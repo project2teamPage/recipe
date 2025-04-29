@@ -1,20 +1,33 @@
 package com.recipe.dto;
 
 import com.recipe.constant.PostCategory;
+import com.recipe.entity.Post;
 import com.recipe.entity.PostImage;
+import com.recipe.entity.User;
 import lombok.Getter;
 import lombok.Setter;
+import org.modelmapper.ModelMapper;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Getter @Setter
 public class PostCreateDto {
 
-    private Long id;
+    private Long userId; // 작성자 id
     private String title;
     private String content;
     private PostCategory postCategory;
 
-    private List<PostImageDto> postImageDtoList;
+    private List<MultipartFile> postImages;
+
+    public Post to(User user){
+        ModelMapper modelMapper = new ModelMapper();
+        Post post = modelMapper.map(this, Post.class);
+        post.setUser(user);
+
+
+        return post;
+    }
 
 }

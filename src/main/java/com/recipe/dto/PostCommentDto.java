@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 public class PostCommentDto {
 
     private Long id;
+    private Long postId;
+    private Long userId;
     private String nickName;
     private String content;
     private LocalDateTime uploadDate;
