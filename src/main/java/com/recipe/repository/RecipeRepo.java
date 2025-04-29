@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecipeRepo extends JpaRepository<Recipe, Long> {
 
+    public Recipe findByIdAndIsDeletedFalse(Long id);
 
 }
