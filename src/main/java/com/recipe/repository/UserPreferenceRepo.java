@@ -1,11 +1,12 @@
 package com.recipe.repository;
 
 import com.recipe.entity.User;
+import com.recipe.entity.UserPreference;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepo extends JpaRepository<User, Long> {
+public interface UserPreferenceRepo extends JpaRepository<UserPreference, Long> {
 
-    // 로그인할 때 메서드
+    // 식이관심사 -
 }
