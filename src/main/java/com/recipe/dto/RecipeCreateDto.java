@@ -32,7 +32,11 @@ public class RecipeCreateDto {
     public Recipe toRecipe(User user){
         Recipe recipe = modelMapper.map(this, Recipe.class);
         recipe.setUser(user);
-        recipe.setUploadDate(LocalDateTime.now());
+
+        if(this.uploadDate == null) {
+            recipe.setUploadDate(LocalDateTime.now());
+        }
+        else recipe.setUpdateDate(LocalDateTime.now());
 
         return recipe;
     }
