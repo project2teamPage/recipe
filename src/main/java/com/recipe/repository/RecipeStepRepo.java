@@ -14,5 +14,6 @@ public interface RecipeStepRepo extends JpaRepository<RecipeStep, Long> {
     public List<RecipeStep> findAllByRecipeIdOrderByStepOrder(Long recipeId);
 
     // 레시피 썸네일 이미지
+    public RecipeStep findByRecipeIdAndIsThumbnailIsTrue(Long id);
 
 }
