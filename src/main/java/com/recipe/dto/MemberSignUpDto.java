@@ -40,33 +40,40 @@ public class MemberSignUpDto {
 
     public User toUser(){
         User user = modelMapper.map(this, User.class);
-        user.setLoginId(this.loginId);
-        user.setPassword(this.password);
-        user.setEmail(this.email);
-        user.setNickName(this.nickName);
-        user.setFamilyMember(this.familyMember);
 
         return user;
     }
 
     // 식이관심사
-    public List<Theme> toPreference() {
-        List<Theme> themeList = new ArrayList<>();
+    public List<UserPreference> toPreference(User user) {
 
-        for (Theme theme : this.getThemeList()){
-            themeList.add(  );
+        List<Theme> themeList = this.getThemeList();
+        List<UserPreference> userPreferenceList = new ArrayList<>();
+
+        for(Theme theme : themeList ){
+           UserPreference  userPreference = new UserPreference();
+           userPreference.setUser(user);
+           userPreference.setTheme(theme);
+
+           userPreferenceList.add(userPreference);
         }
-        return themeList;
+        return userPreferenceList;
     }
 
     // 음식 호불호
-    public List<Food> toFavorite(){
-        List<Food> foodList = new ArrayList<>();
+    public List<UserFavorite> toFavorite(User user){
 
-        for(Food food : this.getFoodList() ){
-            foodList.add( );
+        List<Food> foodList = this.getFoodList();
+        List<UserFavorite> userFavoriteList = new ArrayList<>();
+
+        for( Food food : foodList ){
+            UserFavorite userFavorite = new UserFavorite();
+            userFavorite.setUser(user);
+            userFavorite.setFood(food);
+
+            userFavoriteList.add(userFavorite);
         }
 
-        return foodList;
+        return userFavoriteList;
     }
 }
