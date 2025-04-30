@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+</head>
+<body>
+<div>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+      </tr>
+    </thead>
+      <tbody>
+        <tr th:each="noticeColumn : ${noticeList}">
+          <td>
+            <input type="checkbox">
+          </td>
+
+          <td th:text="${noticeColumn.title}"><span>고정</span>관리자1</td>
+          <td th:text="${noticeColumn.adminNickName}">긴급점검</td>
+          <td th:text="${noticeColumn.writeDate}">긴급점검</td>
+        </tr>
+        <tr>
+          <td>
+            <input type="checkbox">
+          </td>
+          <td><span>숨김</span>관리자1</td>
+          <td>점검</td>
+        </tr>
+      </tbody>
+  </table>
+</div>
+</body>
+</html>

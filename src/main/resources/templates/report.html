@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>피신고자</th>
+                    <th>신고자</th>
+                    <th>카테고리</th>
+                    <th>신고제목</th>
+                    <th>날짜</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="reportColumn : ${reportList}">
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td th:text="${reportColumn.userId} + '(' + ${reportColumn.userNickName} + ')'">user1</td>
+                    <td th:text="${reportColumn.targetId}">user1</td>
+                    <td th:text="${reportColumn.targetType}">user2</td>
+                    <td th:text="${reportColumn.title}">레시피게시글</td>
+                    <td th:text="${reportColumn.date}">2025-04-18</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>user3</td>
+                    <td>user4</td>
+                    <td>레시피댓글</td>
+                    <td>댓글 욕설</td>
+                    <td>2025-04-20</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
