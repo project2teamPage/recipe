@@ -44,7 +44,7 @@ public class MemberSignUpDto {
         user.setPassword(this.password);
         user.setEmail(this.email);
         user.setNickName(this.nickName);
-        user.getFamilyMember(this.familyMember);
+        user.setFamilyMember(this.familyMember);
 
         return user;
     }
