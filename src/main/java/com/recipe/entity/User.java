@@ -1,37 +1,35 @@
 package com.recipe.entity;
 
 import com.recipe.constant.Role;
-import com.recipe.dto.MemberSignUpDto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Getter @Setter
 @Entity
-@Getter  @Setter
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
-    private Long id; // user 테이블 번호
+    @Column(name = "user_id")
+    private Long id;
 
-    @NotEmpty
-    private String loginId; // 아이디
+    private String loginId;
+    private String password;
+    private String nickName;
+    private String email;
 
-    @NotEmpty
-    private String password; // 비밀번호
-
-    @NotEmpty
-    private String email; // 이메일
-
-    private String nickName; // 닉네임
-    private int familyMember; // 구성원
-    private boolean isBanned; // 정지유무
-    private LocalDateTime BanTime; // 정지된 시간
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+
+
+    private int familyMember;
+    private boolean isBanned;
+    private LocalDateTime BanTime;
 
 
 }
