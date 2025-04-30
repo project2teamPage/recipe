@@ -1,12 +1,42 @@
 package com.recipe.dto;
 
 import com.recipe.constant.MealType;
+import com.recipe.entity.BookmarkRecipe;
+import com.recipe.entity.CalendarEntry;
+import com.recipe.entity.CalendarEntryMeal;
 import lombok.Getter;
 import lombok.Setter;
+import org.modelmapper.ModelMapper;
 
 @Getter @Setter
 public class CalendarEntryMealListDto {
-    private MealType mealType;
+    private Long id;
+    private Long calendarEntryId;
     private Long bookmarkRecipeId;
+    private MealType mealType;
+
+    private static ModelMapper modelMapper = new ModelMapper();
+
+    public CalendarEntryMeal to (CalendarEntry calendarEntry,
+                                 BookmarkRecipe bookmarkRecipe){
+
+        CalendarEntryMeal calendarEntryMeal = modelMapper.map(this, CalendarEntryMeal.class);
+        calendarEntryMeal.setCalendarEntry(calendarEntry);
+        calendarEntryMeal.setBookmarkRecipe(bookmarkRecipe);
+
+        return calendarEntryMeal;
+    }
+
+    public static CalendarEntryMealListDto from(CalendarEntryMeal calendarEntryMeal){
+
+        CalendarEntryMealListDto calendarEntryMealListDto = new CalendarEntryMealListDto();
+        calendarEntryMealListDto.setMealType(calendarEntryMeal.getMealType());
+        calendarEntryMealListDto.setCalendarEntryId(calendarEntryMeal.getCalendarEntry().getId());
+        calendarEntryMealListDto.setBookmarkRecipeId(calendarEntryMeal.getBookmarkRecipe().getId());
+
+        return calendarEntryMealListDto;
+
+    }
+
 
 }
