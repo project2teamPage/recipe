@@ -1,19 +1,16 @@
 package com.recipe.constant;
 
-public enum DishType {
-    MAINDISH("메인요리"), SIDEDISH("반찬"), DRINK("음료"), DESSERT("디저트");
-
+public enum RecipeDifficulty {
+    TOO_EASY("하"), EASY("중하"), MEDIUM("중"), HARD("중상"), TOO_HARD("상");
 
     private final String label;
 
-    DishType(String label){
+    RecipeDifficulty(String label){
         this.label = label;
     }
 
     public String getLabel(){
         return this.label;
     }
-
-
 
 }
