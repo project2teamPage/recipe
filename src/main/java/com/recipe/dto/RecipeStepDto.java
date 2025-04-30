@@ -16,7 +16,6 @@ public class RecipeStepDto {
     private String imgName;
     private String imgOriginalName;
     private String imgUrl;
-    private boolean isThumbnail;
 
     public static ModelMapper modelMapper = new ModelMapper();
 

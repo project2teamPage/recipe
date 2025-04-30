@@ -32,19 +32,19 @@ public class RecipeDetailDto {
 
     private List<RecipeIngredientDto> recipeIngredientDtoList;
     private List<RecipeCommentDto> recipeCommentDtoList;
-    private List<RecipeStep> recipeStepList;
+    private List<RecipeStepDto> recipeStepDtoList;
 
     public static ModelMapper modelMapper = new ModelMapper();
 
     public static RecipeDetailDto of(Recipe recipe, List<RecipeIngredientDto> recipeIngredientDtoList,
-                            List<RecipeCommentDto> recipeCommentDtoList, List<RecipeStep> recipeStepList, int recipeLikes){
+                            List<RecipeCommentDto> recipeCommentDtoList, List<RecipeStepDto> recipeStepDtoList, int recipeLikes){
 
         RecipeDetailDto recipeDetailDto = new RecipeDetailDto();
         recipeDetailDto = modelMapper.map(recipe, RecipeDetailDto.class);
 
         recipeDetailDto.setRecipeIngredientDtoList(recipeIngredientDtoList);
         recipeDetailDto.setRecipeCommentDtoList(recipeCommentDtoList);
-        recipeDetailDto.setRecipeStepList(recipeStepList);
+        recipeDetailDto.setRecipeStepDtoList(recipeStepDtoList);
         recipeDetailDto.setRecipeLikes(recipeLikes);
 
 
