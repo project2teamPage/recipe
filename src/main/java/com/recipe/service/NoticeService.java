@@ -29,7 +29,7 @@ public class NoticeService {
 
         for(Notice notice : noticeList) {
 
-            NoticeListDto noticeListDto = NoticeListDto.from(notice, "공지사항");
+            NoticeListDto noticeListDto = NoticeListDto.from(notice, user.getNickName());
 
             noticeListDtos.add(noticeListDto);
         }
