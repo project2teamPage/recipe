@@ -36,7 +36,7 @@ public class RecipeService {
 
     // 레시피 리스트 페이징
     public Page<RecipeListDto> recipeListPage(Pageable pageable){
-        Page<Recipe> recipes = recipeRepo.findAllOrderByUploadDateDesc(pageable);
+        Page<Recipe> recipes = recipeRepo.findAllByOrderByUploadDateDesc(pageable);
 
         List<RecipeListDto> recipeListDtoList = new ArrayList<>();
 

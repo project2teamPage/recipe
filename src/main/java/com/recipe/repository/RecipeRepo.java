@@ -15,6 +15,6 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
     public Recipe findByIdAndIsDeletedFalse(Long id);
 
     // 레시피 최신순으로 목록 가져오기
-    public Page<Recipe> findAllOrderByUploadDateDesc(Pageable pageable);
+    public Page<Recipe> findAllByOrderByUploadDateDesc(Pageable pageable);
 
 }
