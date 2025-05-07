@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig {
 
     @Bean
@@ -18,4 +17,3 @@ public class SecurityConfig {
         http.formLogin(Customizer.withDefaults());
         return http.build();
     }
-}
