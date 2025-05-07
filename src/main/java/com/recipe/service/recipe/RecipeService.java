@@ -1,5 +1,7 @@
 package com.recipe.service.recipe;
 
+import com.recipe.constant.DishType;
+import com.recipe.constant.Theme;
 import com.recipe.constant.UploadType;
 import com.recipe.dto.recipe.*;
 import com.recipe.entity.recipe.Recipe;
@@ -78,7 +80,7 @@ public class RecipeService {
 
     }
 
-    // 레시피 리스트 페이징
+    // 레시피 기본 리스트 페이징
     public Page<RecipeListDto> recipeListPage(Pageable pageable){
         Page<Recipe> recipes = recipeRepo.findAllByOrderByUploadDateDesc(pageable);
 
@@ -97,6 +99,28 @@ public class RecipeService {
         return new PageImpl<>(recipeListDtoList, pageable, recipes.getTotalElements() );
 
     }
+
+    // 카테고리별 레시피 목록
+    public Page<RecipeListDto> recipeFilter(DishType dishType, Theme theme, int spicy, Pageable pageable){
+        Page<Recipe> recipes = recipeRepo.findByCategory(dishType, theme, spicy, pageable);
+
+        List<RecipeListDto> recipeListDtoList = new ArrayList<>();
+
+        for(Recipe recipe : recipes.getContent()){
+            RecipeStep recipeStep = recipeStepRepo.findByRecipeIdAndIsThumbnailIsTrue(recipe.getId()); // 레시피의 썸네일 step 찾기
+            String imgUrl = recipeStep.getImgUrl(); // 레시피 썸네일 imgUrl
+
+            int recipeLikes = recipeLikeRepo.countByRecipeId( recipe.getId() );
+
+            recipeListDtoList.add( RecipeListDto.of(recipe, imgUrl, recipeLikes) );
+
+        }
+
+        return new PageImpl<>(recipeListDtoList, pageable, recipes.getTotalElements() );
+
+
+    }
+
 
     // 레시피 상세페이지
     public RecipeDetailDto recipeDetail(Long recipeId){

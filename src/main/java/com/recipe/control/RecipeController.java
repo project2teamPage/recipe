@@ -1,5 +1,7 @@
 package com.recipe.control;
 
+import com.recipe.constant.DishType;
+import com.recipe.constant.Theme;
 import com.recipe.dto.recipe.RecipeCreateDto;
 import com.recipe.dto.recipe.RecipeDetailDto;
 import com.recipe.dto.recipe.RecipeListDto;
@@ -30,6 +32,7 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final FileService fileService;
 
+    // 레시피 첫페이지
     @GetMapping("/recipe")
     public String recipePage(Model model, @PageableDefault(size = 12, sort = "uploadDate", direction = Sort.Direction.DESC) Pageable pageable){
 
@@ -41,6 +44,21 @@ public class RecipeController {
 
         return "recipe/recipe";
     }
+
+    // 카테고리별 필터링된 레시피 목록
+    @GetMapping("/recipe/category")
+    public String filteredRecipe(@RequestParam(required = false)DishType dishType,
+                                 @RequestParam(required = false)Theme theme,
+                                 @RequestParam(required = false)Integer spicy,
+                                 Pageable pageable, Model model){
+
+        Page<RecipeListDto> recipePage = recipeService.recipeFilter(dishType, theme, spicy, pageable);
+        model.addAttribute("recipes", recipePage.getContent());
+
+        return "recipe/recipe";
+    }
+
+
 
     // 레시피 상세
     @GetMapping("/recipe/{id}")
