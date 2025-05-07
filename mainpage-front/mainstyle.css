@@ -1,31 +1,16 @@
+
+
 * {
     margin: 0 auto;
     padding: 0;
     list-style: none;
+    text-decoration: none;
+    /* text-align: center; */
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 .mainpage {
   width: 1440px;
   background-color: antiquewhite;
-}
-header {
-  width: 100%;
-  height: 110px;
-  background-color: rgba(0, 0, 0, 0.2);
-}
-.head{
-    display: flex;
-}
-.menu {
-    width: 600px;
-    height: 40px;
-    background-color: aquamarine;
-    display: flex;
-    line-height: 40px;
-}
-.main-logo{
-    width: 200px;
-    height: 40px;
-    background-color: blue;
 }
 
 /* main */
@@ -33,9 +18,15 @@ main {
   width: 1180px;
 }
 .main {
-  height: 644px;
+  height: 800px;
   background-color: rgba(0, 0, 0, 0.4);
 }
+.main-content {
+  width: 100%;
+  height: 650px;
+  background-color: aquamarine;
+}
+/* ㅇㅇㅇㅇㅇ */
 .hot-recipe {
   height: 635px;
   background-color: rgba(0, 0, 0, 0.6);

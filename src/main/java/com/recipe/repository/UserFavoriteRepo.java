@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserFavoriteRepo extends JpaRepository<UserFavorite, Long> {
 
-    // 호불호 -
+    // 호불호 - 메인페이지에 노출용
 }

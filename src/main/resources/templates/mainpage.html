@@ -38,7 +38,10 @@ xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
         <div class="recipe-brag">레시피자랑</div>
         <div class="member-list">
             <ul>
-                <li></li>
+                <li th:each="info : ${userInfo}">
+                    <span th:text="${info.nickName}"> </span>
+                    <span th:text="${info.id}"> </span>
+                </li>
             </ul>
         </div>
         <div class="community">커뮤니티</div>

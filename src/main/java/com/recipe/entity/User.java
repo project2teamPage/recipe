@@ -21,11 +21,8 @@ public class User {
     private String nickName;
     private String email;
 
-
     @Enumerated(EnumType.STRING)
     private Role role;
-
-
 
     private int familyMember;
     private boolean isBanned;
