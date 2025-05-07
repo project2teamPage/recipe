@@ -1,10 +1,8 @@
 package com.recipe.control;
 
-import com.recipe.dto.ReportListDto;
-import com.recipe.entity.Report;
-import com.recipe.service.InquiryService;
-import com.recipe.service.NoticeService;
-import com.recipe.service.ReportService;
+import com.recipe.service.admin.InquiryService;
+import com.recipe.service.admin.NoticeService;
+import com.recipe.service.admin.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
