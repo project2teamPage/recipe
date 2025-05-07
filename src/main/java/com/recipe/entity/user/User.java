@@ -1,3 +1,4 @@
+
 package com.recipe.entity.user;
 
 import com.recipe.constant.Role;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @Entity
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -26,6 +28,7 @@ public class User {
     private int familyMember; // 가족인원
     private boolean isBanned; // 정지여부
     private LocalDateTime banTime; // 정지일
+
 
 
 }

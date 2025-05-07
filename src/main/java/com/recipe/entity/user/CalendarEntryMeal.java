@@ -15,7 +15,8 @@ public class CalendarEntryMeal {
 
     @ManyToOne
     @JoinColumn(name = "calendar_entry_id")
-    private CalendarEntryMeal calendarEntryMeal;
+    private CalendarEntry calendarEntry;
+
 
     @Enumerated(EnumType.STRING)
     private MealType mealType;

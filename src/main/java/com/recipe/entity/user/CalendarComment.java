@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+
+import java.time.LocalDateTime;
+
+
 @Entity
 @Getter @Setter
 public class CalendarComment {
@@ -20,4 +24,9 @@ public class CalendarComment {
     @JoinColumn(name = "user_id")
     private User user;
     private String content;
+
+    private LocalDateTime writeDate;
+
+    private boolean isUpdated; // 수정됐냐 // dafault=false 새로운 데이터가 옮겨지면(수정) true
+
 }
