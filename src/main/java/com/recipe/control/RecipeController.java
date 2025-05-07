@@ -1,8 +1,8 @@
 package com.recipe.control;
 
-import com.recipe.dto.RecipeDetailDto;
-import com.recipe.dto.RecipeListDto;
-import com.recipe.service.RecipeService;
+import com.recipe.dto.recipe.RecipeDetailDto;
+import com.recipe.dto.recipe.RecipeListDto;
+import com.recipe.service.recipe.RecipeService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
