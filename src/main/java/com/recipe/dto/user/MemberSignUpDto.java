@@ -32,9 +32,7 @@ public class MemberSignUpDto {
     @Length(min = 2, max = 8, message = "최소 2글자, 최대 8글자 입력 가능합니다.")
     private String nickName;
 
-    private List<Theme> themeList;
-    private List<Food> foodList;
-    private int familyMember;
+
 
     public static ModelMapper modelMapper = new ModelMapper();
 
@@ -76,4 +74,5 @@ public class MemberSignUpDto {
 
         return userFavoriteList;
     }
+
 }

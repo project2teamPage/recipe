@@ -17,6 +17,7 @@ public class CalendarEntryMeal {
     @JoinColumn(name = "calendar_entry_id")
     private CalendarEntry calendarEntry;
 
+
     @Enumerated(EnumType.STRING)
     private MealType mealType;
 

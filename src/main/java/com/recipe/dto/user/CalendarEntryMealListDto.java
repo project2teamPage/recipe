@@ -37,6 +37,5 @@ public class CalendarEntryMealListDto {
         return calendarEntryMealListDto;
 
     }
-
-
 }
+

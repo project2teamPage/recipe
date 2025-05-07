@@ -9,4 +9,5 @@ public interface UserPreferenceRepo extends JpaRepository<UserPreference, Long> 
 
     // 식이관심사 - 메인페이지에 노출용
 
+
 }

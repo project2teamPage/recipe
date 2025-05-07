@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>레시피 목록</title>
+  <link rel="stylesheet" th:href="@{/css/recipe.css}" />
+</head>
+<body>
+
+<h1>레시피 목록</h1>
+
+<div class="recipe-grid">
+  <div class="recipe-card" th:each="recipe : ${recipes}">
+    <a th:href="@{'/recipe/' + ${recipe.id}}">
+      <img th:src="${recipe.imgUrl}" alt="레시피 이미지" class="recipe-img"/>
+      <h3 th:text="${recipe.title}">레시피 제목</h3>
+      <p th:text="${recipe.nickName}">작성자</p>
+      <p th:text="'좋아요: ' + ${recipe.recipeLikes}">좋아요 수</p>
+    </a>
+  </div>
+</div>
+
+<!-- 페이지네이션 -->
+<div class="pagination">
+  <ul>
+    <li th:each="i : ${#numbers.sequence(1, totalPages)}">
+      <a th:href="@{'/recipe'(page=${i - 1})}"
+         th:text="${i}"
+         th:classappend="${i == currentPage} ? 'active' : ''">1</a>
+    </li>
+  </ul>
+</div>

@@ -7,8 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CalendarEntryMealRepo extends JpaRepository<CalendarEntryMeal, Long> {
 
-
-
-
-
 }
