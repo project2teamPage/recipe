@@ -1,4 +1,4 @@
-package com.recipe.entity;
+package com.recipe.entity.user;
 
 import com.recipe.constant.Role;
 import jakarta.persistence.*;

@@ -1,5 +1,4 @@
 package com.recipe.service.admin;
-
 import com.recipe.constant.Role;
 import com.recipe.dto.admin.NoticeListDto;
 import com.recipe.entity.admin.Notice;
