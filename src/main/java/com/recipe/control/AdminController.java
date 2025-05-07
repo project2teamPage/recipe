@@ -28,7 +28,7 @@ public class AdminController {
     public String reportPage(Model model) {
 
         model.addAttribute("reportList", reportService.getReports());
-        return "report";
+        return "/admin/report";
     }
 
     @GetMapping("/admin/notice")
@@ -36,13 +36,19 @@ public class AdminController {
 
         model.addAttribute("noticeList", noticeService.getNotices());
 
-        return "notice";
+        return "/admin/notice";
     }
 
     @GetMapping("/admin/inquiry")
     public String inquiryPage(Model model) {
 
         model.addAttribute("inquiryList", inquiryService.getInquirys());
-        return "inquiry";
+        return "/admin/inquiry";
+    }
+
+    @GetMapping("/admin/noticeWrite")
+    public String writeNoticePage(Model model) {
+
+        return "/admin/noticeWrite";
     }
 }

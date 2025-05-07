@@ -25,7 +25,7 @@
                         <input type="checkbox">
                     </td>
                     <td th:text="${reportColumn.userId} + '(' + ${reportColumn.userNickName} + ')'">user1</td>
-                    <td th:text="${reportColumn.targetId}">user1</td>
+                    <td th:text="${reportColumn.targetId} + '(' + ${reportColumn.userNickName} + ')'">user1</td>
                     <td th:text="${reportColumn.targetType}">user2</td>
                     <td th:text="${reportColumn.title}">레시피게시글</td>
                     <td th:text="${reportColumn.date}">2025-04-18</td>

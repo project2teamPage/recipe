@@ -9,11 +9,12 @@
 <body>
 <div>
   <div>
-  <button type="button" onclick="location.href='/notice/write'">작성하기</button>
+  <button type="button" onclick="location.href='/admin/noticeWrite'">작성하기</button>
   </div>
   <table>
     <thead>
       <tr>
+        <th></th>
         <th></th>
         <th>제목</th>
         <th>작성자</th>
@@ -25,8 +26,8 @@
           <td>
             <input type="checkbox">
           </td>
-
-          <td th:text="${noticeColumn.title}"><span>고정</span>관리자1</td>
+          <td></td>
+          <td th:text="${noticeColumn.title}"><span>[고정]</span>관리자1</td>
           <td th:text="${noticeColumn.adminNickName}">긴급점검</td>
           <td th:text="${noticeColumn.writeDate}">긴급점검</td>
         </tr>
@@ -34,7 +35,7 @@
           <td>
             <input type="checkbox">
           </td>
-          <td><span>숨김</span>관리자1</td>
+          <td><span>[숨김]</span>관리자1</td>
           <td>점검</td>
         </tr>
       </tbody>
