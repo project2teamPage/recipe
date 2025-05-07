@@ -1,6 +1,7 @@
 package com.recipe.control;
 
 import com.recipe.constant.DishType;
+import com.recipe.constant.OrderType;
 import com.recipe.constant.Theme;
 import com.recipe.dto.recipe.RecipeCreateDto;
 import com.recipe.dto.recipe.RecipeDetailDto;
@@ -32,28 +33,20 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final FileService fileService;
 
-    // 레시피 첫페이지
+    // 레시피 목록
     @GetMapping("/recipe")
-    public String recipePage(Model model, @PageableDefault(size = 12, sort = "uploadDate", direction = Sort.Direction.DESC) Pageable pageable){
+    public String filteredRecipe(@RequestParam(required = false)DishType dishType,
+                                 @RequestParam(required = false)Theme theme,
+                                 @RequestParam(required = false)Integer spicy,
+                                 @RequestParam(defaultValue = "RECENT") OrderType orderType,
+                                 @PageableDefault(size = 16, sort = "uploadDate", direction = Sort.Direction.DESC) Pageable pageable,
+                                 Model model){
 
-        //레시피 리스트
-        Page<RecipeListDto> recipePage = recipeService.recipeListPage(pageable);
+        Page<RecipeListDto> recipePage = recipeService.recipeListPage(dishType, theme, spicy, orderType, pageable);
         model.addAttribute("recipes", recipePage.getContent());
         model.addAttribute("totalPages", recipePage.getTotalPages());
         model.addAttribute("currentPage", recipePage.getNumber() + 1);
 
-        return "recipe/recipe";
-    }
-
-    // 카테고리별 필터링된 레시피 목록
-    @GetMapping("/recipe/category")
-    public String filteredRecipe(@RequestParam(required = false)DishType dishType,
-                                 @RequestParam(required = false)Theme theme,
-                                 @RequestParam(required = false)Integer spicy,
-                                 Pageable pageable, Model model){
-
-        Page<RecipeListDto> recipePage = recipeService.recipeFilter(dishType, theme, spicy, pageable);
-        model.addAttribute("recipes", recipePage.getContent());
 
         return "recipe/recipe";
     }
