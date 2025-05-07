@@ -2,12 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>레시피 목록</title>
-  <link rel="stylesheet" th:href="@{/css/recipe.css}" />
+  <title>레시피</title>
+  <link rel="stylesheet" th:href="@{/css/recipe/recipe.css}" />
 </head>
 <body>
 
-<h1>레시피 목록</h1>
+<h1>Recipe</h1>
+<h1>레시피</h1>
 
 <div class="recipe-grid">
   <div class="recipe-card" th:each="recipe : ${recipes}">

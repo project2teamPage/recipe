@@ -1,5 +1,6 @@
 package com.recipe.service.recipe;
 
+import com.recipe.constant.UploadType;
 import com.recipe.dto.recipe.*;
 import com.recipe.entity.recipe.Recipe;
 import com.recipe.entity.recipe.RecipeComment;
@@ -8,12 +9,15 @@ import com.recipe.entity.recipe.RecipeStep;
 import com.recipe.entity.user.User;
 import com.recipe.repository.recipe.*;
 import com.recipe.repository.user.UserRepo;
+import com.recipe.service.FileService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,15 +31,51 @@ public class RecipeService {
     private final RecipeLikeRepo recipeLikeRepo;
     private final RecipeIngredientRepo recipeIngredientRepo;
     private final RecipeCommentRepo recipeCommentRepo;
+    private final FileService fileService;
 
     
-    // 레시피 작성시 entity 로 저장
-    public Recipe saveRecipe(RecipeCreateDto recipeCreateDto){
+    // 레시피 작성시 레시피 entity 로 저장
+    public Recipe saveRecipe(RecipeCreateDto dto){
 
-        User user = userRepo.findById( recipeCreateDto.getUserId() ).orElseThrow(); // dto 에 유저Id를 담아 User 객체를 만든 후
-        Recipe recipe = recipeCreateDto.toRecipe(user);                             // Recipe 객체에 User 객체를 넣어준다.
+        User user = userRepo.findById( dto.getUserId() ).orElseThrow(); // dto 에 유저Id를 담아 User 객체를 만든 후
+        Recipe recipe = dto.toRecipe(user);                             // Recipe 객체에 User 객체를 넣어준다.
 
-        return recipeRepo.save( recipe );
+        recipeRepo.save( recipe );
+        saveIngredient(dto, recipe);
+
+        return recipe;
+    }
+
+    // 레시피 재료 저장
+    public void saveIngredient(RecipeCreateDto dto, Recipe recipe){
+
+        List<RecipeIngredient> recipeIngredientList = dto.toIngredient(recipe);
+        recipeIngredientRepo.saveAll(recipeIngredientList);
+
+    }
+
+    // 레시피 step 저장
+    public void saveRecipeStep(RecipeCreateDto dto, List<MultipartFile> multipartFileList, Recipe recipe) throws IOException {
+
+        List<RecipeStepDto> stepDtos = dto.getRecipeStepDtoList();
+        List<RecipeStep> recipeStep = new ArrayList<>();
+
+        for( int i = 0; i < stepDtos.size(); i++ ){
+            RecipeStepDto stepDto = stepDtos.get(i);
+            MultipartFile file = multipartFileList.get(i);
+
+            String imgName = fileService.uploadFile( file.getOriginalFilename(), file.getBytes(), UploadType.RECIPE );
+
+            stepDto.setImgOriginalName( file.getOriginalFilename() );
+            stepDto.setImgName( imgName );
+            stepDto.setImgUrl("/recipeImg/"+ imgName);
+
+            recipeStep.add( stepDto.to(recipe) );
+
+        }
+
+        recipeStepRepo.saveAll(recipeStep);
+
     }
 
     // 레시피 리스트 페이징

@@ -51,15 +51,6 @@ public class RecipeCreateDto {
         return recipeIngredientList;
     }
 
-    public List<RecipeStep> toStep (Recipe recipe){
-
-        List<RecipeStep> recipeStepList = new ArrayList<>();
-        for(RecipeStepDto recipeStepDto : this.getRecipeStepDtoList()){
-            recipeStepList.add(recipeStepDto.to(recipe));
-        }
-
-        return recipeStepList;
-    }
 
 
 
