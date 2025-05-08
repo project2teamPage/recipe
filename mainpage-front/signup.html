@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원가입</title>
+    <link rel="stylesheet" href="header.css" />
+    <link rel="stylesheet" href="signup.css" />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <nav class="head">
+        <div class="main-logo"><img src="image/logo4.png" alt="" /></div>
+        <ul class="menu">
+          <li>
+            <a href="#">레시피</a>
+          </li>
+          <li>
+            <a href="#">커뮤니티</a>
+          </li>
+          <li>
+            <a href="#">마이페이지</a>
+          </li>
+          <li>
+            <a href="#">로그인</a>
+          </li>
+          <li class="admin">
+            <a href="#">ADMIN</a>
+          </li>
+        </ul>
+        <form class="top-search" role="">
+          <input
+            class="top-search-form"
+            type="search"
+            placeholder="검색어를 입력해주세요."
+            aria-label="Search"
+          />
+          <button class="top-search-btn" type="top-search-btn">
+            <img src="image/top_search_logo.png" alt="검색 아이콘" />
+          </button>
+        </form>
+      </nav>
+    </header>
+
+    <div class="signup">
+      <span class="sign-up-title">회원가입</span>
+      <div class="sign-up">
+        <form class="nick-name" role="">
+          <div class="nick-name-title">* 닉네임</div>
+          <input
+            class="nick-name-create-form"
+            type="search"
+            placeholder="ex. 김식탁"
+            aria-label="Search"
+          />
+          <p>한글로 작성해주세요 (최소 2글자 ~ 최대 8글자)</p>
+
+          <div class="id-title">* 아이디</div>
+          <input
+            class="id-create-form"
+            type="search"
+            placeholder="아이디는 변경이 불가합니다. ex. kimsicktak1234"
+            aria-label="Search"
+          />
+          <p>영문 소문자, 숫자를 조합하여 5~15자리 이하로 작성해주세요.</p>
+
+          <div class="pw-title">* 비밀번호</div>
+          <input
+            class="pw-create-form"
+            type="search"
+            placeholder="비밀번호를 입력하세요."
+            aria-label="Search"
+          />
+          <p>영문 대/소문자, 숫자를 조합하여 10~16자리 이하로 작성해주세요.</p>
+          <input
+            class="pw-create-form-2"
+            type="search"
+            placeholder="비밀번호를 다시 입력하세요."
+            aria-label="Search"
+          />
+
+          <div class="eamil-title">* 이메일</div>
+          <input
+            class="email-create-form"
+            type="search"
+            placeholder="이메일은 변경이 불가합니다. example@naver.com"
+            aria-label="Search"
+          />
+          <p>이메일 형식에 맞춰서 입력해주세요.</p>
+          <div class="check-box">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="checkDefault"
+              />
+              <label class="form-check-label" for="checkDefault">
+                [필수] 본인은 만 14세 이상입니다.
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="checkChecked"
+                checked
+              />
+              <label class="form-check-label" for="checkChecked">
+                [필수] 이용약관 <a href="#">약관보기</a>
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="checkChecked"
+                checked
+              />
+              <label class="form-check-label" for="checkChecked">
+                [필수] 개인정보수집동의 <a href="#">약관보기</a>
+              </label>
+            </div>
+          </div>
+          <button class="sign-up-btn">다음 단계로 이동</button>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <div class="foot-box">
+        <div class="con1"><a href="#">이용약관</a></div>
+        <div class="con2"><a href="#">개인정보처리방침</a></div>
+      </div>
+    </footer>
+  </body>
+</html>
