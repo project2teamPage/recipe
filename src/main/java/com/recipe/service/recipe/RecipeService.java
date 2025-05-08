@@ -1,5 +1,8 @@
 package com.recipe.service.recipe;
 
+import com.recipe.constant.DishType;
+import com.recipe.constant.OrderType;
+import com.recipe.constant.Theme;
 import com.recipe.constant.UploadType;
 import com.recipe.dto.recipe.*;
 import com.recipe.entity.recipe.Recipe;
@@ -15,9 +18,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,9 +83,30 @@ public class RecipeService {
 
     }
 
-    // 레시피 리스트 페이징
-    public Page<RecipeListDto> recipeListPage(Pageable pageable){
-        Page<Recipe> recipes = recipeRepo.findAllByOrderByUploadDateDesc(pageable);
+    // 한번에 저장하는 메서드
+    @Transactional
+    public void createRecipe(RecipeCreateDto dto, List<MultipartFile> multipartFileList) throws IOException {
+        Recipe recipe = saveRecipe(dto);
+        saveRecipeStep(dto, multipartFileList, recipe);
+    }
+
+    // 레시피 목록 (카테고리별 포함)
+    public Page<RecipeListDto> recipeListPage(DishType dishType, Theme theme, Integer spicy, OrderType orderType, Pageable pageable){
+
+        Page<Recipe> recipes;
+
+        switch (orderType){
+            case LIKE :
+                recipes = recipeRepo.findByLikes(dishType, theme, spicy, pageable);
+                break;
+            case VIEW :
+                recipes = recipeRepo.findByViews(dishType, theme, spicy, pageable);
+                break;
+            case RECENT:
+            default:
+                recipes = recipeRepo.findRecent(dishType, theme, spicy, pageable);
+
+        }
 
         List<RecipeListDto> recipeListDtoList = new ArrayList<>();
 
@@ -96,7 +122,9 @@ public class RecipeService {
 
         return new PageImpl<>(recipeListDtoList, pageable, recipes.getTotalElements() );
 
+
     }
+
 
     // 레시피 상세페이지
     public RecipeDetailDto recipeDetail(Long recipeId){
@@ -131,6 +159,14 @@ public class RecipeService {
         // Entity -> Dto 한 후 바로 리턴
         return RecipeDetailDto.of(recipe, recipeIngredientDtoList, recipeCommentDtoList, recipeStepDtoList, recipeLikes);
 
+    }
+
+    // 레시피 삭제
+    public void deleteRecipe(Long recipeId){
+        Recipe recipe = recipeRepo.findById(recipeId).orElseThrow();
+        recipe.setDeleted(true);
+        recipe.setDeletedDate(LocalDateTime.now());
+        recipeRepo.save(recipe);
     }
 
     

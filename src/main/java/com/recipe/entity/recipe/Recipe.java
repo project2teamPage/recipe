@@ -36,7 +36,7 @@ public class Recipe {
     @Enumerated(EnumType.STRING)
     private RecipeDifficulty recipeDifficulty;
 
-    private LocalTime recipeTime;
+    private int recipeTime;
     private LocalDateTime uploadDate;
     private LocalDateTime updateDate;
     private int viewCount;
