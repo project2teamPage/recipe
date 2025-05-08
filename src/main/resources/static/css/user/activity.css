@@ -9,22 +9,20 @@
     "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
-.myactivity a {
-  color: #ff6a00;
-}
 body {
   background-color: #f8f8f9;
 }
 .container {
-    width: 1180px;
-    margin-top: 50px;
-    /* background-color: red; */
-    display: flex;
-  }
+  width: 1180px;
+  margin-top: 50px;
+  /* background-color: red; */
+  display: flex;
+}
 /* sidemenu */
 .side-menu {
   width: 170px;
   height: 300px;
+  /* float: left; */
 }
 .side-menu-list li {
   width: 140px;
@@ -36,7 +34,7 @@ body {
 }
 .side-menu-list li a {
   color: #767676;
-  text-decoration: none;
+  text-decoration:none;
 }
 .side-menu-list li a:hover {
   color: #ff6a00;
@@ -50,53 +48,37 @@ body {
 }
 /* title */
 .title {
-    width: 910px;
-    padding-left: 40px;
-  }
-  .title span {
-    font-size: 30px;
-    font-weight: 800;
-  }
-  .title p {
-    font-size: 16px;
-    color: #bababa;
-    margin-top: 10px;
-  }
-
-/* content */
-.container {
-  width: 1180px;
-  height: 1600px;
-  margin-top: 50px;
-}
-
-.content {
   width: 910px;
-  float: right;
+  padding-left: 40px;
 }
-.con-recipe,
-.con-write,
-.con-comment {
-  width: 100%;
-  height: 415px;
-  background-color: rgb(255, 255, 255);
-  margin-top: 30px;
-  border: 1px solid #bababa;
-  border-radius: 26px;
-}
-
-/* con-title */
-.con-recipe {
-  width: 910px;
-}
-.con-recipe title {
+.title span {
   font-size: 30px;
-  font-weight: 700;
+  font-weight: 800;
 }
 .title p {
   font-size: 16px;
   color: #bababa;
   margin-top: 10px;
+}
+
+
+
+.content {
+  background-color:red;
+}
+.con-recipe, .con-write, .con-comment{
+  width: 910px;
+  height: 400px;
+  background-color: rgb(255, 255, 255);
+  margin-top: 30px;
+  border: 1px solid #bababa;
+  border-radius: 26px;
+  float: right;
+  display: flex;
+}
+.con-recipe, .con-write, .con-comment title {
+  font-size: 30px;
+  font-weight: 700;
 }
 
 /* 내 댓글 */

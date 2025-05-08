@@ -1,53 +1,19 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>로그인 페이지</title>
-    <link rel="stylesheet" th:href="@{/css/header.css}" />
-    <link rel="stylesheet" th:href="@{/css/user/login.css}" />
-    <link
-            rel="stylesheet"
-            as="style"
-            crossorigin
-            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
-    />
-</head>
-<body>
-<header>
-    <nav class="head">
-        <div class="main-logo"><img th:src="@{images/logo4.png}" alt="로고이미지" /></div>
-        <ul class="menu">
-            <li>
-                <a href="#">레시피</a>
-            </li>
-            <li>
-                <a href="#">커뮤니티</a>
-            </li>
-            <li>
-                <a href="#">마이페이지</a>
-            </li>
-            <li>
-                <a href="#">로그인</a>
-            </li>
-            <li class="admin">
-                <a href="#">ADMIN</a>
-            </li>
-        </ul>
-        <form class="top-search" role="">
-            <input
-                    class="top-search-form"
-                    type="search"
-                    placeholder="검색어를 입력해주세요."
-                    aria-label="Search"
-            />
-            <button class="top-search-btn" type="top-search-btn">
-                <img th:src="@{images/top_search_logo.png}" alt="검색 아이콘" />
-            </button>
-        </form>
-    </nav>
-</header>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/user/login.css" />
+</th:block>
+<th:block layout:fragment="script"></th:block>
+
+<div layout:fragment="main" id="main">
+
+    <!--여기다가 넣어주세여-->
+
+
 <div class="login">
     <span>로그인</span>
     <div class="id">
@@ -81,5 +47,9 @@
         <div class="con2"><a href="#">개인정보처리방침</a></div>
     </div>
 </footer>
-</body>
+
+</div>
+
+
 </html>
+
