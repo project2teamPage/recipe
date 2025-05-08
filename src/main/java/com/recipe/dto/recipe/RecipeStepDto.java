@@ -5,6 +5,7 @@ import com.recipe.entity.recipe.RecipeStep;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter @Setter
 public class RecipeStepDto {
@@ -16,6 +17,8 @@ public class RecipeStepDto {
     private String imgName;
     private String imgOriginalName;
     private String imgUrl;
+
+    private MultipartFile imgFile;
 
     public static ModelMapper modelMapper = new ModelMapper();
 
