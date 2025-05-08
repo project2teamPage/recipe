@@ -1,5 +1,7 @@
 package com.recipe.service.post;
 
+import com.recipe.constant.OrderType;
+import com.recipe.constant.UploadType;
 import com.recipe.dto.post.*;
 import com.recipe.entity.post.Post;
 import com.recipe.entity.post.PostComment;
@@ -10,11 +12,15 @@ import com.recipe.repository.post.PostImageRepo;
 import com.recipe.repository.post.PostLikeRepo;
 import com.recipe.repository.post.PostRepo;
 import com.recipe.repository.user.UserRepo;
+import com.recipe.service.FileService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +33,10 @@ public class PostService {
     private final PostImageRepo postImageRepo;
     private final PostCommentRepo postCommentRepo;
     private final PostLikeRepo postLikeRepo;
-//    private final FileService fileService; // 이미지 저장을 담당할 서비스
+    private final FileService fileService;
 
     // 게시글 작성
-    public Post savePost(PostCreateDto postCreateDto) {
+    public Post savePost(PostCreateDto postCreateDto) throws IOException {
         User user = userRepo.findById(postCreateDto.getUserId()).orElseThrow();
 
         Post post = postCreateDto.to(user);
@@ -41,23 +47,23 @@ public class PostService {
         Post savedPost = postRepo.save(post);
 
         // 이미지 저장
-//        if (postCreateDto.getPostImages() != null) {
-//            for (int i = 0; i < postCreateDto.getPostImages().size(); i++) {
-//                MultipartFile image = postCreateDto.getPostImages().get(i);
-//                if (!image.isEmpty()) {
-//                    String imgName = fileService.saveFile(image); // 저장된 파일 이름
-//                    String url = "/images/post/" + imgName;
-//
-//                    PostImage postImage = new PostImage();
-//                    postImage.setPost(savedPost);
-//                    postImage.setImgName(imgName);
-//                    postImage.setOriginalName(image.getOriginalFilename());
-//                    postImage.setImgUrl(url);
-//                    postImage.setThumbnail(i == 0); // 첫 번째 이미지를 썸네일로
-//                    postImageRepo.save(postImage);
-//                }
-//            }
-//        }
+        if (postCreateDto.getPostImages() != null) {
+            for (int i = 0; i < postCreateDto.getPostImages().size(); i++) {
+                MultipartFile image = postCreateDto.getPostImages().get(i);
+                if (!image.isEmpty()) {
+                    String imgName = fileService.uploadFile(image.getOriginalFilename(), image.getBytes(), UploadType.POST); // 저장된 파일 이름
+                    String url = "/postImg/" + imgName;
+
+                    PostImage postImage = new PostImage();
+                    postImage.setPost(savedPost);
+                    postImage.setImgName(imgName);
+                    postImage.setOriginalName(image.getOriginalFilename());
+                    postImage.setImgUrl(url);
+                    postImage.setThumbnail(i == 0); // 첫 번째 이미지를 썸네일로
+                    postImageRepo.save(postImage);
+                }
+            }
+        }
 
         return savedPost;
     }
@@ -65,21 +71,17 @@ public class PostService {
     // 게시글 리스트 (페이징)
     public Page<PostListDto> getPostList(Pageable pageable) {
         Page<Post> posts = postRepo.findByIsDeletedFalseOrderByUploadDateDesc(pageable);
-        return posts.map(post -> {
-            PostImage thumbnail = postImageRepo.findFirstByPostIdAndIsThumbnailTrue(post.getId());
 
+        List<PostListDto> postListDtos = new ArrayList<>();
+
+        for(Post post : posts){
+            PostImage thumbnail = postImageRepo.findFirstByPostIdAndIsThumbnailTrue(post.getId());
             int postLikes = postLikeRepo.countByPostId(post.getId());
 
-            PostListDto dto = new PostListDto();
-            dto.setId(post.getId());
-            dto.setTitle(post.getTitle());
-            dto.setNickName(post.getUser().getNickName());
-            dto.setUploadDate(post.getUploadDate());
-            dto.setImageUrl(thumbnail.getImgUrl());
-            dto.setPostLikes(postLikes);
+            postListDtos.add( PostListDto.from(post, thumbnail.getImgName(), postLikes) );
+        }
 
-            return dto;
-        });
+        return new PageImpl<>(postListDtos, pageable, posts.getTotalElements());
     }
 
     // 게시글 상세 조회

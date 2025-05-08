@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,6 +151,14 @@ public class RecipeService {
         // Entity -> Dto 한 후 바로 리턴
         return RecipeDetailDto.of(recipe, recipeIngredientDtoList, recipeCommentDtoList, recipeStepDtoList, recipeLikes);
 
+    }
+
+    // 레시피 삭제
+    public void deleteRecipe(Long recipeId){
+        Recipe recipe = recipeRepo.findById(recipeId).orElseThrow();
+        recipe.setDeleted(true);
+        recipe.setDeletedDate(LocalDateTime.now());
+        recipeRepo.save(recipe);
     }
 
     
