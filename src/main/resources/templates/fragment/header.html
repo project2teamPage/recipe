@@ -3,10 +3,14 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
+<th:block th:fragment="headerCss">
+  <link rel="stylesheet" th:href="@{/css/header.css}" />
+</th:block>
+
 <div th:fragment="header" id="header">
 
     <nav class="head">
-      <div class="main-logo"><img th:src="@{images/logo4.png}" alt="로고이미지" /></div>
+      <a href="/"><div class="main-logo"><img th:src="@{images/logo4.png}" alt="로고이미지" /></div></a>
       <ul class="menu">
         <li>
           <a href="#">레시피</a>
@@ -36,3 +40,4 @@
         </button>
       </form>
     </nav>
+</div>

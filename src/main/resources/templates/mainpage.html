@@ -1,36 +1,13 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
->
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>냉털키친</title>
-    <link rel="stylesheet" href="mainstyle.css" />
-</head>
-<body>
-<header>
-    <nav class="head">
-        <div class="main-logo">메인로고</div>
-        <ul class="menu">
-            <li>
-                <a href="recipe">레시피</a>
-            </li>
-            <li>
-                <a href="#">커뮤니티</a>
-            </li>
-            <li>
-                <a href="#">마이페이지</a>
-            </li>
-            <li>
-                <a href="#">로그인</a>
-            </li>
-            <li>
-                <a href="#">ADMIN</a>
-            </li>
-        </ul>
-    </nav>
-</header>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+<th:block layout:fragment="css"></th:block>
+<th:block layout:fragment="script"></th:block>
+
+<div layout:fragment="main" id="main">
+
 <div class="mainpage">
     <main>
         <div class="main">메인</div>
@@ -48,6 +25,7 @@ xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
         <div class="notice">공지사항</div>
         <div class="question">문의사항</div>
     </main>
+</div>
 </div>
 <footer>푸터</footer>
 </body>
