@@ -10,10 +10,10 @@
 <div th:fragment="header" id="header">
 
     <nav class="head">
-      <a href="/"><div class="main-logo"><img th:src="@{images/logo4.png}" alt="로고이미지" /></div></a>
+      <a href="/"><div class="main-logo"><img th:src="@{/images/logo4.png}" alt="로고이미지" /></div></a>
       <ul class="menu">
         <li>
-          <a href="#">레시피</a>
+          <a href="/recipe">레시피</a>
         </li>
         <li>
           <a href="#">커뮤니티</a>
@@ -36,7 +36,7 @@
                 aria-label="Search"
         />
         <button class="top-search-btn" type="top-search-btn">
-          <img th:src="@{images/top_search_logo.png}" alt="검색 아이콘" />
+          <img th:src="@{/images/top_search_logo.png}" alt="검색 아이콘" />
         </button>
       </form>
     </nav>

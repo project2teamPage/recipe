@@ -60,14 +60,14 @@ public class RecipeService {
     }
 
     // 레시피 step 저장
-    public void saveRecipeStep(RecipeCreateDto dto, List<MultipartFile> multipartFileList, Recipe recipe) throws IOException {
+    public void saveRecipeStep(RecipeCreateDto dto, Recipe recipe) throws IOException {
 
         List<RecipeStepDto> stepDtos = dto.getRecipeStepDtoList();
         List<RecipeStep> recipeStep = new ArrayList<>();
 
         for( int i = 0; i < stepDtos.size(); i++ ){
             RecipeStepDto stepDto = stepDtos.get(i);
-            MultipartFile file = multipartFileList.get(i);
+            MultipartFile file = stepDto.getImgFile();
 
             String imgName = fileService.uploadFile( file.getOriginalFilename(), file.getBytes(), UploadType.RECIPE );
 
@@ -85,9 +85,9 @@ public class RecipeService {
 
     // 한번에 저장하는 메서드
     @Transactional
-    public void createRecipe(RecipeCreateDto dto, List<MultipartFile> multipartFileList) throws IOException {
+    public void createRecipe(RecipeCreateDto dto) throws IOException {
         Recipe recipe = saveRecipe(dto);
-        saveRecipeStep(dto, multipartFileList, recipe);
+        saveRecipeStep(dto, recipe);
     }
 
     // 레시피 목록 (카테고리별 포함)
