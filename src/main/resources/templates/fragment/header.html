@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:fragment="header" id="header">
+
+    <nav class="head">
+      <div class="main-logo"><img th:src="@{images/logo4.png}" alt="로고이미지" /></div>
+      <ul class="menu">
+        <li>
+          <a href="#">레시피</a>
+        </li>
+        <li>
+          <a href="#">커뮤니티</a>
+        </li>
+        <li>
+          <a href="#">마이페이지</a>
+        </li>
+        <li>
+          <a href="#">로그인</a>
+        </li>
+        <li class="admin">
+          <a href="#">ADMIN</a>
+        </li>
+      </ul>
+      <form class="top-search" role="">
+        <input
+                class="top-search-form"
+                type="search"
+                placeholder="검색어를 입력해주세요."
+                aria-label="Search"
+        />
+        <button class="top-search-btn" type="top-search-btn">
+          <img th:src="@{images/top_search_logo.png}" alt="검색 아이콘" />
+        </button>
+      </form>
+    </nav>

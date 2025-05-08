@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>로그인 페이지</title>
     <link rel="stylesheet" href="header.css" />
+    <link rel="stylesheet" href="loginPage.css" />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+    />
   </head>
   <body>
     <header>
@@ -40,10 +47,38 @@
         </form>
       </nav>
     </header>
-    <span>로그인</span>
-    <div class="id">
-      <div class="id-title">아이디</div>
-      <div class="id-btn"></div>
+    <div class="login">
+      <span>로그인</span>
+      <div class="id">
+        <form class="id-create" role="">
+          <div class="id-title">아이디</div>
+          <input
+            class="id-create-form"
+            type="search"
+            placeholder="아이디를 입력하세요."
+            aria-label="Search"
+          />
+          <div class="pw-title">비밀번호</div>
+          <input
+            class="pw-create-form"
+            type="search"
+            placeholder="비밀번호를 입력하세요."
+            aria-label="Search"
+          />
+          <button class="login-btn">로그인</button>
+        </form>
+      </div>
+      <div class="find-info">
+        <div class="find-id"><a href="#">아이디 찾기</a></div>
+        <div class="find-pw"><a href="#">비밀번호 찾기</a></div>
+        <div class="sign-in"><a href="#">회원가입</a></div>
+      </div>
     </div>
+    <footer>
+      <div class="foot-box">
+        <div class="con1"><a href="#">이용약관</a></div>
+        <div class="con2"><a href="#">개인정보처리방침</a></div>
+      </div>
+    </footer>
   </body>
 </html>
