@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
+<html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -8,9 +8,13 @@
 </head>
 <body>
 <div>
+  <div>
+  <button type="button" onclick="location.href='/admin/noticeWrite'">작성하기</button>
+  </div>
   <table>
     <thead>
       <tr>
+        <th></th>
         <th></th>
         <th>제목</th>
         <th>작성자</th>
@@ -22,16 +26,21 @@
           <td>
             <input type="checkbox">
           </td>
-
-          <td th:text="${noticeColumn.title}"><span>고정</span>관리자1</td>
-          <td th:text="${noticeColumn.adminNickName}">긴급점검</td>
-          <td th:text="${noticeColumn.writeDate}">긴급점검</td>
+          <td></td>
+          <td>
+            <span>[고정]</span>
+            <a th:href="'/admin/noticeDetail/'+${noticeColumn.id}"
+               th:text="${noticeColumn.title}"></a>
+          </td>
+          <td th:text="${noticeColumn.adminNickName}"></td>
+          <td th:text="${noticeColumn.writeDate}"></td>
         </tr>
         <tr>
           <td>
             <input type="checkbox">
           </td>
-          <td><span>숨김</span>관리자1</td>
+          <td></td>
+          <td><span>[숨김]</span>관리자1</td>
           <td>점검</td>
         </tr>
       </tbody>
