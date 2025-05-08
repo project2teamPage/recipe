@@ -1,9 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+<th:block layout:fragment="css"></th:block>
+<th:block layout:fragment="script"></th:block>
+
 <head>
     <meta charset="UTF-8">
     <title th:text="${recipe.title}">레시피 상세</title>
     <link rel="stylesheet" th:href="@{/css/recipe/detail.css}" />
+
 </head>
 <body>
 
@@ -42,4 +49,4 @@
 </div>
 
 </body>
-</html>
+</>

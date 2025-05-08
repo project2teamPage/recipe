@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <h3 th:text="${notice.title}">공지사항 제목</h3>
+        <p>
+            <strong>작성자 : </strong>
+            <span th:text="${notice.adminNickName}">관리자</span>
+        </p>
+        <p>
+            <strong>작성일 : </strong>
+            <span th:text="${notice.writeDate}">날짜</span>
+        </p>
+    </div>
+    <div>
+        <p th:text="${notice.content}">공지내용</p>
+    </div>
+
+    <div>
+        <button type="button" onclick></button>
+    </div>
+</body>
+</html>
