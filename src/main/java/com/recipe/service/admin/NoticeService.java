@@ -19,6 +19,25 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
 
+    public List<Notice> getPinnedNotices() {
+        return noticeRepository.findAllByPinned(true);
+    }
+
+    // 고정 여부로 조회
+    public List<NoticeListDto> getNotices(boolean pinned) {
+
+        User user = userRepository.findByRole(Role.ADMIN);
+        List<NoticeListDto> noticeListDtos = new ArrayList<>();
+        List<Notice> noticeList = noticeRepository.findAllByPinned(pinned);
+
+        for (Notice notice : noticeList) {
+            noticeListDtos.add(NoticeListDto.from(notice, user.getNickName()));
+        }
+
+        return noticeListDtos;
+    }
+
+    // 전체 목록(고정 포함)
     public List<NoticeListDto> getNotices() {
 
         User user = userRepository.findByRole(Role.ADMIN);
@@ -37,6 +56,7 @@ public class NoticeService {
         return noticeListDtos;
     }
 
+    // 상세페이지
     public NoticeDto getNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
@@ -44,5 +64,12 @@ public class NoticeService {
         return NoticeDto.from(notice, admin.getNickName());
     }
 
+    // 고정 여부 토글
+    public void togglePinned(Long id) {
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
+        notice.setPinned(!notice.isPinned()); // true ↔ false 토글
+        noticeRepository.save(notice);
+    }
 }
 

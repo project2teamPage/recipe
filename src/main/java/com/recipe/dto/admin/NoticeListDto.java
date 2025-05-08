@@ -28,4 +28,6 @@ public class NoticeListDto {
 
         return noticeListDto;
     }
+
+
 }
