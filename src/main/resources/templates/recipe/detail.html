@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${recipe.title}">레시피 상세</title>
+    <link rel="stylesheet" th:href="@{/css/recipe/detail.css}" />
 </head>
 <body>
+
+<div class="container">
+    <h1 th:text="${recipe.title}">레시피 제목</h1>
+    <p><strong>작성자:</strong> <span th:text="${recipe.nickName}">닉네임</span></p>
+    <p><strong>등록일:</strong> <span th:text="${recipe.uploadDate}">2025.05.07</span></p>
+    <p><strong>조회수:</strong> <span th:text="${recipe.viewCount}">10</span></p>
+
+    <img th:src="@{${recipe.imgUrl}}" alt="대표 이미지" class="main-image"/>
+
+    <hr/>
+
+    <h3>재료</h3>
+    <ul>
+        <li th:each="ingredient : ${recipe.ingredients}" th:text="|${ingredient.name} - ${ingredient.amount}|"></li>
+    </ul>
+
+    <hr/>
+
+    <h3>요리 순서</h3>
+    <div th:each="step, iterStat : ${recipe.recipeSteps}" class="step-block">
+        <h4 th:text="|Step ${iterStat.index + 1}|"></h4>
+        <img th:if="${step.imgUrl != null}" th:src="@{${step.imgUrl}}" alt="요리 이미지" class="step-image"/>
+        <p th:text="${step.description}">요리 설명</p>
+    </div>
+
+    <hr/>
+
+    <form th:action="@{'/recipe/' + ${recipe.id}}" method="post" th:if="${#authentication.name == recipe.userLoginId}">
+        <input type="hidden" name="_method" value="delete" />
+        <button type="submit" class="btn btn-danger">삭제</button>
+    </form>
+
+    <a href="/recipe" class="btn btn-secondary">목록으로</a>
+</div>
 
 </body>
 </html>

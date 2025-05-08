@@ -7,6 +7,7 @@ import com.recipe.dto.recipe.RecipeCreateDto;
 import com.recipe.dto.recipe.RecipeDetailDto;
 import com.recipe.dto.recipe.RecipeListDto;
 import com.recipe.entity.recipe.Recipe;
+import com.recipe.repository.recipe.RecipeRepo;
 import com.recipe.service.FileService;
 import com.recipe.service.recipe.RecipeService;
 import jakarta.validation.Valid;
@@ -18,10 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -32,6 +30,7 @@ public class RecipeController {
 
     private final RecipeService recipeService;
     private final FileService fileService;
+    private final RecipeRepo recipeRepo;
 
     // 레시피 목록
     @GetMapping("/recipe")
@@ -48,7 +47,7 @@ public class RecipeController {
         model.addAttribute("currentPage", recipePage.getNumber() + 1);
 
 
-        return "recipe/recipe";
+        return "recipe/list";
     }
 
 
@@ -59,6 +58,14 @@ public class RecipeController {
         RecipeDetailDto recipeDetailDto = recipeService.recipeDetail(id);
         model.addAttribute("recipe", recipeDetailDto);
         return "recipe/detail";
+    }
+
+    // 레시피 삭제
+    @DeleteMapping("/recipe/{id}")
+    public String recipeDelete(@PathVariable Long id){
+        recipeService.deleteRecipe(id);
+
+        return "recipe/list";
     }
 
     // 레시피 작성
@@ -84,10 +91,10 @@ public class RecipeController {
         }
 
         try{
-            Recipe recipe = recipeService.saveRecipe(recipeCreateDto); // 레시피 , 재료 저장
-            recipeService.saveRecipeStep(recipeCreateDto, multipartFileList, recipe); // 레시피 step 저장
+            recipeService.createRecipe(recipeCreateDto, multipartFileList);
         } catch (Exception e) {
             model.addAttribute("errorMessage", "레시피 작성 실패");
+            return "recipe/recipeCreate";
         }
 
 

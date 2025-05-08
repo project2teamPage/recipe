@@ -24,6 +24,7 @@ public class RecipeCreateDto {
     private Theme theme;
     private int spicy;
     private LocalDateTime uploadDate;
+    private int recipeTime;
     private List<RecipeIngredientDto> recipeIngredientDtoList;
     private List<RecipeStepDto> recipeStepDtoList;
 

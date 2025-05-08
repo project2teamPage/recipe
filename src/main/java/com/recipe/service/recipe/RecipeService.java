@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -80,6 +81,13 @@ public class RecipeService {
 
         recipeStepRepo.saveAll(recipeStep);
 
+    }
+
+    // 한번에 저장하는 메서드
+    @Transactional
+    public void createRecipe(RecipeCreateDto dto, List<MultipartFile> multipartFileList) throws IOException {
+        Recipe recipe = saveRecipe(dto);
+        saveRecipeStep(dto, multipartFileList, recipe);
     }
 
     // 레시피 목록 (카테고리별 포함)
