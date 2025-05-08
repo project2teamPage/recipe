@@ -5,8 +5,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 200px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
+<div class="form-container">
+<h2>공지사항 작성</h2>
 
+<form th:action="@{/admin/noticeWrite}" th:object="${noticeDto}" method="post">
+    <div>
+        <label for="title">제목:</label>
+        <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required>
+    </div>
+
+    <div>
+        <label for="content">내용:</label>
+        <textarea id="content" th:field="*{content}" placeholder="내용을 입력하세요" rows="10" required></textarea>
+    </div>
+
+    <div>
+        <button type="submit">작성 완료</button>
+        <button type="button" onclick="location.href='/admin/notice'">목록으로</button>
+    </div>
+</form>
 </body>
 </html>

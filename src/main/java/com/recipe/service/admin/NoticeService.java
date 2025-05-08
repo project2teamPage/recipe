@@ -1,5 +1,6 @@
 package com.recipe.service.admin;
 import com.recipe.constant.Role;
+import com.recipe.dto.admin.NoticeDto;
 import com.recipe.dto.admin.NoticeListDto;
 import com.recipe.entity.admin.Notice;
 import com.recipe.entity.user.User;
@@ -26,7 +27,7 @@ public class NoticeService {
 
         List<Notice> noticeList = noticeRepository.findAll();
 
-        for(Notice notice : noticeList) {
+        for (Notice notice : noticeList) {
 
             NoticeListDto noticeListDto = NoticeListDto.from(notice, user.getNickName());
 
@@ -35,4 +36,13 @@ public class NoticeService {
 
         return noticeListDtos;
     }
+
+    public NoticeDto getNotice(Long noticeId) {
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
+        User admin = userRepository.findByRole(Role.ADMIN);
+        return NoticeDto.from(notice, admin.getNickName());
+    }
+
 }
+

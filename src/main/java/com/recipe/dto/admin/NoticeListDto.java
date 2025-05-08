@@ -19,7 +19,7 @@ public class NoticeListDto {
 
     public static NoticeListDto from(Notice notice, String adminNickName) {
         NoticeListDto noticeListDto = new NoticeListDto();
-
+        noticeListDto.setId(notice.getId());
         noticeListDto.setAdminNickName(adminNickName);
         noticeListDto.setTitle(notice.getTitle());
         noticeListDto.setWriteDate(notice.getWriteDate());

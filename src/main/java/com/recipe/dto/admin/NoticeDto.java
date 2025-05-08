@@ -1,8 +1,10 @@
 package com.recipe.dto.admin;
 
 import com.recipe.entity.admin.Notice;
+import com.recipe.entity.user.User;
 import lombok.Getter;
 import lombok.Setter;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 
