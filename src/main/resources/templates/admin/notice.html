@@ -18,38 +18,41 @@
         <thead>
         <tr>
             <th></th>
-            <th></th>
             <th>제목</th>
+            <th></th>
             <th>작성자</th>
+            <th></th>
             <th>작성일</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="noticeColumn : ${noticeList}">
-            <td>
-                <input type="checkbox">
-            </td>
+        <!-- 🔒 고정글 영역 -->
+        <tr th:each="notice : ${pinnedNotices}">
             <td></td>
-            <td th:text="${noticeColumn.title}"><span>[고정]</span>관리자1</td>
-            <td th:text="${noticeColumn.adminNickName}">긴급점검</td>
-            <td th:text="${noticeColumn.writeDate}">긴급점검</td>
             <td>
                 <span>[고정]</span>
-                <a th:href="'/admin/noticeDetail/'+${noticeColumn.id}"
-                   th:text="${noticeColumn.title}"></a>
+                <a th:href="'/admin/noticeDetail/' + ${notice.id}"
+                   th:text="${notice.title}"></a>
             </td>
-            <td th:text="${noticeColumn.adminNickName}"></td>
-            <td th:text="${noticeColumn.writeDate}"></td>
+            <td th:text="${notice.adminNickName}"></td>
+            <td th:text="${notice.writeDate}"></td>
         </tr>
-        <tr>
-            <td>
-                <input type="checkbox">
-            </td>
+        <tr><td colspan="5" style="height: 20px;"></td></tr>
+
+        <!-- 📋 전체글 출력 (고정글도 포함됨) -->
+        <tr th:each="notice : ${noticeList}">
             <td></td>
-            <td><span>[숨김]</span>관리자1</td>
-            <td>점검</td>
+            <td>
+                <span th:if="${notice.pinned}">[고정]</span>
+                <a th:href="'/admin/noticeDetail/' + ${notice.id}"
+                   th:text="${notice.title}"></a>
+            </td>
+            <td th:text="${notice.adminNickName}"></td>
+            <td th:text="${notice.writeDate}"></td>
         </tr>
         </tbody>
+
+
     </table>
 </div>
 </div>

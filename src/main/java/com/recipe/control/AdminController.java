@@ -50,18 +50,6 @@ public class AdminController {
         return "admin/notice";
     }
 
-    @PostMapping("/admin/notice/togglePinnedMultiple")
-    public String togglePinnedMultiple(@RequestParam("noticeIds") String ids) {
-        List<Long> noticeIds = Arrays.stream(ids.split(","))
-                .map(Long::parseLong)
-                .collect(Collectors.toList());
-
-        for (Long id : noticeIds) {
-            noticeService.togglePinned(id);
-        }
-        return "redirect:/admin/notice";
-    }
-
     @GetMapping("/admin/inquiry")
     public String inquiryPage(Model model) {
 
