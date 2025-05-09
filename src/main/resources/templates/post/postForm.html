@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css"></th:block>
+<th:block layout:fragment="script"></th:block>
+
+<div layout:fragment="main" id="main">
+    <div>
+        <form th:action="@{/post/new}" th:object="${postForm}" method="post" enctype="multipart/form-data">
+
+
+
+
+
+        </form>
+
+
+
+    </div>
+</div>
+</html>

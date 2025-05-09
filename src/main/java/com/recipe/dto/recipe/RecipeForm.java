@@ -5,7 +5,6 @@ import com.recipe.constant.RecipeDifficulty;
 import com.recipe.constant.Theme;
 import com.recipe.entity.recipe.Recipe;
 import com.recipe.entity.recipe.RecipeIngredient;
-import com.recipe.entity.recipe.RecipeStep;
 import com.recipe.entity.user.User;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
-public class RecipeCreateDto {
+public class RecipeForm {
 
     private Long id;
 
