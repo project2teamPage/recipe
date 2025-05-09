@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface UserRepo extends JpaRepository<User, Long> {
 
     // 로그인할 때 메서드
+    public boolean findByLoginIdAndPassword(String loginId, String password);
 
 }
