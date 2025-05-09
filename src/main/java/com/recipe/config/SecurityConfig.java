@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -39,10 +40,16 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/")
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/user/**").permitAll()
+                        .requestMatchers("/", "/user/**", "recipe/**").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
                         .anyRequest().authenticated()
                 );
+
+        http.csrf(
+                cr ->
+                        cr.csrfTokenRepository(
+                                CookieCsrfTokenRepository.withHttpOnlyFalse()));
+        //http.formLogin(Customizer.withDefaults());
 
         return http.build();
     }
