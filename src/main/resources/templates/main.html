@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
-</head>
-<body>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css"></th:block>
+<th:block layout:fragment="script"></th:block>
+
+<div layout:fragment="main" id="main">
+
     <div>
         <div>
             <a href="/admin/report">신고하기</a>
@@ -18,6 +20,6 @@
             <a href="/admin/notice">공지사항</a>
         </div>
     </div>
+</div>
 
-</body>
 </html>
