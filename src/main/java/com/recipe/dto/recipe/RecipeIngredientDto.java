@@ -10,7 +10,7 @@ import org.modelmapper.ModelMapper;
 public class RecipeIngredientDto {
     private Long id;
     private String name;
-    private float quantity;
+    private String amount;
 
     public static ModelMapper modelMapper = new ModelMapper();
 

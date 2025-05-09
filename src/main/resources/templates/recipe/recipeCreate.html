@@ -1,14 +1,71 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>레시피 작성</title>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/recipe/recipe.css}">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-    <script th:src="@{javascript/recipe/detail.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/recipe/recipeCreate.css}">
+</th:block>
 
+<th:block layout:fragment="script">
+    <script th:src="@{/javascript/recipe/detail.js}"></script>
+    <!--ingredient 스크립트-->
+    <script>
+        let ingredientCount = 0;
+
+        function addIngredient() {
+          const name = document.getElementById("ingredientName").value.trim();
+          const amount = document.getElementById("ingredientAmount").value.trim();
+
+          if (!name || !amount) {
+            alert("재료명과 양을 모두 입력해주세요.");
+            return;
+          }
+
+          const badgeId = `ingredient-${ingredientCount}`;
+
+          // 뱃지 만들기
+          const badge = document.createElement("span");
+          badge.className = "badge bg-light text-dark me-2";
+          badge.id = badgeId;
+          badge.innerHTML = `${name} ${amount} <button type="button" class="btn-close btn-sm ms-1" onclick="removeIngredient('${badgeId}')"></button>`;
+
+          document.getElementById("ingredientBadgeContainer").appendChild(badge);
+
+          // hidden input
+          const hiddenName = document.createElement("input");
+          hiddenName.type = "hidden";
+          hiddenName.name = `recipeIngredientDtoList[${ingredientCount}].name`;
+          hiddenName.value = name;
+          hiddenName.id = `${badgeId}-name`;
+
+          const hiddenAmount = document.createElement("input");
+          hiddenAmount.type = "hidden";
+          hiddenAmount.name = `recipeIngredientDtoList[${ingredientCount}].amount`;
+          hiddenAmount.value = amount;
+          hiddenAmount.id = `${badgeId}-amount`;
+
+          document.getElementById("hiddenIngredients").appendChild(hiddenName);
+          document.getElementById("hiddenIngredients").appendChild(hiddenAmount);
+
+          ingredientCount++;
+
+          // 입력칸 초기화
+          document.getElementById("ingredientName").value = "";
+          document.getElementById("ingredientAmount").value = "";
+        }
+
+        function removeIngredient(badgeId) {
+          document.getElementById(badgeId)?.remove();
+          document.getElementById(`${badgeId}-name`)?.remove();
+          document.getElementById(`${badgeId}-amount`)?.remove();
+        }
+    </script>
+
+<!--     step javascript-->
     <script>
         let stepCount = 0;
 
@@ -28,7 +85,7 @@
             <h4>STEP ${stepCount + 1}</h4>
             <div>
               <label>이미지:</label>
-              <input type="file" name="recipeStepDtoList[${stepCount}].imageFile" accept="image/*" />
+              <input type="file" name="recipeStepDtoList[${stepCount}].imgFile" accept="image/*" />
             </div>
             <div>
               <label>제목:</label>
@@ -44,10 +101,9 @@
           stepCount++;
         }
     </script>
+</th:block>
 
-
-</head>
-<body>
+<div layout:fragment="main" id="main">
 <div class="container mt-5">
 
     <form th:action="@{/recipe/new}" th:object="${recipeCreateDto}" method="post" enctype="multipart/form-data">
@@ -57,6 +113,7 @@
             <h2>제목을 입력해주세요.</h2>
                 <input type="text" class="form-control" th:field="*{title}" placeholder="예) 고소한 크림 파스타">
         </div>
+        <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="fieldError"></p>
 
         <!-- 카테고리 선택 -->
         <div class="row mb-4">
@@ -69,6 +126,7 @@
                     <option value="DESSERT">디저트</option>
                     <option value="DRINK">음료</option>
                 </select>
+                <p th:if="${#fields.hasErrors('dishType')}" th:errors="*{dishType}" class="fieldError"></p>
             </div>
             <div class="col">
                 <label>테마</label>
@@ -81,6 +139,7 @@
                     <option value="HIGH_PROTEIN">고단백</option>
                     <option value="LCHF">저탄고지</option>
                 </select>
+                <p th:if="${#fields.hasErrors('theme')}" th:errors="*{theme}" class="fieldError"></p>
             </div>
         </div>
 
@@ -91,31 +150,30 @@
 
         <!-- 추가 버튼 -->
         <div class="text-center mb-4">
-            <button type="button" class="btn btn-outline-secondary">+ 추가하기</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="addStep()">+ 단계 추가</button>
         </div>
 
-        <button type="button" onclick="addStep()">+ 단계 추가</button>
 
 
         <!-- 재료 입력 -->
         <div class="mb-4">
             <label>사용한 재료</label>
-            <div class="row">
+            <div class="row mb-2">
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="예: 방어회">
+                    <input type="text" id="ingredientName" class="form-control" placeholder="예: 방어회">
                 </div>
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="예: 100g">
+                    <input type="text" id="ingredientAmount" class="form-control" placeholder="예: 100g">
                 </div>
                 <div class="col-auto">
-                    <button type="button" class="btn btn-outline-primary">등록</button>
+                    <button type="button" class="btn btn-outline-primary" onclick="addIngredient()">등록</button>
                 </div>
             </div>
-            <!-- 여기에 동적으로 등록된 재료 목록이 나열될 예정 -->
-            <div class="mt-2">
-                <span class="badge bg-light text-dark me-2">방어회 1개</span>
-                <span class="badge bg-light text-dark me-2">유부 1봉지</span>
-            </div>
+
+            <!-- 보여지는 목록 -->
+            <div id="ingredientBadgeContainer" class="mt-2"></div>
+
+            <div id="hiddenIngredients"></div>
         </div>
 
         <!-- 난이도 / 조리시간 -->
@@ -123,10 +181,13 @@
             <div class="col">
                 <label>난이도</label>
                 <div>
-                    <label class="me-2"><input type="radio" name="difficulty" value="EASY"> 하</label>
-                    <label class="me-2"><input type="radio" name="difficulty" value="NORMAL"> 중</label>
-                    <label class="me-2"><input type="radio" name="difficulty" value="HARD"> 상</label>
+                    <label class="me-2"><input type="radio" th:field="*{recipeDifficulty}" value="TOO_EASY"> 최하</label>
+                    <label class="me-2"><input type="radio" th:field="*{recipeDifficulty}" value="EASY"> 하</label>
+                    <label class="me-2"><input type="radio" th:field="*{recipeDifficulty}" value="MEDIUM"> 중</label>
+                    <label class="me-2"><input type="radio" th:field="*{recipeDifficulty}" value="HARD"> 상</label>
+                    <label class="me-2"><input type="radio" th:field="*{recipeDifficulty}" value="TOO_HARD"> 최상</label>
                 </div>
+                <p th:if="${#fields.hasErrors('recipeDifficulty')}" th:errors="*{recipeDifficulty}" class="fieldError"></p>
             </div>
             <div class="col">
                 <label>조리시간</label>
@@ -135,11 +196,15 @@
         </div>
 
         <!-- 버튼 -->
-        <div class="text-end">
+        <div th:if="${#strings.isEmpty(recipeCreateDto.id)}" class="text-end">
             <button type="submit" class="btn btn-outline-secondary me-2">임시 저장</button>
             <button type="submit" class="btn btn-primary">업로드</button>
         </div>
+        <div th:unless="${#strings.isEmpty(recipeCreateDto.id)}" class="text-end">
+            <button type="submit" class="btn btn-outline-secondary me-2">임시 저장</button>
+            <button type="submit" class="btn btn-primary">수정</button>
+        </div>
     </form>
 </div>
-</body>
+</div>
 </html>

@@ -8,9 +8,9 @@ import com.recipe.service.admin.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Controller
@@ -37,10 +37,19 @@ public class AdminController {
 
     @GetMapping("/admin/notice")
     public String noticePage(Model model) {
-
-        model.addAttribute("noticeList", noticeService.getNotices());
-
+        List<Notice> pinnedNotices = noticeService.getPinnedNotices();
+        model.addAttribute("pinnedNotices", noticeService.getNotices(true)); // 고정글
+        model.addAttribute("noticeList", noticeService.getNotices()); // 전체글
+        model.addAttribute("pinnedCount", pinnedNotices.size()); // 현재 고정글 개수
         return "/admin/notice";
+    }
+
+    @PostMapping("/admin/notice/togglePinnedMultiple")
+    public String togglePinnedMultiple(@RequestParam("noticeId") List<Long> noticeIds) {
+        for (Long id : noticeIds) {
+            noticeService.togglePinned(id);
+        }
+        return "redirect:/admin/notice";
     }
 
     @GetMapping("/admin/inquiry")
@@ -61,6 +70,7 @@ public class AdminController {
     public String noticeDetail(@PathVariable("noticeId") Long noticeId, Model model) {
 
         model.addAttribute("notice", noticeService.getNotice(noticeId));
+
 
         return "admin/noticeDetail";
     }

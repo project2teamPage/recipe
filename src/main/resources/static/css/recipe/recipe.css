@@ -1,56 +1,45 @@
-<div class="pagination">
-    <ul>
-        <li th:each="i : ${#numbers.sequence(1, totalPages)}">
-            <a th:href="@{'/recipe'(page=${i - 1})}"
-               th:text="${i}"
-               th:classappend="${i == currentPage} ? 'active' : ''">1</a>
-        </li>
-    </ul>
-</div>
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
 
-<style>
-    .recipe-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-top: 2rem;
-    }
+.recipe-card {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
 
-    .recipe-card {
-        border: 1px solid #ccc;
-        padding: 1rem;
-        border-radius: 8px;
-        text-align: center;
-    }
+.recipe-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+}
 
-    .recipe-img {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 4px;
-    }
+.pagination {
+    margin-top: 2rem;
+    text-align: center;
+}
 
-    .pagination {
-        margin-top: 2rem;
-        text-align: center;
-    }
+.pagination ul {
+    list-style: none;
+    padding: 0;
+    display: inline-flex;
+    gap: 8px;
+}
 
-    .pagination ul {
-        list-style: none;
-        padding: 0;
-        display: inline-flex;
-        gap: 8px;
-    }
+.pagination a {
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
 
-    .pagination a {
-        text-decoration: none;
-        padding: 6px 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    .pagination .active {
-        background-color: #333;
-        color: white;
-        border-color: #333;
-    }
+.pagination .active {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+}

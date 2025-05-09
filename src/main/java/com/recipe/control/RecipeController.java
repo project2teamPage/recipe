@@ -6,6 +6,7 @@ import com.recipe.constant.Theme;
 import com.recipe.dto.recipe.RecipeCreateDto;
 import com.recipe.dto.recipe.RecipeDetailDto;
 import com.recipe.dto.recipe.RecipeListDto;
+import com.recipe.dto.recipe.RecipeStepDto;
 import com.recipe.entity.recipe.Recipe;
 import com.recipe.repository.recipe.RecipeRepo;
 import com.recipe.service.FileService;
@@ -78,20 +79,21 @@ public class RecipeController {
 
     @PostMapping("/recipe/new")
     public String recipeSave(@Valid RecipeCreateDto recipeCreateDto, BindingResult bindingResult,
-                             @RequestParam("recipeImgFile") List<MultipartFile> multipartFileList, Model model){
+                             Model model){
 
         if(bindingResult.hasErrors()){ // 필수입력값 을 작성하지 않은 경우
             return "recipe/recipeCreate";
         }
+        List<RecipeStepDto> stepList = recipeCreateDto.getRecipeStepDtoList();
 
-        if( multipartFileList.get(0).isEmpty() && recipeCreateDto.getRecipeStepDtoList() == null ){
+        if( stepList == null || stepList.isEmpty() ){
             // 이미지를 선택하지 않을 경우 에러메세지 보내주기
             model.addAttribute("errorMessage", "each recipeSteps needs image");
             return "recipe/recipeCreate";
         }
 
         try{
-            recipeService.createRecipe(recipeCreateDto, multipartFileList);
+            recipeService.createRecipe(recipeCreateDto);
         } catch (Exception e) {
             model.addAttribute("errorMessage", "레시피 작성 실패");
             return "recipe/recipeCreate";

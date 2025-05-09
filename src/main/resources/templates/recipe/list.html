@@ -3,9 +3,10 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/default}">
-<th:block layout:fragment="css"></th:block>
+<th:block layout:fragment="css">
+  <link rel="stylesheet" th:href="@{/css/recipe/recipe.css}" />
+</th:block>
 <th:block layout:fragment="script"></th:block>
-<link rel="stylesheet" th:href="@{css/recipe/recipe.css}" />
 
 <div layout:fragment="main" id="main">
 
