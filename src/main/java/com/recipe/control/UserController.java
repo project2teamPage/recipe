@@ -21,6 +21,7 @@ public class UserController {
     public String login(Model model){
         return "user/login";
     }
+
     // 로그인 실패시 - 다시 로그인 페이지 제공
     @GetMapping("/signIn/error")
     public String loginfail(Model model){
@@ -35,6 +36,7 @@ public class UserController {
 
         return "user/signup";
     }
+
     @PostMapping
     public String saveUser(@Valid MemberSignUpDto memberSignUpDto, BindingResult bindingResult){
 
@@ -46,7 +48,6 @@ public class UserController {
 
         return "/";
     }
-
 
     // 내 프로필 편집
     @GetMapping("/profile")

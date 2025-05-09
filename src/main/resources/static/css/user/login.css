@@ -76,6 +76,7 @@ span {
 }
 .find-info a {
   color: #929292;
+  text-decoration:none;
 }
 .find-info a:hover {
   color: #ff6a00;
