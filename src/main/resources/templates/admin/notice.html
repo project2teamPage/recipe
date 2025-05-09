@@ -42,6 +42,11 @@
             font-weight: 500;
         }
 
+        /* 숨김 게시글 흐려지도록 */
+        .hidden-row {
+            opacity: 0.4;
+        }
+
         /* 제목 링크 스타일 */
         a {
             color: #333;
@@ -79,38 +84,75 @@
 <th:block layout:fragment="script">
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.toggle-pin').forEach(function (link) {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const noticeId = this.getAttribute('data-id');
-                    const action = this.getAttribute('data-action'); // 'pin' or 'unpin'
 
-                    // ✅ CSRF 토큰 가져오기
-                    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-                    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+                // 고정 핸들링
+                document.querySelectorAll('.toggle-pin').forEach(function (link) {
+                    link.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const noticeId = this.getAttribute('data-id');
+                        const action = this.getAttribute('data-action');
 
-                    fetch(`/admin/notice/${action}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            [csrfHeader]: csrfToken  // 동적 키 사용
-                        },
-                        body: JSON.stringify(noticeId)
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            location.reload();
-                    } else {
-                        response.text().then(msg => alert(msg)); // 서버 메시지 출력
-                        }
-                    })
-                    .catch(error => {
-                        console.error('에러 발생:', error);
-                        alert('오류가 발생했습니다.');
+                        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+                        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+                        fetch(`/admin/notice/${action}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                [csrfHeader]: csrfToken
+                            },
+                            body: JSON.stringify(noticeId)
+                        })
+                        .then(response => response.ok ? location.reload() : response.text().then(msg => alert(msg)))
+                        .catch(error => {
+                            console.error('에러 발생:', error);
+                            alert('오류가 발생했습니다.');
+                        });
                     });
+                });
+
+                // 숨김 핸들링
+                document.querySelectorAll('.toggle-hide').forEach(function (link) {
+                    link.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const noticeId = this.getAttribute('data-id');
+                        const action = this.getAttribute('data-action');
+
+                        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+                        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+                        fetch(`/admin/notice/${action}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                [csrfHeader]: csrfToken
+                            },
+                            body: JSON.stringify(noticeId)
+                        })
+                .then(response => {
+                    if (response.ok) {
+                        // ✅ 화면에서 바로 반영되도록 수정
+                        const row = this.closest('tr');
+                        const isHiding = action === 'hide';
+
+                        // ✅ 흐리게 / 복원
+                        row.classList.toggle('hidden-row', isHiding);
+
+                        // 버튼 텍스트 변경
+                        this.textContent = isHiding ? '[취소]' : '[숨김]';
+                        this.setAttribute('data-action', isHiding ? 'unhide' : 'hide');
+
+                                } else {
+                        response.text().then(msg => alert(msg));
+                    }
+                })
+                .catch(error => {
+                    console.error('에러 발생:', error);
+                    alert('오류가 발생했습니다.');
                 });
             });
         });
+    });
         </script>
     </th:block>
 
@@ -132,7 +174,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="notice : ${pinnedNotices}" class="pinned">
+        <tr th:each="notice : ${pinnedNotices}" class="pinned"
+            th:classappend="${notice.hidden} ? 'hidden-row'">
             <td>
                 <span>[고정]</span>
                 <a th:href="'/admin/noticeDetail/' + ${notice.id}" th:text="${notice.title}"></a>
@@ -141,6 +184,11 @@
             <td>
                 <span th:text="${notice.writeDate}"></span>
                 <a href="#" th:attr="data-id=${notice.id}" class="toggle-pin" data-action="unpin">[취소]</a>
+                <a href="#"
+                   th:attr="data-id=${notice.id}, data-action=${notice.hidden ? 'unhide' : 'hide'}"
+                   class="toggle-hide"
+                   th:text="${notice.hidden ? '[취소]' : '[숨김]'}">
+                </a>
             </td>
         </tr>
 
@@ -160,6 +208,13 @@
                    th:attr="data-id=${notice.id}, data-action=${notice.pinned ? 'unpin' : 'pin'}"
                    class="toggle-pin"
                    th:text="${notice.pinned ? '[취소]' : '[고정]'}">
+                </a>
+                <a href="#"
+                   th:attr="data-id=${notice.id}, data-action=${notice.hidden ? 'unhide' : 'hide'}"
+                   class="toggle-hide"
+                   th:text="${notice.hidden ? '[취소]' : '[숨김]'}"
+                >
+
                 </a>
             </td>
         </tr>

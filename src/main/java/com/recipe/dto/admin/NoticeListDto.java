@@ -29,5 +29,12 @@ public class NoticeListDto {
         return noticeListDto;
     }
 
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
 
 }

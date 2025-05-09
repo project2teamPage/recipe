@@ -30,10 +30,40 @@ public class NoticeService {
             if (pinnedCount >= 4) {
                 throw new IllegalStateException("고정 가능한 최대 개수(4개)를 초과했습니다.");
             }
+
+            // 2️⃣ 고정 시 숨김 해제
+            if (notice.isHidden()) {
+                notice.setHidden(false);
+            }
         }
 
         notice.setPinned(pinned);
         noticeRepository.save(notice);
+    }
+
+    public void setHidden(Long noticeId, boolean hidden) {
+        Notice notice = noticeRepository.findById(noticeId)
+            .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
+
+        notice.setHidden(hidden);
+
+        if (hidden) {
+            notice.setPinned(false);
+        }
+
+        noticeRepository.save(notice);
+    }
+    public List<NoticeListDto> getAllNoticeDtos() {
+
+        User admin = userRepository.findByRole(Role.ADMIN);
+        List<Notice> allNotices = noticeRepository.findAll();
+        List<NoticeListDto> noticeListDtos = new ArrayList<>();
+
+        for (Notice notice : allNotices) {
+            noticeListDtos.add(NoticeListDto.from(notice, admin.getNickName()));
+        }
+
+        return noticeListDtos;
     }
 
     // 상세페이지
@@ -47,7 +77,8 @@ public class NoticeService {
     // ✅ 추가: 고정된 공지사항 DTO 목록 반환
     public List<NoticeListDto> getPinnedNoticeDtos() {
         User admin = userRepository.findByRole(Role.ADMIN);
-        List<Notice> pinnedNotices = noticeRepository.findAllByPinned(true);
+        List<Notice> pinnedNotices = noticeRepository.findAllByPinnedTrueAndHiddenFalse();
+
         List<NoticeListDto> dtoList = new ArrayList<>();
 
         for (Notice notice : pinnedNotices) {
@@ -57,17 +88,5 @@ public class NoticeService {
         return dtoList;
     }
 
-    // ✅ 추가: 전체 공지사항 DTO 목록 반환
-    public List<NoticeListDto> getAllNoticeDtos() {
-        User admin = userRepository.findByRole(Role.ADMIN);
-        List<Notice> allNotices = noticeRepository.findAll();
-        List<NoticeListDto> dtoList = new ArrayList<>();
-
-        for (Notice notice : allNotices) {
-            dtoList.add(NoticeListDto.from(notice, admin.getNickName()));
-        }
-
-        return dtoList;
-    }
 }
 

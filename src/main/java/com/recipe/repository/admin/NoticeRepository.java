@@ -11,7 +11,15 @@ import java.util.List;
 
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
     List<Notice> findAllByOrderByWriteDateDesc(Pageable pageable);
+
+    // 고정된 공지사항만 조회
     List<Notice> findAllByPinned(boolean pinned);
 
+    // 고정된 공지사항 개수
     long countByPinned(boolean pinned);
+
+    // 숨김상태가 아닌 공지사항만 조회
+    List<Notice> findAllByHiddenFalse();
+
+    List<Notice> findAllByPinnedTrueAndHiddenFalse();
 }

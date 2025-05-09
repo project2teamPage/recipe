@@ -38,13 +38,16 @@ public class AdminController {
     public String reportPage(Model model) {
 
         model.addAttribute("reportList", reportService.getReports());
-        return "/admin/report";
+        return "admin/report";
     }
 
     @GetMapping("/admin/notice")
     public String noticePage(Model model) {
-        List<NoticeListDto> pinnedNotices = noticeService.getPinnedNoticeDtos(); // ✅ DTO로 수정
-        List<NoticeListDto> allNotices = noticeService.getAllNoticeDtos();       // ✅ DTO로 수정
+        List<NoticeListDto> pinnedNotices = noticeService.getPinnedNoticeDtos(); // pinned == true && hidden == false
+        List<NoticeListDto> allNotices = noticeService.getAllNoticeDtos()
+                .stream()
+                .filter(n -> !n.isPinned()) // 이미 고정 리스트에 들어간 것 제외
+                .collect(Collectors.toList());
 
         model.addAttribute("pinnedNotices", pinnedNotices);
         model.addAttribute("noticeList", allNotices);
@@ -64,7 +67,6 @@ public class AdminController {
         }
     }
 
-
     @PostMapping("/admin/notice/unpin")
     @ResponseBody
     public String unpinNotice(@RequestBody Long id) {
@@ -72,11 +74,27 @@ public class AdminController {
         return "success";
     }
 
-    @GetMapping("/admin/inquiry")
-    public String inquiryPage(Model model) {
+    @PostMapping("/admin/notice/hide")
+    @ResponseBody
+    public ResponseEntity<String> hideNotice(@RequestBody Long id) {
 
-        model.addAttribute("inquiryList", inquiryService.getInquirys());
-        return "admin/inquiry";
+        try {
+            noticeService.setHidden(id, true); // 여기서 고정해제도 같이 처리됨
+            return ResponseEntity.ok("숨김 처리 완료");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/admin/notice/unhide")
+    @ResponseBody
+    public ResponseEntity<String> unhideNotice(@RequestBody Long id) {
+        try {
+            noticeService.setHidden(id, false);
+            return ResponseEntity.ok("숨김 취소 완료");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/admin/noticeWrite")
@@ -93,5 +111,12 @@ public class AdminController {
 
 
         return "admin/noticeDetail";
+    }
+
+    @GetMapping("/admin/inquiry")
+    public String inquiryPage(Model model) {
+
+        model.addAttribute("inquiryList", inquiryService.getInquirys());
+        return "admin/inquiry";
     }
 }

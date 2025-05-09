@@ -40,6 +40,7 @@ public class SecurityConfig {
 //                )
 //                .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers("/", "/user/**", "admin/**").permitAll()
+//                        .requestMatchers("/admin/**").hasRole("admin").anyRequest().authenticated()
 //                        .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
 //                        .anyRequest().authenticated()
 //                );
