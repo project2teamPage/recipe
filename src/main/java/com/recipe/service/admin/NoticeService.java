@@ -64,12 +64,5 @@ public class NoticeService {
         return NoticeDto.from(notice, admin.getNickName());
     }
 
-    // 고정 여부 토글
-    public void togglePinned(Long id) {
-        Notice notice = noticeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
-        notice.setPinned(!notice.isPinned()); // true ↔ false 토글
-        noticeRepository.save(notice);
-    }
 }
 
