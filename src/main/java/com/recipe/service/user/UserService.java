@@ -37,18 +37,6 @@ public class UserService {
         return userRepo.save(user);
 
     }
+    // 로그인 시큐리티 사용
 
-    public User login(MemberSignInDto memberSignInDto){
-
-        String loginId = memberSignInDto.getLoginId();
-        String password = memberSignInDto.getPassword();
-
-        if( userRepo.findByLoginIdAndPassword(loginId, password) ){
-
-        }
-
-
-
-
-    }
 }
