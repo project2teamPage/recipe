@@ -4,8 +4,117 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/default}">
 
-<th:block layout:fragment="css"></th:block>
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="css">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <style>
+        /* 테이블 전체 스타일 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead th {
+            background-color: #f6f6f6;
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+        }
+
+        tbody td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        /* 행 간 간격용 클래스 */
+        .row-gap td {
+            height: 20px;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        /* 고정글 강조 */
+        .pinned {
+            background-color: #fff9e6;
+            font-weight: 500;
+        }
+
+        /* 제목 링크 스타일 */
+        a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #007acc;
+        }
+
+        /* 버튼 스타일 */
+        button {
+            background-color: #007acc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #005f99;
+        }
+
+        /* 테이블 정렬 */
+        .notice-table th,
+        .notice-table td {
+            text-align: left;
+        }
+    </style>
+
+</th:block>
+<th:block layout:fragment="script">
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.toggle-pin').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const noticeId = this.getAttribute('data-id');
+                    const action = this.getAttribute('data-action'); // 'pin' or 'unpin'
+
+                    // ✅ CSRF 토큰 가져오기
+                    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+                    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+                    fetch(`/admin/notice/${action}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            [csrfHeader]: csrfToken  // 동적 키 사용
+                        },
+                        body: JSON.stringify(noticeId)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                    } else {
+                        response.text().then(msg => alert(msg)); // 서버 메시지 출력
+                        }
+                    })
+                    .catch(error => {
+                        console.error('에러 발생:', error);
+                        alert('오류가 발생했습니다.');
+                    });
+                });
+            });
+        });
+        </script>
+    </th:block>
+
+</th:block>
 
 <div layout:fragment="main" id="main">
 
@@ -17,42 +126,44 @@
     <table>
         <thead>
         <tr>
-            <th></th>
             <th>제목</th>
-            <th></th>
             <th>작성자</th>
-            <th></th>
             <th>작성일</th>
         </tr>
         </thead>
         <tbody>
-        <!-- 🔒 고정글 영역 -->
-        <tr th:each="notice : ${pinnedNotices}">
-            <td></td>
+        <tr th:each="notice : ${pinnedNotices}" class="pinned">
             <td>
                 <span>[고정]</span>
-                <a th:href="'/admin/noticeDetail/' + ${notice.id}"
-                   th:text="${notice.title}"></a>
+                <a th:href="'/admin/noticeDetail/' + ${notice.id}" th:text="${notice.title}"></a>
             </td>
             <td th:text="${notice.adminNickName}"></td>
-            <td th:text="${notice.writeDate}"></td>
+            <td>
+                <span th:text="${notice.writeDate}"></span>
+                <a href="#" th:attr="data-id=${notice.id}" class="toggle-pin" data-action="unpin">[취소]</a>
+            </td>
         </tr>
-        <tr><td colspan="5" style="height: 20px;"></td></tr>
 
-        <!-- 📋 전체글 출력 (고정글도 포함됨) -->
+        <tr class="row-gap">
+            <td colspan="3"></td>
+        </tr>
+
         <tr th:each="notice : ${noticeList}">
-            <td></td>
             <td>
                 <span th:if="${notice.pinned}">[고정]</span>
-                <a th:href="'/admin/noticeDetail/' + ${notice.id}"
-                   th:text="${notice.title}"></a>
+                <a th:href="'/admin/noticeDetail/' + ${notice.id}" th:text="${notice.title}"></a>
             </td>
             <td th:text="${notice.adminNickName}"></td>
-            <td th:text="${notice.writeDate}"></td>
+            <td>
+                <span th:text="${notice.writeDate}"></span>
+                <a href="#"
+                   th:attr="data-id=${notice.id}, data-action=${notice.pinned ? 'unpin' : 'pin'}"
+                   class="toggle-pin"
+                   th:text="${notice.pinned ? '[취소]' : '[고정]'}">
+                </a>
+            </td>
         </tr>
         </tbody>
-
-
     </table>
 </div>
 </div>

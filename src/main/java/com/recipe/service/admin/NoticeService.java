@@ -19,41 +19,21 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
 
-    public List<Notice> getPinnedNotices() {
-        return noticeRepository.findAllByPinned(true);
-    }
+    // ✅ 유지: pin/unpin 기능에 필요
+    public void setPinned(Long noticeId, boolean pinned) {
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
 
-    // 고정 여부로 조회
-    public List<NoticeListDto> getNotices(boolean pinned) {
-
-        User user = userRepository.findByRole(Role.ADMIN);
-        List<NoticeListDto> noticeListDtos = new ArrayList<>();
-        List<Notice> noticeList = noticeRepository.findAllByPinned(pinned);
-
-        for (Notice notice : noticeList) {
-            noticeListDtos.add(NoticeListDto.from(notice, user.getNickName()));
+        // 고정하려는 경우만 개수 체크
+        if (pinned) {
+            long pinnedCount = noticeRepository.countByPinned(true);
+            if (pinnedCount >= 4) {
+                throw new IllegalStateException("고정 가능한 최대 개수(4개)를 초과했습니다.");
+            }
         }
 
-        return noticeListDtos;
-    }
-
-    // 전체 목록(고정 포함)
-    public List<NoticeListDto> getNotices() {
-
-        User user = userRepository.findByRole(Role.ADMIN);
-
-        List<NoticeListDto> noticeListDtos = new ArrayList<>();
-
-        List<Notice> noticeList = noticeRepository.findAll();
-
-        for (Notice notice : noticeList) {
-
-            NoticeListDto noticeListDto = NoticeListDto.from(notice, user.getNickName());
-
-            noticeListDtos.add(noticeListDto);
-        }
-
-        return noticeListDtos;
+        notice.setPinned(pinned);
+        noticeRepository.save(notice);
     }
 
     // 상세페이지
@@ -64,5 +44,30 @@ public class NoticeService {
         return NoticeDto.from(notice, admin.getNickName());
     }
 
+    // ✅ 추가: 고정된 공지사항 DTO 목록 반환
+    public List<NoticeListDto> getPinnedNoticeDtos() {
+        User admin = userRepository.findByRole(Role.ADMIN);
+        List<Notice> pinnedNotices = noticeRepository.findAllByPinned(true);
+        List<NoticeListDto> dtoList = new ArrayList<>();
+
+        for (Notice notice : pinnedNotices) {
+            dtoList.add(NoticeListDto.from(notice, admin.getNickName()));
+        }
+
+        return dtoList;
+    }
+
+    // ✅ 추가: 전체 공지사항 DTO 목록 반환
+    public List<NoticeListDto> getAllNoticeDtos() {
+        User admin = userRepository.findByRole(Role.ADMIN);
+        List<Notice> allNotices = noticeRepository.findAll();
+        List<NoticeListDto> dtoList = new ArrayList<>();
+
+        for (Notice notice : allNotices) {
+            dtoList.add(NoticeListDto.from(notice, admin.getNickName()));
+        }
+
+        return dtoList;
+    }
 }
 

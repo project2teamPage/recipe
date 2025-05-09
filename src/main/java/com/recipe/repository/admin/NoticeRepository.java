@@ -12,4 +12,6 @@ import java.util.List;
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
     List<Notice> findAllByOrderByWriteDateDesc(Pageable pageable);
     List<Notice> findAllByPinned(boolean pinned);
+
+    long countByPinned(boolean pinned);
 }

@@ -1,12 +1,14 @@
 package com.recipe.control;
 
 import com.recipe.dto.admin.NoticeDto;
+import com.recipe.dto.admin.NoticeListDto;
 import com.recipe.entity.admin.Notice;
 import com.recipe.service.admin.InquiryService;
 import com.recipe.service.admin.NoticeService;
 import com.recipe.service.admin.ReportService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,13 +43,33 @@ public class AdminController {
 
     @GetMapping("/admin/notice")
     public String noticePage(Model model) {
+        List<NoticeListDto> pinnedNotices = noticeService.getPinnedNoticeDtos(); // ✅ DTO로 수정
+        List<NoticeListDto> allNotices = noticeService.getAllNoticeDtos();       // ✅ DTO로 수정
 
-        List<Notice> pinnedNotices = noticeService.getPinnedNotices();
-        model.addAttribute("pinnedNotices", noticeService.getNotices(true)); // 고정글
-        model.addAttribute("noticeList", noticeService.getNotices()); // 전체글
-        model.addAttribute("pinnedCount", pinnedNotices.size()); // 현재 고정글 개수
+        model.addAttribute("pinnedNotices", pinnedNotices);
+        model.addAttribute("noticeList", allNotices);
+        model.addAttribute("pinnedCount", pinnedNotices.size());
 
         return "admin/notice";
+    }
+
+    @PostMapping("/admin/notice/pin")
+    @ResponseBody
+    public ResponseEntity<String> pinNotice(@RequestBody Long id) {
+        try {
+            noticeService.setPinned(id, true);
+            return ResponseEntity.ok("success");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/admin/notice/unpin")
+    @ResponseBody
+    public String unpinNotice(@RequestBody Long id) {
+        noticeService.setPinned(id, false);
+        return "success";
     }
 
     @GetMapping("/admin/inquiry")
