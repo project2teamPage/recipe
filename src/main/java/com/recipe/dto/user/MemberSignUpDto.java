@@ -11,12 +11,17 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Getter @Setter
 public class MemberSignUpDto {
+
     @NotEmpty
     @Length(min = 5, max = 15, message = "영어 소문자, 숫자 5~15자리로 입력해주세요.")
     private String loginId;
@@ -76,5 +81,6 @@ public class MemberSignUpDto {
 
         return userFavoriteList;
     }
+
 
 }

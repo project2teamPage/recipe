@@ -22,12 +22,6 @@ public class UserController {
         return "user/login";
     }
 
-    // 로그인 실패시 - 다시 로그인 페이지 제공
-    @GetMapping("/signIn/error")
-    public String loginfail(Model model){
-        model.addAttribute("loginErrorMsg","다시 로그인 해주세요.");
-        return "user/login";
-    }
 
     // 회원가입 시
     @GetMapping("/signup")
@@ -37,7 +31,7 @@ public class UserController {
         return "user/signup";
     }
 
-    @PostMapping
+    @PostMapping("/signup")
     public String saveUser(@Valid MemberSignUpDto memberSignUpDto, BindingResult bindingResult){
 
         if( bindingResult.hasErrors()) {
