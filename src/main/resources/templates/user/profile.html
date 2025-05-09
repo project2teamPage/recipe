@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/user/profile.css" />
+</th:block>
+<th:block layout:fragment="script"></th:block>
+
+<div layout:fragment="main" id="main">
+
+  <!--여기다가 넣어주세여-->
+  <div class="container">
+    <div class="side-menu">
+      <ul class="side-menu-list">
+        <li class="side-menu-list-title">마이페이지</li>
+        <li class="pro-change"><a href="#">프로필 편집</a></li>
+        <li><a href="#">내 활동</a></li>
+        <li><a href="#">즐겨찾는 레시피</a></li>
+        <li class="s-m-l-calendar"><a href="#">내 캘린더</a></li>
+      </ul>
+    </div>
+    <div class="profile">
+      <div class="title">
+        <span>프로필 편집</span>
+        <p>내 프로필을 편집하고 관리할 수 있어요.</p>
+      </div>
+      <div class="content">
+        <div class="profile-content">
+          <div class="pro-title">내 프로필</div>
+          <div class="pro-photo"></div>
+          <div class="pro-text">
+            날 표현할 수 있는 <br>
+            프로필 사진을 지정해 보세요!
+          </div>
+          <button class="pro-btn">프로필 사진 수정</button>
+        </div>
+        <div class="myinfo">
+          <form class="myinfo-form" role="">
+            <div>
+              <label for="name" class="info-nick-name">닉네임 </label>
+              <input
+                      id="name"
+                      class="info-nick-name-form"
+                      type="search"
+                      placeholder="ex. 계림제자선우선우"
+                      aria-label="Search"
+              />
+            </div>
+            <div>
+              <label for="id" class="info-nick-name">아이디 </label>
+              <input
+                      id="id"
+                      class="info-nick-name-form1"
+                      type="search"
+                      disabled
+                      placeholder="kimsicktak1234"
+                      aria-label="Search"
+              />
+            </div>
+
+            <div>
+              <label for="passowrd" class="info-password-name">비밀번호</label>
+              <input
+                      id="passowrd"
+                      class="info-nick-name-form"
+                      type="search"
+                      placeholder="비밀번호 재설정"
+                      aria-label="Search"
+              />
+            </div>
+
+            <div>
+              <label for="email" class="info-nick-name">이메일 </label>
+              <input
+                      id="email"
+                      class="info-nick-name-form1"
+                      type="search"
+                      disabled
+                      placeholder="example@naver.com"
+                      aria-label="Search"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="btn">
+        <button class="info-out">회원탈퇴</button>
+        <button class="info-change">내 정보 수정</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</html>

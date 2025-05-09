@@ -37,7 +37,7 @@ body {
 }
 .side-menu-list li a {
   color: #767676;
-  text-decoration: none;
+  text-decoration:none;
 }
 .side-menu-list li a:hover {
   color: #ff6a00;
@@ -113,7 +113,7 @@ body {
   color: #bababa;
   margin-top: 10px;
   margin-left: 60px;
-  font-size: 14px;
+  font-size:14px;
 }
 .pro-change a {
   color: #ff6a00;
