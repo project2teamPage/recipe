@@ -6,6 +6,8 @@ import com.recipe.dto.user.MemberSignUpDto;
 import com.recipe.entity.user.User;
 import com.recipe.repository.user.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +44,22 @@ public class UserService {
         }
     }
 
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        //스프링 시큐리티 사용시 커스텀 로그인 DB의 데이터로 로그인진행하기 때문에 오버라이딩
+//
+//        // 로그인 시 입력한 아이디로 회원 테이블에서 정보 조회
+//        User user = userRepo.findByUserId(username);
+//
+//        if( user == null){
+//            throw new UsernameNotFoundException(username);
+//        }
+//
+//        return org.springframework.security.core.userdetails.User.builder()
+//                .username(user.getLoginId())
+//                .password(user.getPassword())
+//                .roles(user.getRole().toString()).build();
+//    }
 
 
 }

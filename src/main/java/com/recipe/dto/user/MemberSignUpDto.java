@@ -6,6 +6,7 @@ import com.recipe.entity.user.User;
 import com.recipe.entity.user.UserFavorite;
 import com.recipe.entity.user.UserPreference;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -40,9 +41,9 @@ public class MemberSignUpDto {
 
     public static ModelMapper modelMapper = new ModelMapper();
 
-    public User toUser(PasswordEncoder passwordEncoder){
+    public User toUser(PasswordEncoder passwordEncoder) {
         User user = modelMapper.map(this, User.class);
-        user.setPassword( passwordEncoder.encode(password) );
+        user.setPassword(passwordEncoder.encode(password));
 
         return user;
     }
@@ -53,23 +54,23 @@ public class MemberSignUpDto {
         List<Theme> themeList = this.getThemeList();
         List<UserPreference> userPreferenceList = new ArrayList<>();
 
-        for(Theme theme : themeList ){
-           UserPreference  userPreference = new UserPreference();
-           userPreference.setUser(user);
-           userPreference.setTheme(theme);
+        for (Theme theme : themeList) {
+            UserPreference userPreference = new UserPreference();
+            userPreference.setUser(user);
+            userPreference.setTheme(theme);
 
-           userPreferenceList.add(userPreference);
+            userPreferenceList.add(userPreference);
         }
         return userPreferenceList;
     }
 
     // 음식 호불호
-    public List<UserFavorite> toFavorite(User user){
+    public List<UserFavorite> toFavorite(User user) {
 
         List<Food> foodList = this.getFoodList();
         List<UserFavorite> userFavoriteList = new ArrayList<>();
 
-        for( Food food : foodList ){
+        for (Food food : foodList) {
             UserFavorite userFavorite = new UserFavorite();
             userFavorite.setUser(user);
             userFavorite.setFood(food);
@@ -79,5 +80,12 @@ public class MemberSignUpDto {
 
         return userFavoriteList;
     }
+    @AssertTrue(message = "만 14세 이상 이용 가능합니다.")
+    private boolean agreeAge;
 
+    @AssertTrue(message = "이용약관에 동의해야 합니다.")
+    private boolean agreeTerms;
+
+    @AssertTrue(message = "개인정보 수집에 동의해야 합니다.")
+    private boolean agreePrivacy;
 }

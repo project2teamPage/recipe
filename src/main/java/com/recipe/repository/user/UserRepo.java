@@ -13,7 +13,10 @@ public interface UserRepo extends JpaRepository<User, Long> {
     public boolean findByLoginIdAndPassword(String loginId, String password);
 
 
+    
     User findByLoginId(String id);
 
     Optional<User> findByEmail(String email);
+
+  //  User findByUserId(String username);
 }

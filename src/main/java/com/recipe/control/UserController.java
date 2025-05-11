@@ -23,11 +23,17 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     // 로그인 시
-    @GetMapping("/login")
+    @GetMapping("user/login")
     public String login(Model model){
-        return "user/login";
+        return "/";
     }
 
+    // 로그인 실패 시
+    @GetMapping("/user/login/error")
+    public String loginfail(Model model){
+        model.addAttribute("errorMessage", "로그인에 실패했습니다");
+        return "user/login";
+    }
 
     // 회원가입 시
     @GetMapping("/user/signup")
