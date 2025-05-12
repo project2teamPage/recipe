@@ -3,49 +3,93 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/default}">
+
 <th:block layout:fragment="css"></th:block>
+
 <th:block layout:fragment="script"></th:block>
 
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${recipe.title}">레시피 상세</title>
-    <link rel="stylesheet" th:href="@{/css/recipe/detail.css}" />
+<div layout:fragment="main" id="main" class="recipe-detail">
 
-</head>
-<body>
-
-<div class="container">
-    <h1 th:text="${recipe.title}">레시피 제목</h1>
-    <p><strong>작성자:</strong> <span th:text="${recipe.nickName}">닉네임</span></p>
-    <p><strong>등록일:</strong> <span th:text="${recipe.uploadDate}">2025.05.07</span></p>
-    <p><strong>조회수:</strong> <span th:text="${recipe.viewCount}">10</span></p>
-
-    <img th:src="@{${recipe.imgUrl}}" alt="대표 이미지" class="main-image"/>
-
-    <hr/>
-
-    <h3>재료</h3>
-    <ul>
-        <li th:each="ingredient : ${recipe.ingredients}" th:text="|${ingredient.name} - ${ingredient.amount}|"></li>
-    </ul>
-
-    <hr/>
-
-    <h3>요리 순서</h3>
-    <div th:each="step, iterStat : ${recipe.recipeSteps}" class="step-block">
-        <h4 th:text="|Step ${iterStat.index + 1}|"></h4>
-        <img th:if="${step.imgUrl != null}" th:src="@{${step.imgUrl}}" alt="요리 이미지" class="step-image"/>
-        <p th:text="${step.description}">요리 설명</p>
+    <div class="recipe-header">
+        <h2 th:text="${recipe.title}">레시피 제목</h2>
+        <div>
+            <span th:text="${recipe.uploadDate}">2025.04.16 08:00</span>
+        </div>
     </div>
 
-    <hr/>
+    <!-- 스텝 이미지 슬라이드 -->
+    <div class="recipe-steps-slider">
+        <div th:each="step, iterStat : ${recipe.recipeStepDtoList}" class="step-slide" th:classappend="${iterStat.index == 0} ? 'active'">
+            <img th:src="@{${step.imgUrl}}" alt="Step 이미지">
+            <div class="step-title">
+                <span>STEP.<span th:text="${step.stepOrder}">1</span></span>
+                <h3 th:text="${step.title}">스텝 제목</h3>
+            </div>
+            <p th:text="${step.content}">스텝 설명</p>
+        </div>
 
-    <form th:action="@{'/recipe/' + ${recipe.id}}" method="post" th:if="${#authentication.name == recipe.userLoginId}">
-        <input type="hidden" name="_method" value="delete" />
-        <button type="submit" class="btn btn-danger">삭제</button>
-    </form>
+        <!-- 슬라이드 네비게이션 (좌/우 버튼) -->
+        <button class="slide-prev">&lt;</button>
+        <button class="slide-next">&gt;</button>
+    </div>
 
-    <a href="/recipe" class="btn btn-secondary">목록으로</a>
+    <!-- 재료 리스트 -->
+    <div class="recipe-ingredients">
+        <h4>재료 준비하기</h4>
+        <ul>
+            <li th:each="ingredient : ${recipe.recipeIngredientDtoList}">
+                <span th:text="${ingredient.name}">재료명</span>
+                <span th:text="${ingredient.amount}">수량</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 레시피 정보 -->
+    <div class="recipe-info">
+        <span th:text="'난이도: ' + ${recipe.recipeDifficulty}">난이도</span>
+        <span th:text="'조리시간: ' + ${recipe.recipeTime} + '분'">조리시간</span>
+    </div>
+
+    <!-- 좋아요 -->
+    <div class="recipe-likes">
+        <span>좋아요 <strong th:text="${recipe.recipeLikes}">0</strong></span>
+        <button class="like-btn">♥</button>
+    </div>
+
+    <!-- 댓글 -->
+    <div class="recipe-comments">
+        <h4>댓글 <span th:text="${#lists.size(recipe.recipeCommentDtoList)}">0</span></h4>
+        <ul>
+            <li th:each="comment : ${recipe.recipeCommentDtoList}">
+                <p><strong th:text="${comment.nickName}">닉네임</strong></p>
+                <p th:text="${comment.content}">댓글 내용</p>
+                <p class="date" th:text="${#temporals.format(comment.uploadDate, 'yyyy-MM-dd HH:mm')}">작성일</p>
+            </li>
+        </ul>
+
+        <!-- 댓글 작성 -->
+        <form th:action="@{/recipe/comment}" method="post">
+            <textarea name="content" placeholder="댓글을 입력하세요."></textarea>
+            <input type="hidden" name="recipeId" th:value="${recipe.id}">
+            <button type="submit">등록</button>
+        </form>
+    </div>
+
+    <!-- 관련 레시피 (임시 영역) -->
+    <div class="related-recipes">
+        <h4>이 레시피 관련 요리자랑</h4>
+        <!-- 실제 연동 시 반복 출력 -->
+        <div class="related-item">
+            <p>관련 게시글 제목</p>
+            <p>간략 설명</p>
+        </div>
+    </div>
+
+    <!-- 목록으로 -->
+    <div class="go-list">
+        <a href="/recipe">목록</a>
+    </div>
+
 </div>
 
-</body>
+</html>
