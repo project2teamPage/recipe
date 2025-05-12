@@ -9,6 +9,7 @@ import com.recipe.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,17 @@ import java.util.List;
 public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
+
+    public void saveNotice(NoticeDto dto) {
+        Notice notice = new Notice();
+        notice.setTitle(dto.getTitle());
+        notice.setContent(dto.getContent());
+        notice.setWriteDate(LocalDateTime.now()); // 작성 시간 설정
+        notice.setPinned(false); // 기본 고정 아님
+        notice.setHidden(false); // 기본 숨김 아님
+
+        noticeRepository.save(notice);
+    }
 
     // ✅ 유지: pin/unpin 기능에 필요
     public void setPinned(Long noticeId, boolean pinned) {
@@ -48,9 +60,8 @@ public class NoticeService {
         notice.setHidden(hidden);
 
         if (hidden) {
-            notice.setPinned(false);
+            notice.setPinned(false); // 숨기면 고정도 해제
         }
-
         noticeRepository.save(notice);
     }
     public List<NoticeListDto> getAllNoticeDtos() {
@@ -87,6 +98,8 @@ public class NoticeService {
 
         return dtoList;
     }
+
+
 
 }
 

@@ -4,61 +4,48 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/default}">
 
+<!-- ✅ CSS Fragment -->
 <th:block layout:fragment="css">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <style>
-        /* 테이블 전체 스타일 */
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
         }
-
         thead th {
             background-color: #f6f6f6;
             padding: 12px 10px;
             text-align: left;
             border-bottom: 2px solid #ddd;
         }
-
         tbody td {
             padding: 12px 10px;
             border-bottom: 1px solid #eee;
             vertical-align: middle;
         }
-
-        /* 행 간 간격용 클래스 */
         .row-gap td {
             height: 20px;
             background: transparent;
             border: none;
             padding: 0;
         }
-
-        /* 고정글 강조 */
         .pinned {
             background-color: #fff9e6;
             font-weight: 500;
         }
-
-        /* 숨김 게시글 흐려지도록 */
         .hidden-row {
             opacity: 0.4;
         }
-
-        /* 제목 링크 스타일 */
         a {
             color: #333;
             text-decoration: none;
         }
-
         a:hover {
             text-decoration: underline;
             color: #007acc;
         }
-
-        /* 버튼 스타일 */
         button {
             background-color: #007acc;
             color: white;
@@ -68,103 +55,98 @@
             border-radius: 4px;
             cursor: pointer;
         }
-
         button:hover {
             background-color: #005f99;
         }
-
-        /* 테이블 정렬 */
-        .notice-table th,
-        .notice-table td {
-            text-align: left;
-        }
     </style>
-
 </th:block>
+
+<!-- ✅ SCRIPT Fragment -->
 <th:block layout:fragment="script">
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-                // 고정 핸들링
-                document.querySelectorAll('.toggle-pin').forEach(function (link) {
-                    link.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        const noticeId = this.getAttribute('data-id');
-                        const action = this.getAttribute('data-action');
+            // 고정/해제
+            document.querySelectorAll('.toggle-pin').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const id = this.getAttribute('data-id');
+                    const action = this.getAttribute('data-action');
+                    const row = this.closest('tr');
 
-                        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-                        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+                    fetch(`/admin/notice/${action}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            [csrfHeader]: csrfToken
+                        },
+                        body: JSON.stringify(id)
+                    }).then(res => {
+                        if (!res.ok) return res.text().then(msg => { throw new Error(msg); });
 
-                        fetch(`/admin/notice/${action}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                [csrfHeader]: csrfToken
-                            },
-                            body: JSON.stringify(noticeId)
-                        })
-                        .then(response => response.ok ? location.reload() : response.text().then(msg => alert(msg)))
-                        .catch(error => {
-                            console.error('에러 발생:', error);
-                            alert('오류가 발생했습니다.');
-                        });
-                    });
+                        const isPin = action === 'pin';
+                        this.textContent = isPin ? '[취소]' : '[고정]';
+                        this.setAttribute('data-action', isPin ? 'unpin' : 'pin');
+
+                        // ✅ 숨김 상태였다면 숨김 해제
+                        if (isPin && row.classList.contains('hidden-row')) {
+                            row.classList.remove('hidden-row');
+                            const hideBtn = row.querySelector('.toggle-hide');
+                            hideBtn.textContent = '[숨김]';
+                            hideBtn.setAttribute('data-action', 'hide');
+                        }
+
+                        location.reload(); // 고정/해제 후 고정 리스트 반영
+                    }).catch(err => alert(err.message || '오류가 발생했습니다.'));
                 });
+            });
 
-                // 숨김 핸들링
-                document.querySelectorAll('.toggle-hide').forEach(function (link) {
-                    link.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        const noticeId = this.getAttribute('data-id');
-                        const action = this.getAttribute('data-action');
+            // 숨김/숨김 취소
+            document.querySelectorAll('.toggle-hide').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const id = this.getAttribute('data-id');
+                    const action = this.getAttribute('data-action');
+                    const row = this.closest('tr');
 
-                        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-                        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+                    fetch(`/admin/notice/${action}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            [csrfHeader]: csrfToken
+                        },
+                        body: JSON.stringify(id)
+                    }).then(res => {
+                        if (!res.ok) return res.text().then(msg => { throw new Error(msg); });
 
-                        fetch(`/admin/notice/${action}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                [csrfHeader]: csrfToken
-                            },
-                            body: JSON.stringify(noticeId)
-                        })
-                .then(response => {
-                    if (response.ok) {
-                        // ✅ 화면에서 바로 반영되도록 수정
-                        const row = this.closest('tr');
-                        const isHiding = action === 'hide';
+                        const isHide = action === 'hide';
+                        row.classList.toggle('hidden-row', isHide);
+                        this.textContent = isHide ? '[취소]' : '[숨김]';
+                        this.setAttribute('data-action', isHide ? 'unhide' : 'hide');
 
-                        // ✅ 흐리게 / 복원
-                        row.classList.toggle('hidden-row', isHiding);
-
-                        // 버튼 텍스트 변경
-                        this.textContent = isHiding ? '[취소]' : '[숨김]';
-                        this.setAttribute('data-action', isHiding ? 'unhide' : 'hide');
-
-                                } else {
-                        response.text().then(msg => alert(msg));
-                    }
-                })
-                .catch(error => {
-                    console.error('에러 발생:', error);
-                    alert('오류가 발생했습니다.');
+                        // ✅ 고정된 상태에서 숨김 처리 시 고정 해제
+                        if (isHide && row.classList.contains('pinned')) {
+                            row.classList.remove('pinned');
+                            const pinBtn = row.querySelector('.toggle-pin');
+                            pinBtn.textContent = '[고정]';
+                            pinBtn.setAttribute('data-action', 'pin');
+                            location.reload();
+                        }
+                    }).catch(err => alert(err.message || '오류가 발생했습니다.'));
                 });
             });
         });
-    });
-        </script>
-    </th:block>
-
+    </script>
 </th:block>
 
+<!-- ✅ Main Content -->
 <div layout:fragment="main" id="main">
-
-
-<div>
-    <div>
+    <div style="margin-bottom: 10px;">
         <button type="button" onclick="location.href='/admin/noticeWrite'">작성하기</button>
     </div>
+
     <table>
         <thead>
         <tr>
@@ -174,29 +156,34 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="notice : ${pinnedNotices}" class="pinned"
-            th:classappend="${notice.hidden} ? 'hidden-row'">
+        <!-- 고정된 공지 (복사본) -->
+        <tr th:each="pinned : ${pinnedNotices}"
+            class="pinned"
+            th:classappend="${pinned.hidden} ? 'hidden-row'">
             <td>
                 <span>[고정]</span>
-                <a th:href="'/admin/noticeDetail/' + ${notice.id}" th:text="${notice.title}"></a>
+                <a th:href="'/admin/noticeDetail/' + ${pinned.id}" th:text="${pinned.title}"></a>
             </td>
-            <td th:text="${notice.adminNickName}"></td>
+            <td th:text="${pinned.adminNickName}"></td>
             <td>
-                <span th:text="${notice.writeDate}"></span>
-                <a href="#" th:attr="data-id=${notice.id}" class="toggle-pin" data-action="unpin">[취소]</a>
-                <a href="#"
-                   th:attr="data-id=${notice.id}, data-action=${notice.hidden ? 'unhide' : 'hide'}"
-                   class="toggle-hide"
-                   th:text="${notice.hidden ? '[취소]' : '[숨김]'}">
-                </a>
+                <span th:text="${pinned.writeDate}"></span>
+                <a href="#" class="toggle-pin"
+                   th:attr="data-id=${pinned.id}"
+                   data-action="unpin">[취소]</a>
+                <a href="#" class="toggle-hide"
+                   th:attr="data-id=${pinned.id},data-action=${pinned.hidden ? 'unhide' : 'hide'}"
+                   th:text="${pinned.hidden ? '[취소]' : '[숨김]'}"></a>
             </td>
         </tr>
 
+        <!-- 고정/일반 구분선 -->
         <tr class="row-gap">
             <td colspan="3"></td>
         </tr>
 
-        <tr th:each="notice : ${noticeList}">
+        <!-- 전체 공지 리스트 (항상 표시) -->
+        <tr th:each="notice : ${noticeList}"
+            th:classappend="${notice.hidden} ? 'hidden-row'">
             <td>
                 <span th:if="${notice.pinned}">[고정]</span>
                 <a th:href="'/admin/noticeDetail/' + ${notice.id}" th:text="${notice.title}"></a>
@@ -204,22 +191,15 @@
             <td th:text="${notice.adminNickName}"></td>
             <td>
                 <span th:text="${notice.writeDate}"></span>
-                <a href="#"
-                   th:attr="data-id=${notice.id}, data-action=${notice.pinned ? 'unpin' : 'pin'}"
-                   class="toggle-pin"
-                   th:text="${notice.pinned ? '[취소]' : '[고정]'}">
-                </a>
-                <a href="#"
-                   th:attr="data-id=${notice.id}, data-action=${notice.hidden ? 'unhide' : 'hide'}"
-                   class="toggle-hide"
-                   th:text="${notice.hidden ? '[취소]' : '[숨김]'}"
-                >
-
-                </a>
+                <a href="#" class="toggle-pin"
+                   th:attr="data-id=${notice.id},data-action=${notice.pinned ? 'unpin' : 'pin'}"
+                   th:text="${notice.pinned ? '[취소]' : '[고정]'}"></a>
+                <a href="#" class="toggle-hide"
+                   th:attr="data-id=${notice.id},data-action=${notice.hidden ? 'unhide' : 'hide'}"
+                   th:text="${notice.hidden ? '[취소]' : '[숨김]'}"></a>
             </td>
         </tr>
         </tbody>
     </table>
-</div>
 </div>
 </html>

@@ -43,17 +43,37 @@ public class AdminController {
 
     @GetMapping("/admin/notice")
     public String noticePage(Model model) {
-        List<NoticeListDto> pinnedNotices = noticeService.getPinnedNoticeDtos(); // pinned == true && hidden == false
-        List<NoticeListDto> allNotices = noticeService.getAllNoticeDtos()
-                .stream()
-                .filter(n -> !n.isPinned()) // 이미 고정 리스트에 들어간 것 제외
+
+        // 전체 공지 가져오기
+        List<NoticeListDto> allNotices = noticeService.getAllNoticeDtos();
+
+        // 고정 리스트: 고정된 게시글만
+        List<NoticeListDto> pinnedNotices = allNotices.stream()
+                .filter(n -> n.isPinned() && !n.isHidden())
                 .collect(Collectors.toList());
 
+        // 일반 리스트: 모든 공지 포함 (고정도 포함) — 숨김된 것도 포함해야 함!
+        List<NoticeListDto> noticeList = allNotices;
+
         model.addAttribute("pinnedNotices", pinnedNotices);
-        model.addAttribute("noticeList", allNotices);
+        model.addAttribute("noticeList", noticeList);
         model.addAttribute("pinnedCount", pinnedNotices.size());
 
         return "admin/notice";
+    }
+
+    // 📌 작성 폼 페이지
+    @GetMapping("/admin/noticeWrite")
+    public String showNoticeWriteForm(Model model) {
+        model.addAttribute("notice", new NoticeDto());
+        return "admin/noticeWrite";
+    }
+
+    // 📌 작성 폼 제출 처리
+    @PostMapping("/admin/noticeWrite")
+    public String submitNotice(@ModelAttribute("notice") NoticeDto dto) {
+        noticeService.saveNotice(dto);
+        return "redirect:/admin/notice"; // 작성 완료 후 목록 페이지로 이동
     }
 
     @PostMapping("/admin/notice/pin")
