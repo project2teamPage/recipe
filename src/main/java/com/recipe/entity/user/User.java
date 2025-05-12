@@ -29,5 +29,7 @@ public class User {
     private boolean isBanned; // 정지여부
     private LocalDateTime banTime; // 정지일
 
+    private String profileImagePath; // 프로필 이미지
+
 
 }
