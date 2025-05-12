@@ -30,5 +30,4 @@ public class User {
     private LocalDateTime banTime; // 정지일
 
 
-
 }

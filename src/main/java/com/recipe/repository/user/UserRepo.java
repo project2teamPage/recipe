@@ -12,5 +12,11 @@ public interface UserRepo extends JpaRepository<User, Long> {
     // 로그인할 때 메서드
     public boolean findByLoginIdAndPassword(String loginId, String password);
 
-    Optional<User> findByLoginId(String loginId);
+
+    
+    public User findByLoginId(String id);
+
+    public Optional<User> findByEmail(String email);
+
+
 }

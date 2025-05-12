@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -35,14 +37,21 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/user/**").permitAll()
+                        .requestMatchers("/", "/login", "/signup", "/user/**", "recipe/**", "post/**").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
                         .anyRequest().authenticated()
                 );
+
+        http.csrf(
+                cr ->
+                        cr.csrfTokenRepository(
+                                CookieCsrfTokenRepository.withHttpOnlyFalse()));
+        //http.formLogin(Customizer.withDefaults());
 
         return http.build();
     }
