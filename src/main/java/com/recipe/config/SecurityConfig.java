@@ -9,49 +9,59 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 
 public class SecurityConfig {
 
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        // http.formLogin(Customizer.withDefaults());
+//        return http.build();
+//    }
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // http.formLogin(Customizer.withDefaults());
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .formLogin(form -> form
+
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login") // form action
+                        .failureUrl("/login?error")
+                        .usernameParameter("loginId") // input name
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/", true) // 성공시 리다이렉트
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/login", "/signup", "/user/**", "recipe/**", "post/**").permitAll()
+                        .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
+                        .anyRequest().authenticated()
+                );
+
+        http.csrf(
+                cr ->
+                        cr.csrfTokenRepository(
+                                CookieCsrfTokenRepository.withHttpOnlyFalse()));
+        //http.formLogin(Customizer.withDefaults());
+
         return http.build();
     }
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .formLogin(form -> form
-//
-//                        .loginPage("/login")
-//                        .loginProcessingUrl("/login") // form action
-//                        .failureUrl("/login?error")
-//                        .usernameParameter("loginId") // input name
-//                        .passwordParameter("password")
-//                        .defaultSuccessUrl("/", true) // 성공시 리다이렉트
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/")
-//                )
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/", "/user/**", "admin/**").permitAll()
-//                        .requestMatchers("/admin/**").hasRole("admin").anyRequest().authenticated()
-//                        .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
-//                        .anyRequest().authenticated()
-//                );
-//
-//        return http.build();
-//    }
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 
 
 }

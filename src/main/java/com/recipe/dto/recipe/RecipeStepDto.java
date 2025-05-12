@@ -20,17 +20,34 @@ public class RecipeStepDto {
 
     private MultipartFile imgFile;
 
-    public static ModelMapper modelMapper = new ModelMapper();
+
+
 
     public static RecipeStepDto from (RecipeStep recipeStep){
-        return modelMapper.map(recipeStep, RecipeStepDto.class);
+        RecipeStepDto dto = new RecipeStepDto();
+
+        dto.setId(recipeStep.getId() );
+        dto.setTitle(recipeStep.getTitle());
+        dto.setContent(recipeStep.getContent());
+        dto.setStepOrder(recipeStep.getStepOrder());
+        dto.setImgName(recipeStep.getImgName());
+        dto.setImgOriginalName(recipeStep.getImgOriginalName());
+        dto.setImgUrl(recipeStep.getImgUrl());
+
+        return dto;
     }
 
     public RecipeStep to(Recipe recipe){
-        RecipeStep entity = modelMapper.map(this, RecipeStep.class);
-        entity.setRecipe(recipe);
+        RecipeStep step = new RecipeStep();
+        step.setTitle(this.title);
+        step.setContent(this.content);
+        step.setStepOrder(this.stepOrder);
+        step.setImgName(this.imgName);
+        step.setImgOriginalName(this.imgOriginalName);
+        step.setImgUrl(this.imgUrl);
+        step.setRecipe(recipe);
 
-        return entity;
+        return step;
     }
 
 

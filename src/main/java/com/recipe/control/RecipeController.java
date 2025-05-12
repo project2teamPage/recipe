@@ -3,11 +3,10 @@ package com.recipe.control;
 import com.recipe.constant.DishType;
 import com.recipe.constant.OrderType;
 import com.recipe.constant.Theme;
-import com.recipe.dto.recipe.RecipeCreateDto;
 import com.recipe.dto.recipe.RecipeDetailDto;
+import com.recipe.dto.recipe.RecipeForm;
 import com.recipe.dto.recipe.RecipeListDto;
 import com.recipe.dto.recipe.RecipeStepDto;
-import com.recipe.entity.recipe.Recipe;
 import com.recipe.repository.recipe.RecipeRepo;
 import com.recipe.service.FileService;
 import com.recipe.service.recipe.RecipeService;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -72,31 +70,32 @@ public class RecipeController {
     // 레시피 작성
     @GetMapping("/recipe/new")
     public String recipeNew(Model model){
-        model.addAttribute("recipeCreateDto", new RecipeCreateDto() );
+        model.addAttribute("recipeForm", new RecipeForm() );
 
-        return "recipe/recipeCreate";
+        return "recipe/recipeForm";
     }
 
     @PostMapping("/recipe/new")
-    public String recipeSave(@Valid RecipeCreateDto recipeCreateDto, BindingResult bindingResult,
+    public String recipeSave(@Valid RecipeForm recipeForm, BindingResult bindingResult,
                              Model model){
 
         if(bindingResult.hasErrors()){ // 필수입력값 을 작성하지 않은 경우
-            return "recipe/recipeCreate";
+            return "recipe/recipeForm";
         }
-        List<RecipeStepDto> stepList = recipeCreateDto.getRecipeStepDtoList();
+        List<RecipeStepDto> stepList = recipeForm.getRecipeStepDtoList();
 
         if( stepList == null || stepList.isEmpty() ){
             // 이미지를 선택하지 않을 경우 에러메세지 보내주기
             model.addAttribute("errorMessage", "each recipeSteps needs image");
-            return "recipe/recipeCreate";
+            return "recipe/recipeForm";
         }
 
         try{
-            recipeService.createRecipe(recipeCreateDto);
+            recipeService.createRecipe(recipeForm);
         } catch (Exception e) {
             model.addAttribute("errorMessage", "레시피 작성 실패");
-            return "recipe/recipeCreate";
+            e.printStackTrace();
+            return "recipe/recipeForm";
         }
 
 

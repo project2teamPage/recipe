@@ -16,6 +16,7 @@ public class PostListDto {
     private String imageUrl;
     private int postLikes;
     private LocalDateTime uploadDate;
+    private int viewCount;
 
     public static PostListDto from(Post post, String imageUrl, int postLikes){
         ModelMapper modelMapper = new ModelMapper();

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</th:block>
+
+<th:block layout:fragment="script">
+    <!-- 스크롤 이동 -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+        });
+    </script>
+
+    <!-- 작성 버튼 -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+        });
+    </script>
+
+
+    <!-- 최신순, 조회순, 추천순 -->
+    <script>
+        function setOrder(orderType) {
+            const url = new URL(window.location.href);
+            url.searchParams.set("orderType", orderType);
+            window.location.href = url;
+        }
+    </script>
+</th:block>
+
+<div layout:fragment="main" class="container mt-4">
+
+    <!-- 카테고리 스크롤 이동 버튼 -->
+    <div class="d-flex justify-content-center gap-3 my-4">
+        <a href="#fridge" class="btn btn-outline-primary">냉장고 자랑</a>
+        <a href="#dish" class="btn btn-outline-success">요리 자랑</a>
+        <a href="#tip" class="btn btn-outline-warning">노하우</a>
+    </div>
+
+    <!-- 고정된 카테고리 버튼 바 -->
+    <div class="category-nav position-fixed top-0 start-0 w-100 bg-white shadow-sm z-3 py-2" style="z-index: 1030;">
+        <div class="container d-flex justify-content-center gap-3">
+            <a href="#fridge" class="btn btn-outline-primary">냉장고 자랑</a>
+            <a href="#dish" class="btn btn-outline-success">요리 자랑</a>
+            <a href="#tip" class="btn btn-outline-warning">노하우</a>
+
+            <!-- 레시피 작성 버튼 (그림 포함) -->
+            <button onclick="location.href='/post/new'" class="btn btn-light" style="position: fixed; top: 200px; right: 30px;">
+                <img th:src="@{/images/write_icon.png}" alt="글쓰기" style="width: 84px; height: 84px;">
+            </button>
+
+        </div>
+    </div>
+
+    <!-- 위 고정바 높이만큼 마진 추가 -->
+    <div style="margin-top: 60px;"></div>
+
+
+    <!-- 냉장고 자랑 -->
+    <div id="fridge" class="mb-5">
+        <h2>냉장고 자랑</h2>
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="btn-group">
+                <a th:href="@{/post(orderType='RECENT')}" class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${param.orderType == 'RECENT'} ? ' active' : ''">최신순</a>
+                <a th:href="@{/post(orderType='LIKE')}" class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${param.orderType == 'LIKE'} ? ' active' : ''">추천순</a>
+                <a th:href="@{/post(orderType='VIEW')}" class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${param.orderType == 'VIEW'} ? ' active' : ''">조회순</a>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+            <div class="col" th:each="post : ${fridgeList}">
+                <a th:href="@{'/post/' + ${post.id}}" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+<!--                        <img th:src="@{'/postImg/' + ${post.imgName}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">-->
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate" th:text="${post.title}">제목</h5>
+                            <p class="card-text small text-muted mb-1" th:text="${post.nickName}">작성자</p>
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span><i class="bi bi-eye"></i> <span th:text="${post.viewCount}">0</span></span>
+                                <span><i class="bi bi-heart"></i> <span th:text="${post.postLikes}">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 요리 자랑 -->
+    <div id="dish" class="mb-5">
+        <h2>요리 자랑</h2>
+        <!-- 정렬 버튼 동일하게 복붙 -->
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+            <div class="col" th:each="post : ${dishList}">
+                <a th:href="@{'/post/' + ${post.id}}" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+<!--                        <img th:src="@{'/postImg/' + ${post.imgName}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">-->
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate" th:text="${post.title}">제목</h5>
+                            <p class="card-text small text-muted mb-1" th:text="${post.nickName}">작성자</p>
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span><i class="bi bi-eye"></i> <span th:text="${post.viewCount}">0</span></span>
+                                <span><i class="bi bi-heart"></i> <span th:text="${post.postLikes}">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 노하우 -->
+    <div id="tip" class="mb-5">
+        <h2>노하우</h2>
+        <!-- 정렬 버튼 동일하게 복붙 -->
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+            <div class="col" th:each="post : ${tipList}">
+                <a th:href="@{'/post/' + ${post.id}}" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+<!--                        <img th:src="@{'/postImg/' + ${post.imgName}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">-->
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate" th:text="${post.title}">제목</h5>
+                            <p class="card-text small text-muted mb-1" th:text="${post.nickName}">작성자</p>
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span><i class="bi bi-eye"></i> <span th:text="${post.viewCount}">0</span></span>
+                                <span><i class="bi bi-heart"></i> <span th:text="${post.postLikes}">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</html>

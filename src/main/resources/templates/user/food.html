@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/user/food.css" />
+</th:block>
+<th:block layout:fragment="script"></th:block>
+
+<div layout:fragment="main" id="main">
+
+  <div class="food">
+    <span class="food-title">음식 취향 조사</span>
+    <div class="food-list">
+      <form class="food-list-form" role="">
+        <div class="family">회원님의 구성원 수를 입력해주세요.</div>
+        <input class="family-create-form" type="search" placeholder="ex. 2" />
+        <span>인</span>
+        <div class="theme">
+          식이관심사 <span class="vaild">최대 2개</span>
+          <div class="theme-box">
+            <button type="submit">비건</button>
+            <button type="submit">다이어트</button>
+            <button type="submit">저탄고지</button>
+            <button type="submit">저속노화</button>
+            <button type="submit">저당</button>
+            <button type="submit">고단백</button>
+          </div>
+        </div>
+        <div class="foodList">
+          회원님의 취향에 맞는 음식들을 골라주세요.<span class="vaild"
+        >최대 2개</span
+        >
+          <ul class="foodList-box">
+            <li><img src="#" alt="1" /></li>
+            <li><img src="#" alt="2" /></li>
+            <li><img src="#" alt="3" /></li>
+            <li><img src="#" alt="4" /></li>
+            <li><img src="#" alt="5" /></li>
+            <li><img src="#" alt="6" /></li>
+            <li><img src="#" alt="7" /></li>
+            <li><img src="#" alt="8" /></li>
+            <li><img src="#" alt="9" /></li>
+          </ul>
+        </div>
+        <button class="skip-btn">건너뛰고 회원가입</button>
+        <button class="sign-up-btn">회원가입</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div class="foot-box">
+      <div class="con1"><a href="#">이용약관</a></div>
+      <div class="con2"><a href="#">개인정보처리방침</a></div>
+    </div>
+  </footer>
+
+
+
+</div>
+</html>

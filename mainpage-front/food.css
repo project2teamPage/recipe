@@ -1,0 +1,142 @@
+* {
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  /* text-align: center; */
+  font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+.food {
+  width: 360px;
+}
+
+.food-title {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 80px;
+  margin-bottom: 50px;
+}
+
+.family,
+.theme,
+.foodList {
+  margin-top: 20px;
+  font-weight: 600;
+}
+
+.family-create-form {
+  width: 330px;
+  height: 64px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  border: 1px solid #bababa;
+  margin-top: 10px;
+  padding: 0 20px;
+}
+
+span {
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 5px;
+}
+
+.theme-box {
+  width: 360px;
+  height: 120px;
+  background-color: white;
+  border: 1px solid #bababa;
+  border-radius: 8px;
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 15px;
+}
+
+.vaild {
+  color: #bababa;
+  font-size: 14px;
+  font-weight: 400;
+}
+.theme-box > button {
+  width: 100px;
+  height: 45px;
+  background-color: #d9d9d9;
+  border-radius: 25px;
+  border-style: none;
+  color: #7d7d7d;
+  font-size: 14px;
+  line-height: 37px;
+  justify-content: center;
+}
+.theme-box > button:hover {
+  background-color: #ff6a00;
+  color: white;
+}
+.skip-btn {
+  width: 360px;
+  height: 64px;
+  line-height: 64px;
+  background-color: #ffffff;
+  border: 1px solid #ff6a00;
+  border-radius: 8px;
+  color: #ff6a00;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 20px;
+}
+
+.foodList-box {
+  width: 360px;
+  height: 360px;
+  /* background-color: white;
+  border: 1px solid #bababa;
+  border-radius: 8px; */
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.foodList-box > li {
+  width: 110px;
+  height: 110px;
+  border-radius: 8px;
+  border: 1px solid #bababa;
+}
+.sign-up-btn {
+  width: 360px;
+  height: 64px;
+  line-height: 64px;
+  background-color: #ff6a00;
+  border-radius: 8px;
+  border-style: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 10px;
+  margin-bottom: 100px;
+}
+
+/* footer */
+footer {
+  width: 100%;
+  height: 120px;
+  background-color: #ededed;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+.foot-box {
+  width: 200px;
+  height: 20px;
+  display: flex;
+  margin: auto;
+}
+.con1 > a,
+.con2 > a {
+  color: #929292;
+}
