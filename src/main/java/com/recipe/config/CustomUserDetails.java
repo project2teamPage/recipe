@@ -21,6 +21,10 @@ public class CustomUserDetails implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole())); // 예: ROLE_USER, ROLE_ADMIN
     }
 
+    public User getUser(){
+        return this.user;
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword(); // 암호화된 비밀번호

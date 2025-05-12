@@ -94,6 +94,7 @@ public class RecipeController {
             recipeService.createRecipe(recipeForm);
         } catch (Exception e) {
             model.addAttribute("errorMessage", "레시피 작성 실패");
+            e.printStackTrace();
             return "recipe/recipeForm";
         }
 

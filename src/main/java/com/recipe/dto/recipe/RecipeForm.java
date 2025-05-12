@@ -34,19 +34,21 @@ public class RecipeForm {
     private int recipeTime;
     @NotNull(message = "난이도를 고르세요.")
     private RecipeDifficulty recipeDifficulty;
-    private List<RecipeIngredientDto> recipeIngredientDtoList;
-    private List<RecipeStepDto> recipeStepDtoList;
-
-    public static ModelMapper modelMapper = new ModelMapper();
+    private List<RecipeIngredientDto> recipeIngredientDtoList = new ArrayList<>();
+    private List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
 
     public Recipe toRecipe(User user){
-        Recipe recipe = modelMapper.map(this, Recipe.class);
+        Recipe recipe = new Recipe();
         recipe.setUser(user);
-
-        if(this.uploadDate == null) {
-            recipe.setUploadDate(LocalDateTime.now());
-        }
-        else recipe.setUpdateDate(LocalDateTime.now());
+        recipe.setTitle(this.title);
+        recipe.setDishType(this.dishType);
+        recipe.setTheme(this.theme);
+        recipe.setSpicy(this.spicy);
+        recipe.setRecipeDifficulty(this.recipeDifficulty);
+        recipe.setRecipeTime(this.recipeTime);
+        recipe.setUploadDate(LocalDateTime.now()); // 직접 설정
+        recipe.setViewCount(0); // 초기값 설정
+        recipe.setDeleted(false);
 
         return recipe;
     }

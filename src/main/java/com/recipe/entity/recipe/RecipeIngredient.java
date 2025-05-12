@@ -17,7 +17,6 @@ public class RecipeIngredient {
     private Recipe recipe;
 
     private String name;
-    private String similar;
     private String amount;
 
 

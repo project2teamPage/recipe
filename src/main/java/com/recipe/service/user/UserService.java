@@ -1,5 +1,6 @@
 package com.recipe.service.user;
 
+import com.recipe.config.CustomUserDetails;
 import com.recipe.dto.user.MainUserListDto;
 import com.recipe.dto.user.MemberSignInDto;
 import com.recipe.dto.user.MemberSignUpDto;
@@ -7,6 +8,8 @@ import com.recipe.entity.user.User;
 import com.recipe.repository.user.UserRepo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -57,10 +60,24 @@ System.out.println(memberSignUpDto.getEmail());
             throw new UsernameNotFoundException(loginId);
         }
 
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getLoginId())
-                .password(user.getPassword())
-                .roles(user.getRole().toString()).build();
+        return new CustomUserDetails(user);
+    }
+
+    // 로그인중인 User 객체 가져오기
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("로그인된 사용자가 없습니다.");
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getUser();  // 여기서 진짜 User 리턴
+        }
+
+        throw new IllegalStateException("인증 객체가 CustomUserDetails 타입이 아닙니다.");
     }
 
 

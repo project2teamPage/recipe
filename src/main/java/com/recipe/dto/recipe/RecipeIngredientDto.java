@@ -12,15 +12,20 @@ public class RecipeIngredientDto {
     private String name;
     private String amount;
 
-    public static ModelMapper modelMapper = new ModelMapper();
-
     public static RecipeIngredientDto from (RecipeIngredient recipeIngredient){
-        return modelMapper.map(recipeIngredient, RecipeIngredientDto.class);
+        RecipeIngredientDto dto = new RecipeIngredientDto();
+        dto.setId(recipeIngredient.getId() );
+        dto.setName(recipeIngredient.getName() );
+        dto.setAmount(recipeIngredient.getAmount());
+
+        return dto;
     }
 
     public RecipeIngredient to (Recipe recipe) {
-        RecipeIngredient recipeIngredient = modelMapper.map(this, RecipeIngredient.class);
+        RecipeIngredient recipeIngredient = new RecipeIngredient();
         recipeIngredient.setRecipe(recipe);
+        recipeIngredient.setName(this.getName());
+        recipeIngredient.setAmount(this.getAmount());
 
         return  recipeIngredient;
     }
