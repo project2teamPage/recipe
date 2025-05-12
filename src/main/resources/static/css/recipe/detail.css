@@ -1,0 +1,122 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.recipe-title-area h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.tags span {
+    background-color: #ff6b00;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+.info {
+    font-size: 14px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.summary-box {
+    margin: 20px 0;
+    font-size: 16px;
+}
+
+.recipe-slider {
+    margin: 30px 0;
+}
+
+.step-slide {
+    margin-bottom: 30px;
+}
+
+.step-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.step-label {
+    margin-top: 10px;
+}
+
+.ingredient-section h4 {
+    margin-top: 30px;
+    font-size: 18px;
+}
+
+.ingredient-section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.like-section {
+    margin: 20px 0;
+    font-size: 16px;
+    color: #ff6b00;
+    font-weight: bold;
+}
+
+.comments h5 {
+    margin-top: 40px;
+    font-size: 18px;
+}
+
+.comments ul {
+    padding-left: 0;
+    list-style: none;
+}
+
+.comments li {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.comments textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.comments button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #ff6b00;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.related-recipes {
+    margin-top: 50px;
+}
+
+.related-item {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+
+.btn-area {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.btn-area .btn {
+    padding: 10px 20px;
+    background-color: #ff6b00;
+    color: white;
+    border-radius: 20px;
+    text-decoration: none;
+}
