@@ -76,6 +76,8 @@
 <h2>공지사항 작성</h2>
 
 <form th:action="@{/admin/noticeWrite}" th:object="${noticeDto}" method="post">
+    <!-- CSRF 토큰 추가 -->
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div>
         <label for="title">제목:</label>
         <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required>

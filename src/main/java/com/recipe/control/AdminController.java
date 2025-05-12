@@ -1,12 +1,14 @@
 package com.recipe.control;
 
 import com.recipe.dto.admin.NoticeDto;
+import com.recipe.dto.admin.NoticeListDto;
 import com.recipe.entity.admin.Notice;
 import com.recipe.service.admin.InquiryService;
 import com.recipe.service.admin.NoticeService;
 import com.recipe.service.admin.ReportService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,25 +38,83 @@ public class AdminController {
     public String reportPage(Model model) {
 
         model.addAttribute("reportList", reportService.getReports());
-        return "/admin/report";
+        return "admin/report";
     }
 
     @GetMapping("/admin/notice")
     public String noticePage(Model model) {
 
-        List<Notice> pinnedNotices = noticeService.getPinnedNotices();
-        model.addAttribute("pinnedNotices", noticeService.getNotices(true)); // 고정글
-        model.addAttribute("noticeList", noticeService.getNotices()); // 전체글
-        model.addAttribute("pinnedCount", pinnedNotices.size()); // 현재 고정글 개수
+        // 전체 공지 가져오기
+        List<NoticeListDto> allNotices = noticeService.getAllNoticeDtos();
+
+        // 고정 리스트: 고정된 게시글만
+        List<NoticeListDto> pinnedNotices = allNotices.stream()
+                .filter(n -> n.isPinned() && !n.isHidden())
+                .collect(Collectors.toList());
+
+        // 일반 리스트: 모든 공지 포함 (고정도 포함) — 숨김된 것도 포함해야 함!
+        List<NoticeListDto> noticeList = allNotices;
+
+        model.addAttribute("pinnedNotices", pinnedNotices);
+        model.addAttribute("noticeList", noticeList);
+        model.addAttribute("pinnedCount", pinnedNotices.size());
 
         return "admin/notice";
     }
 
-    @GetMapping("/admin/inquiry")
-    public String inquiryPage(Model model) {
+    // 📌 작성 폼 페이지
+    @GetMapping("/admin/noticeWrite")
+    public String showNoticeWriteForm(Model model) {
+        model.addAttribute("notice", new NoticeDto());
+        return "admin/noticeWrite";
+    }
 
-        model.addAttribute("inquiryList", inquiryService.getInquirys());
-        return "admin/inquiry";
+    // 📌 작성 폼 제출 처리
+    @PostMapping("/admin/noticeWrite")
+    public String submitNotice(@ModelAttribute("notice") NoticeDto dto) {
+        noticeService.saveNotice(dto);
+        return "redirect:/admin/notice"; // 작성 완료 후 목록 페이지로 이동
+    }
+
+    @PostMapping("/admin/notice/pin")
+    @ResponseBody
+    public ResponseEntity<String> pinNotice(@RequestBody Long id) {
+        try {
+            noticeService.setPinned(id, true);
+            return ResponseEntity.ok("success");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/admin/notice/unpin")
+    @ResponseBody
+    public String unpinNotice(@RequestBody Long id) {
+        noticeService.setPinned(id, false);
+        return "success";
+    }
+
+    @PostMapping("/admin/notice/hide")
+    @ResponseBody
+    public ResponseEntity<String> hideNotice(@RequestBody Long id) {
+
+        try {
+            noticeService.setHidden(id, true); // 여기서 고정해제도 같이 처리됨
+            return ResponseEntity.ok("숨김 처리 완료");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/admin/notice/unhide")
+    @ResponseBody
+    public ResponseEntity<String> unhideNotice(@RequestBody Long id) {
+        try {
+            noticeService.setHidden(id, false);
+            return ResponseEntity.ok("숨김 취소 완료");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/admin/noticeWrite")
@@ -71,5 +131,12 @@ public class AdminController {
 
 
         return "admin/noticeDetail";
+    }
+
+    @GetMapping("/admin/inquiry")
+    public String inquiryPage(Model model) {
+
+        model.addAttribute("inquiryList", inquiryService.getInquirys());
+        return "admin/inquiry";
     }
 }

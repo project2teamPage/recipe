@@ -9,6 +9,7 @@ import com.recipe.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,38 +20,58 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
 
-    public List<Notice> getPinnedNotices() {
-        return noticeRepository.findAllByPinned(true);
+    public void saveNotice(NoticeDto dto) {
+        Notice notice = new Notice();
+        notice.setTitle(dto.getTitle());
+        notice.setContent(dto.getContent());
+        notice.setWriteDate(LocalDateTime.now()); // 작성 시간 설정
+        notice.setPinned(false); // 기본 고정 아님
+        notice.setHidden(false); // 기본 숨김 아님
+
+        noticeRepository.save(notice);
     }
 
-    // 고정 여부로 조회
-    public List<NoticeListDto> getNotices(boolean pinned) {
+    // ✅ 유지: pin/unpin 기능에 필요
+    public void setPinned(Long noticeId, boolean pinned) {
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
 
-        User user = userRepository.findByRole(Role.ADMIN);
-        List<NoticeListDto> noticeListDtos = new ArrayList<>();
-        List<Notice> noticeList = noticeRepository.findAllByPinned(pinned);
+        // 고정하려는 경우만 개수 체크
+        if (pinned) {
+            long pinnedCount = noticeRepository.countByPinned(true);
+            if (pinnedCount >= 4) {
+                throw new IllegalStateException("고정 가능한 최대 개수(4개)를 초과했습니다.");
+            }
 
-        for (Notice notice : noticeList) {
-            noticeListDtos.add(NoticeListDto.from(notice, user.getNickName()));
+            // 2️⃣ 고정 시 숨김 해제
+            if (notice.isHidden()) {
+                notice.setHidden(false);
+            }
         }
 
-        return noticeListDtos;
+        notice.setPinned(pinned);
+        noticeRepository.save(notice);
     }
 
-    // 전체 목록(고정 포함)
-    public List<NoticeListDto> getNotices() {
+    public void setHidden(Long noticeId, boolean hidden) {
+        Notice notice = noticeRepository.findById(noticeId)
+            .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
 
-        User user = userRepository.findByRole(Role.ADMIN);
+        notice.setHidden(hidden);
 
+        if (hidden) {
+            notice.setPinned(false); // 숨기면 고정도 해제
+        }
+        noticeRepository.save(notice);
+    }
+    public List<NoticeListDto> getAllNoticeDtos() {
+
+        User admin = userRepository.findByRole(Role.ADMIN);
+        List<Notice> allNotices = noticeRepository.findAll();
         List<NoticeListDto> noticeListDtos = new ArrayList<>();
 
-        List<Notice> noticeList = noticeRepository.findAll();
-
-        for (Notice notice : noticeList) {
-
-            NoticeListDto noticeListDto = NoticeListDto.from(notice, user.getNickName());
-
-            noticeListDtos.add(noticeListDto);
+        for (Notice notice : allNotices) {
+            noticeListDtos.add(NoticeListDto.from(notice, admin.getNickName()));
         }
 
         return noticeListDtos;
@@ -63,6 +84,22 @@ public class NoticeService {
         User admin = userRepository.findByRole(Role.ADMIN);
         return NoticeDto.from(notice, admin.getNickName());
     }
+
+    // ✅ 추가: 고정된 공지사항 DTO 목록 반환
+    public List<NoticeListDto> getPinnedNoticeDtos() {
+        User admin = userRepository.findByRole(Role.ADMIN);
+        List<Notice> pinnedNotices = noticeRepository.findAllByPinnedTrueAndHiddenFalse();
+
+        List<NoticeListDto> dtoList = new ArrayList<>();
+
+        for (Notice notice : pinnedNotices) {
+            dtoList.add(NoticeListDto.from(notice, admin.getNickName()));
+        }
+
+        return dtoList;
+    }
+
+
 
 }
 
