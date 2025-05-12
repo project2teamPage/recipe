@@ -71,6 +71,7 @@ public class RecipeService {
         for( int i = 0; i < stepDtos.size(); i++ ){
             RecipeStepDto stepDto = stepDtos.get(i);
             MultipartFile file = stepDto.getImgFile();
+            System.out.println("업로드 파밀명 : " + file.getOriginalFilename());
             String imgName = "";
             String originalFileName = "";
 
@@ -93,6 +94,8 @@ public class RecipeService {
 
         }
 
+        RecipeStep thumbnailStep = recipeStep.get( recipeStep.size() -1 );
+        thumbnailStep.setThumbnail(true);
 
 
         recipeStepRepo.saveAll(recipeStep);
