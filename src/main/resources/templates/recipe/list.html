@@ -6,7 +6,25 @@
 <th:block layout:fragment="css">
   <link rel="stylesheet" th:href="@{/css/recipe/recipe.css}" />
 </th:block>
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="script">
+  <script>
+    function toggleFilter(inputId, value) {
+        const input = document.getElementById(inputId);
+
+        if (input.value === value.toString()) {
+            input.value = '';
+        } else {
+            input.value = value;
+        }
+        document.getElementById('filterForm').submit();
+    }
+
+     function setOrder(order) {
+          document.getElementById('orderTypeInput').value = order;
+          document.getElementById('filterForm').submit();
+      }
+  </script>
+</th:block>
 
 <div layout:fragment="main" id="main">
 
@@ -129,21 +147,5 @@
 </div>
 
 
-<script>
-  function toggleFilter(inputId, value) {
-      const input = document.getElementById(inputId);
 
-      if (input.value === value.toString()) {
-          input.value = '';
-      } else {
-          input.value = value;
-      }
-      document.getElementById('filterForm').submit();
-  }
-
-   function setOrder(order) {
-        document.getElementById('orderTypeInput').value = order;
-        document.getElementById('filterForm').submit();
-    }
-</script>
 

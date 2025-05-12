@@ -40,7 +40,7 @@ public class RecipeService {
 
     
     // 레시피 작성시 레시피 entity 로 저장
-    public Recipe saveRecipe(RecipeCreateDto dto){
+    public Recipe saveRecipe(RecipeForm dto){
 
         User user = userRepo.findById( dto.getUserId() ).orElseThrow(); // dto 에 유저Id를 담아 User 객체를 만든 후
         Recipe recipe = dto.toRecipe(user);                             // Recipe 객체에 User 객체를 넣어준다.
@@ -52,7 +52,7 @@ public class RecipeService {
     }
 
     // 레시피 재료 저장
-    public void saveIngredient(RecipeCreateDto dto, Recipe recipe){
+    public void saveIngredient(RecipeForm dto, Recipe recipe){
 
         List<RecipeIngredient> recipeIngredientList = dto.toIngredient(recipe);
         recipeIngredientRepo.saveAll(recipeIngredientList);
@@ -60,7 +60,7 @@ public class RecipeService {
     }
 
     // 레시피 step 저장
-    public void saveRecipeStep(RecipeCreateDto dto, Recipe recipe) throws IOException {
+    public void saveRecipeStep(RecipeForm dto, Recipe recipe) throws IOException {
 
         List<RecipeStepDto> stepDtos = dto.getRecipeStepDtoList();
         List<RecipeStep> recipeStep = new ArrayList<>();
@@ -85,7 +85,7 @@ public class RecipeService {
 
     // 한번에 저장하는 메서드
     @Transactional
-    public void createRecipe(RecipeCreateDto dto) throws IOException {
+    public void createRecipe(RecipeForm dto) throws IOException {
         Recipe recipe = saveRecipe(dto);
         saveRecipeStep(dto, recipe);
     }
