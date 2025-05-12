@@ -5,8 +5,10 @@ import com.recipe.dto.user.MemberSignInDto;
 import com.recipe.dto.user.MemberSignUpDto;
 import com.recipe.entity.user.User;
 import com.recipe.repository.user.UserRepo;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -24,8 +26,8 @@ public class UserService {
     private UserRepo userRepo;
 
     // 회원가입 정보 저장
-    public User saveUser(MemberSignUpDto memberSignUpDto, PasswordEncoder passwordEncoder) {
-
+    public User saveUser(@Valid  MemberSignUpDto memberSignUpDto, PasswordEncoder passwordEncoder) {
+System.out.println(memberSignUpDto.getEmail());
         User user = memberSignUpDto.toUser(passwordEncoder);
         ValidUserId(user);
 
@@ -44,22 +46,22 @@ public class UserService {
         }
     }
 
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        //스프링 시큐리티 사용시 커스텀 로그인 DB의 데이터로 로그인진행하기 때문에 오버라이딩
-//
-//        // 로그인 시 입력한 아이디로 회원 테이블에서 정보 조회
-//        User user = userRepo.findByUserId(username);
-//
-//        if( user == null){
-//            throw new UsernameNotFoundException(username);
-//        }
-//
-//        return org.springframework.security.core.userdetails.User.builder()
-//                .username(user.getLoginId())
-//                .password(user.getPassword())
-//                .roles(user.getRole().toString()).build();
-//    }
+    @Override
+    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+        //스프링 시큐리티 사용시 커스텀 로그인 DB의 데이터로 로그인진행하기 때문에 오버라이딩
+
+        // 로그인 시 입력한 아이디로 회원 테이블에서 정보 조회
+        User user = userRepo.findByLoginId(loginId);
+
+        if( user == null){
+            throw new UsernameNotFoundException(loginId);
+        }
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getLoginId())
+                .password(user.getPassword())
+                .roles(user.getRole().toString()).build();
+    }
 
 
 }

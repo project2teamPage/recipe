@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원가입</title>
+    <link rel="stylesheet" href="header.css" />
+    <link rel="stylesheet" href="food.css" />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <nav class="head">
+        <div class="main-logo"><img src="image/logo4.png" alt="" /></div>
+        <ul class="menu">
+          <li>
+            <a href="#">레시피</a>
+          </li>
+          <li>
+            <a href="#">커뮤니티</a>
+          </li>
+          <li>
+            <a href="#">마이페이지</a>
+          </li>
+          <li>
+            <a href="#">로그인</a>
+          </li>
+          <li class="admin">
+            <a href="#">ADMIN</a>
+          </li>
+        </ul>
+        <form class="top-search" role="">
+          <input
+            class="top-search-form"
+            type="search"
+            placeholder="검색어를 입력해주세요."
+            aria-label="Search"
+          />
+          <button class="top-search-btn" type="top-search-btn">
+            <img src="image/top_search_logo.png" alt="검색 아이콘" />
+          </button>
+        </form>
+      </nav>
+    </header>
+    <div class="food">
+      <span class="food-title">음식 취향 조사</span>
+      <div class="food-list">
+        <form class="food-list-form" role="">
+          <div class="family">회원님의 구성원 수를 입력해주세요.</div>
+          <input class="family-create-form" type="search" placeholder="ex. 2" />
+          <span>인</span>
+          <div class="theme">
+            식이관심사 <span class="vaild">최대 2개</span>
+            <div class="theme-box">
+              <button>비건</button>
+              <button>다이어트</button>
+              <button>저탄고지</button>
+              <button>저속노화</button>
+              <button>저당</button>
+              <button>고단백</button>
+            </div>
+          </div>
+          <div class="foodList">
+            회원님의 취향에 맞는 음식들을 골라주세요.<span class="vaild"
+              >최대 2개</span
+            >
+            <ul class="foodList-box">
+              <li><img src="#" alt="1" /></li>
+              <li><img src="#" alt="2" /></li>
+              <li><img src="#" alt="3" /></li>
+              <li><img src="#" alt="4" /></li>
+              <li><img src="#" alt="5" /></li>
+              <li><img src="#" alt="6" /></li>
+              <li><img src="#" alt="7" /></li>
+              <li><img src="#" alt="8" /></li>
+              <li><img src="#" alt="9" /></li>
+            </ul>
+          </div>
+          <button class="skip-btn">건너뛰고 회원가입</button>
+          <button class="sign-up-btn">회원가입</button>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <div class="foot-box">
+        <div class="con1"><a href="#">이용약관</a></div>
+        <div class="con2"><a href="#">개인정보처리방침</a></div>
+      </div>
+    </footer>
+  </body>
+</html>

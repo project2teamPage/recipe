@@ -23,17 +23,11 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     // 로그인 시
-    @GetMapping("user/login")
+    @GetMapping("/login")
     public String login(Model model){
-        return "/";
-    }
-
-    // 로그인 실패 시
-    @GetMapping("/user/login/error")
-    public String loginfail(Model model){
-        model.addAttribute("errorMessage", "로그인에 실패했습니다");
         return "user/login";
     }
+
 
     // 회원가입 시
     @GetMapping("/user/signup")
@@ -56,11 +50,23 @@ public class UserController {
             return "user/signup";
         }
 
-        return "redirect:/login";
+        return "redirect:/user/food";
+    }
+
+//    @PostMapping("/user/food")
+//    public String saveFood(@Valid MemberSignUpDto memberSignUpDto, BindingResult bindingResult, Model model){
+//
+//        if()
+//    }
+
+    // 회원가입 음식 호불호 페이지
+    @GetMapping("/user/food")
+    public String food(Model model){
+        return "user/food";
     }
 
     // 내 프로필 편집
-    @GetMapping("/profile")
+    @GetMapping("/user/profile")
     public String profile(Model model){
         return "user/profile";
     }
