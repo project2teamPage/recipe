@@ -42,17 +42,17 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/")
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/signup", "/user/**", "recipe/**", "post/**").permitAll()
+                        .requestMatchers("/", "/login", "/signup", "/user/**", "/recipe/**", "/post/**", "/admin/**").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
                         .requestMatchers("/recipeImg/**", "/postImg/**").permitAll()
                         .anyRequest().authenticated()
-                );
+                )
+                .csrf(
+                        cr ->
+                                cr.csrfTokenRepository(
+                                        CookieCsrfTokenRepository.withHttpOnlyFalse()));
+                //http.formLogin(Customizer.withDefaults());
 
-        http.csrf(
-                cr ->
-                        cr.csrfTokenRepository(
-                                CookieCsrfTokenRepository.withHttpOnlyFalse()));
-        //http.formLogin(Customizer.withDefaults());
 
         return http.build();
     }
@@ -62,6 +62,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
 
 

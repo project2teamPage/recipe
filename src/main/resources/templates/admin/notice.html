@@ -9,6 +9,10 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <style>
+        .title-col {
+            text-align: center;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -150,9 +154,9 @@
     <table>
         <thead>
         <tr>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>작성일</th>
+            <th class="title-col">제목</th>
+            <th class="title-col">작성자</th>
+            <th class="title-col">작성일</th>
         </tr>
         </thead>
         <tbody>
@@ -160,13 +164,13 @@
         <tr th:each="pinned : ${pinnedNotices}"
             class="pinned"
             th:classappend="${pinned.hidden} ? 'hidden-row'">
-            <td>
+            <td class="title-col">
                 <span>[고정]</span>
                 <a th:href="'/admin/noticeDetail/' + ${pinned.id}" th:text="${pinned.title}"></a>
             </td>
-            <td th:text="${pinned.adminNickName}"></td>
-            <td>
-                <span th:text="${pinned.writeDate}"></span>
+            <td class="title-col" th:text="${pinned.adminNickName}"></td>
+            <td class="title-col">
+                <span th:text="${pinned.formattedWriteDate}"></span>
                 <a href="#" class="toggle-pin"
                    th:attr="data-id=${pinned.id}"
                    data-action="unpin">[취소]</a>
@@ -184,13 +188,13 @@
         <!-- 전체 공지 리스트 (항상 표시) -->
         <tr th:each="notice : ${noticeList}"
             th:classappend="${notice.hidden} ? 'hidden-row'">
-            <td>
+            <td class="title-col">
                 <span th:if="${notice.pinned}">[고정]</span>
                 <a th:href="'/admin/noticeDetail/' + ${notice.id}" th:text="${notice.title}"></a>
             </td>
-            <td th:text="${notice.adminNickName}"></td>
-            <td>
-                <span th:text="${notice.writeDate}"></span>
+            <td class="title-col" th:text="${notice.adminNickName}"></td>
+            <td class="title-col">
+                <span th:text="${notice.formattedWriteDate}"></span>
                 <a href="#" class="toggle-pin"
                    th:attr="data-id=${notice.id},data-action=${notice.pinned ? 'unpin' : 'pin'}"
                    th:text="${notice.pinned ? '[취소]' : '[고정]'}"></a>

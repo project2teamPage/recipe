@@ -21,12 +21,33 @@ public class NoticeService {
     private final UserRepository userRepository;
 
     public void saveNotice(NoticeDto dto) {
-        Notice notice = new Notice();
-        notice.setTitle(dto.getTitle());
-        notice.setContent(dto.getContent());
-        notice.setWriteDate(LocalDateTime.now()); // 작성 시간 설정
-        notice.setPinned(false); // 기본 고정 아님
-        notice.setHidden(false); // 기본 숨김 아님
+
+//        User admin = userRepository.findByRole(Role.ADMIN);
+
+
+        Notice notice;
+
+        if (dto.getId() != null) {
+            // 기존 공지 불러오기
+            notice = noticeRepository.findById(dto.getId())
+                    .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
+            notice.setTitle(dto.getTitle());
+            notice.setContent(dto.getContent());
+            notice.setUpdateDate(LocalDateTime.now());
+
+        } else {
+            // 새 공지 생성
+            notice = new Notice();
+            notice.setTitle(dto.getTitle());
+            notice.setContent(dto.getContent());
+            notice.setWriteDate(LocalDateTime.now());
+            notice.setPinned(false);
+            notice.setHidden(false);
+
+            // admin 설정
+            User admin = userRepository.findByRole(Role.ADMIN);
+            notice.setAdmin(admin);
+        }
 
         noticeRepository.save(notice);
     }
@@ -66,12 +87,13 @@ public class NoticeService {
     }
     public List<NoticeListDto> getAllNoticeDtos() {
 
-        User admin = userRepository.findByRole(Role.ADMIN);
+//        User admin = userRepository.findByRole(Role.ADMIN);
         List<Notice> allNotices = noticeRepository.findAll();
         List<NoticeListDto> noticeListDtos = new ArrayList<>();
 
         for (Notice notice : allNotices) {
-            noticeListDtos.add(NoticeListDto.from(notice, admin.getNickName()));
+//            noticeListDtos.add(NoticeListDto.from(notice, admin.getNickName()));
+            noticeListDtos.add(NoticeListDto.from(notice, "관리자")); // 임시코딩
         }
 
         return noticeListDtos;
@@ -81,8 +103,9 @@ public class NoticeService {
     public NoticeDto getNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
-        User admin = userRepository.findByRole(Role.ADMIN);
-        return NoticeDto.from(notice, admin.getNickName());
+//        User admin = userRepository.findByRole(Role.ADMIN);
+//        return NoticeDto.from(notice, admin.getNickName());
+        return NoticeDto.from(notice, "관리자"); // 임시코딩
     }
 
     // ✅ 추가: 고정된 공지사항 DTO 목록 반환
@@ -93,13 +116,16 @@ public class NoticeService {
         List<NoticeListDto> dtoList = new ArrayList<>();
 
         for (Notice notice : pinnedNotices) {
-            dtoList.add(NoticeListDto.from(notice, admin.getNickName()));
+//            dtoList.add(NoticeListDto.from(notice, admin.getNickName()));
+            dtoList.add(NoticeListDto.from(notice, "관리자")); // 임시코딩
         }
 
         return dtoList;
     }
 
 
-
+    public void deleteNotice(Long id) {
+        noticeRepository.deleteById(id);
+    }
 }
 
