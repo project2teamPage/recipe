@@ -83,6 +83,7 @@ public class RecipeService {
                 throw new FileUploadException("파일 업로드 중 오류 발생: " + e.getMessage());
             }
 
+            stepDto.setStepOrder(i+1);
             stepDto.setImgOriginalName( originalFileName );
             stepDto.setImgName( imgName );
             stepDto.setImgUrl("/recipeImg/"+ imgName);
@@ -182,6 +183,21 @@ public class RecipeService {
         return RecipeDetailDto.of(recipe, recipeIngredientDtoList, recipeCommentDtoList, recipeStepDtoList, recipeLikes);
 
     }
+
+    // 레시피 댓글 작성
+    public void saveComment(Long recipeId, User user, RecipeCommentDto dto){
+
+        Recipe recipe = recipeRepo.findById(recipeId).orElseThrow();
+        if(dto.getUploadDate() != null){
+            dto.setUpdateDate( LocalDateTime.now() );
+        }
+        dto.setUploadDate( LocalDateTime.now() );
+        recipeCommentRepo.save( dto.to(user, recipe) );
+
+    }
+
+    // 레시피 댓글 목록
+
 
     // 레시피 삭제
     public void deleteRecipe(Long recipeId){

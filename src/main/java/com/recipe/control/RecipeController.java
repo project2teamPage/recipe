@@ -1,21 +1,23 @@
 package com.recipe.control;
 
+import com.recipe.config.CustomUserDetails;
 import com.recipe.constant.DishType;
 import com.recipe.constant.OrderType;
 import com.recipe.constant.Theme;
-import com.recipe.dto.recipe.RecipeDetailDto;
-import com.recipe.dto.recipe.RecipeForm;
-import com.recipe.dto.recipe.RecipeListDto;
-import com.recipe.dto.recipe.RecipeStepDto;
+import com.recipe.dto.recipe.*;
+import com.recipe.entity.user.User;
 import com.recipe.repository.recipe.RecipeRepo;
+import com.recipe.repository.user.UserRepo;
 import com.recipe.service.FileService;
 import com.recipe.service.recipe.RecipeService;
+import com.recipe.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -56,18 +58,34 @@ public class RecipeController {
     public String recipeDetail(@PathVariable Long id, Model model) {
         RecipeDetailDto recipeDetailDto = recipeService.recipeDetail(id);
         model.addAttribute("recipe", recipeDetailDto);
+        model.addAttribute("newComment", new RecipeCommentDto() );
         return "recipe/detail";
     }
 
+    // 레시피 댓글 작성
+    @PostMapping("recipe/{id}/comment")
+    public String newComment(@PathVariable Long id, @ModelAttribute("newComment") RecipeCommentDto recipeCommentDto,
+                             @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        User user = userDetails.getUser();
+
+        recipeService.saveComment(id, user, recipeCommentDto);
+
+
+        return "redirect:/recipe/" + id;
+    }
+
+
     // 레시피 삭제
+
     @DeleteMapping("/recipe/{id}")
     public String recipeDelete(@PathVariable Long id){
         recipeService.deleteRecipe(id);
 
         return "recipe/list";
     }
-
     // 레시피 작성
+
     @GetMapping("/recipe/new")
     public String recipeNew(Model model){
         model.addAttribute("recipeForm", new RecipeForm() );

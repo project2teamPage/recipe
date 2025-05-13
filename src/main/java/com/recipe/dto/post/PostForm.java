@@ -22,9 +22,11 @@ public class PostForm {
     private List<MultipartFile> postImages;
 
     public Post to(User user){
-        ModelMapper modelMapper = new ModelMapper();
-        Post post = modelMapper.map(this, Post.class);
+        Post post = new Post();
         post.setUser(user);
+        post.setTitle(this.title);
+        post.setContent(this.content);
+        post.setPostCategory(this.postCategory);
 
 
         return post;

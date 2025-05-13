@@ -2,8 +2,10 @@ package com.recipe.control;
 
 import com.recipe.constant.OrderType;
 import com.recipe.constant.PostCategory;
+import com.recipe.constant.UploadType;
 import com.recipe.dto.post.PostForm;
 import com.recipe.repository.post.PostRepo;
+import com.recipe.service.FileService;
 import com.recipe.service.post.PostService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -13,10 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,6 +27,7 @@ public class PostController {
 
     private final PostService postService;
     private final PostRepo postRepo;
+    private final FileService fileService;
 
     // 커뮤니티 리스트
     @GetMapping("/post")
@@ -54,17 +54,11 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-    public String createPost(@Valid PostForm postForm, BindingResult bindingResult
-                                , List<MultipartFile> files ,Model model) {
+    public String createPost(@Valid PostForm postForm, BindingResult bindingResult,
+                                Model model) {
 
         if( bindingResult.hasErrors() ){
             return "/post/postForm";
-        }
-        
-        if( files.isEmpty() ) {
-            model.addAttribute("errorMessage", "사진은 최소 하나 첨부 필쑤");
-        }else{
-            postForm.setPostImages(files);
         }
 
         try {
@@ -94,6 +88,15 @@ public class PostController {
 
         return "post/post";
     }
+
+    @PostMapping("/summernote/upload")
+    @ResponseBody
+    public String uploadSummernoteImage(@RequestParam("file") MultipartFile file) throws IOException {
+        // 서버에 저장하고 이미지 URL 반환
+        String imgName = fileService.uploadFile(file.getOriginalFilename(), file.getBytes(), UploadType.POST);
+        return "/postImg/" + imgName; // 브라우저에서 접근 가능한 경로 반환
+    }
+
 
 
 

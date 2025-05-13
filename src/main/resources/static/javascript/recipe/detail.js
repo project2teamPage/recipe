@@ -1,34 +1,31 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const slides = document.querySelectorAll(".step-wrapper");
+    const prevBtn = document.querySelector(".recipe-slider .prev");
+    const nextBtn = document.querySelector(".recipe-slider .next");
 
-  let stepCount = 0;
+    let currentIndex = 0;
 
-  // 초기 3단계 렌더링
-  window.onload = function () {
-    for (let i = 0; i < 3; i++) {
-      addStep();
+    if (!slides.length) return;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove("active");
+            if (i === index) {
+                slide.classList.add("active");
+            }
+        });
     }
-  };
 
-  function addStep() {
-    const container = document.getElementById("stepsContainer");
+    prevBtn.addEventListener("click", () => {
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        showSlide(currentIndex);
+    });
 
-    const stepDiv = document.createElement("div");
-    stepDiv.className = "recipe-step";
-    stepDiv.innerHTML = `
-      <h4>STEP ${stepCount + 1}</h4>
-      <div>
-        <label>이미지:</label>
-        <input type="file" name="recipeStepDtoList[${stepCount}].imageFile" accept="image/*" />
-      </div>
-      <div>
-        <label>제목:</label>
-        <input type="text" name="recipeStepDtoList[${stepCount}].title" placeholder="예: 양파 볶기" />
-      </div>
-      <div>
-        <label>내용:</label>
-        <textarea name="recipeStepDtoList[${stepCount}].description" placeholder="설명을 입력하세요."></textarea>
-      </div>
-      <hr/>
-    `;
-    container.appendChild(stepDiv);
-    stepCount++;
-  }
+    nextBtn.addEventListener("click", () => {
+        currentIndex = (currentIndex + 1) % slides.length;
+        showSlide(currentIndex);
+    });
+
+    // 초기 표시
+    showSlide(currentIndex);
+});

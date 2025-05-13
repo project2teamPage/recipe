@@ -37,7 +37,7 @@ public class PostService {
     private final FileService fileService;
 
     // 게시글 작성
-    public Post savePost(PostForm postForm) throws IOException {
+    public void savePost(PostForm postForm) throws IOException {
         User user = userRepo.findById(postForm.getUserId()).orElseThrow();
 
         Post post = postForm.to(user);
@@ -66,7 +66,6 @@ public class PostService {
             }
         }
 
-        return savedPost;
     }
 
     // 커뮤니티 게시글 리스트

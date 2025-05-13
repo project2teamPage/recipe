@@ -55,11 +55,6 @@
             <textarea id="content" th:field="*{content}" class="form-control"></textarea>
         </div>
 
-        <!-- 이미지 첨부 -->
-        <div class="form-group">
-            <label for="images">이미지 첨부</label>
-            <input id="images" type="file" name="files" multiple class="form-control-file">
-        </div>
 
         <!-- 에러 메시지 출력 -->
         <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
