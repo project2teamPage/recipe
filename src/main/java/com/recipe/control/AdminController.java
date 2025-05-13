@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -55,6 +56,8 @@ public class AdminController {
         // 일반 리스트: 모든 공지 포함 (고정도 포함) — 숨김된 것도 포함해야 함!
         List<NoticeListDto> noticeList = allNotices;
 
+        System.out.println(noticeList.get(6).getAdminNickName());
+
         model.addAttribute("pinnedNotices", pinnedNotices);
         model.addAttribute("noticeList", noticeList);
         model.addAttribute("pinnedCount", pinnedNotices.size());
@@ -65,7 +68,7 @@ public class AdminController {
     // 📌 작성 폼 페이지
     @GetMapping("/admin/noticeWrite")
     public String showNoticeWriteForm(Model model) {
-        model.addAttribute("notice", new NoticeDto());
+        model.addAttribute("noticeDto", new NoticeDto());
         return "admin/noticeWrite";
     }
 
@@ -76,6 +79,7 @@ public class AdminController {
         return "redirect:/admin/notice"; // 작성 완료 후 목록 페이지로 이동
     }
 
+    // 공지사항 고정리스트
     @PostMapping("/admin/notice/pin")
     @ResponseBody
     public ResponseEntity<String> pinNotice(@RequestBody Long id) {
@@ -117,13 +121,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/admin/noticeWrite")
-    public String writeNoticePage(Model model) {
-
-        model.addAttribute("noticeDto", new NoticeDto());
-        return "admin/noticeWrite";
-    }
-
+    // 공지사항 상세페이지
     @GetMapping("/admin/noticeDetail/{noticeId}")
     public String noticeDetail(@PathVariable("noticeId") Long noticeId, Model model) {
 
@@ -131,6 +129,35 @@ public class AdminController {
 
 
         return "admin/noticeDetail";
+    }
+
+    @PostMapping("/admin/notice/update/{id}")
+    @ResponseBody
+    public ResponseEntity<String> updateNotice(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
+        try {
+            String title = payload.get("title");
+            String content = payload.get("content");
+
+            NoticeDto existing = noticeService.getNotice(id);
+            existing.setTitle(title); // 제목 수정
+            existing.setContent(content); // 내용 수정
+
+            noticeService.saveNotice(existing);
+            return ResponseEntity.ok("수정 완료");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("수정 실패: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/admin/notice/delete/{id}")
+    @ResponseBody
+    public ResponseEntity<String> deleteNotice(@PathVariable Long id) {
+        try {
+            noticeService.deleteNotice(id); // 서비스에 삭제 로직 추가 필요
+            return ResponseEntity.ok("삭제 완료");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("삭제 실패: " + e.getMessage());
+        }
     }
 
     @GetMapping("/admin/inquiry")
