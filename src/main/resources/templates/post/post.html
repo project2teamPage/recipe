@@ -93,7 +93,7 @@
             <div class="col" th:each="post : ${fridgeList}">
                 <a th:href="@{'/post/' + ${post.id}}" class="text-decoration-none text-dark">
                     <div class="card h-100 shadow-sm">
-<!--                        <img th:src="@{'/postImg/' + ${post.imgName}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">-->
+                        <img th:src="@{'/postImg/' + ${post.imageUrl}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">
                         <div class="card-body">
                             <h5 class="card-title text-truncate" th:text="${post.title}">제목</h5>
                             <p class="card-text small text-muted mb-1" th:text="${post.nickName}">작성자</p>
@@ -117,7 +117,7 @@
             <div class="col" th:each="post : ${dishList}">
                 <a th:href="@{'/post/' + ${post.id}}" class="text-decoration-none text-dark">
                     <div class="card h-100 shadow-sm">
-<!--                        <img th:src="@{'/postImg/' + ${post.imgName}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">-->
+                        <img th:src="@{'/postImg/' + ${post.imageUrl}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">
                         <div class="card-body">
                             <h5 class="card-title text-truncate" th:text="${post.title}">제목</h5>
                             <p class="card-text small text-muted mb-1" th:text="${post.nickName}">작성자</p>
@@ -141,7 +141,7 @@
             <div class="col" th:each="post : ${tipList}">
                 <a th:href="@{'/post/' + ${post.id}}" class="text-decoration-none text-dark">
                     <div class="card h-100 shadow-sm">
-<!--                        <img th:src="@{'/postImg/' + ${post.imgName}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">-->
+                        <img th:src="@{'/postImg/' + ${post.imageUrl}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">
                         <div class="card-body">
                             <h5 class="card-title text-truncate" th:text="${post.title}">제목</h5>
                             <p class="card-text small text-muted mb-1" th:text="${post.nickName}">작성자</p>

@@ -71,6 +71,7 @@ public class RecipeService {
         for( int i = 0; i < stepDtos.size(); i++ ){
             RecipeStepDto stepDto = stepDtos.get(i);
             MultipartFile file = stepDto.getImgFile();
+            System.out.println("업로드 파밀명 : " + file.getOriginalFilename());
             String imgName = "";
             String originalFileName = "";
 
@@ -82,6 +83,7 @@ public class RecipeService {
                 throw new FileUploadException("파일 업로드 중 오류 발생: " + e.getMessage());
             }
 
+            stepDto.setStepOrder(i+1);
             stepDto.setImgOriginalName( originalFileName );
             stepDto.setImgName( imgName );
             stepDto.setImgUrl("/recipeImg/"+ imgName);
@@ -93,6 +95,8 @@ public class RecipeService {
 
         }
 
+        RecipeStep thumbnailStep = recipeStep.get( recipeStep.size() -1 );
+        thumbnailStep.setThumbnail(true);
 
 
         recipeStepRepo.saveAll(recipeStep);
@@ -179,6 +183,21 @@ public class RecipeService {
         return RecipeDetailDto.of(recipe, recipeIngredientDtoList, recipeCommentDtoList, recipeStepDtoList, recipeLikes);
 
     }
+
+    // 레시피 댓글 작성
+    public void saveComment(Long recipeId, User user, RecipeCommentDto dto){
+
+        Recipe recipe = recipeRepo.findById(recipeId).orElseThrow();
+        if(dto.getUploadDate() != null){
+            dto.setUpdateDate( LocalDateTime.now() );
+        }
+        dto.setUploadDate( LocalDateTime.now() );
+        recipeCommentRepo.save( dto.to(user, recipe) );
+
+    }
+
+    // 레시피 댓글 목록
+
 
     // 레시피 삭제
     public void deleteRecipe(Long recipeId){

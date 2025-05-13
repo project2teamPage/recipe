@@ -4,21 +4,63 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/default}">
 
-<th:block layout:fragment="css"></th:block>
-<th:block layout:fragment="script"></th:block>
+<!-- CSS 영역 -->
+<th:block layout:fragment="css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
+</th:block>
 
-<div layout:fragment="main" id="main">
-    <div>
-        <form th:action="@{/post/new}" th:object="${postForm}" method="post" enctype="multipart/form-data">
+<!-- JS 영역 -->
+<th:block layout:fragment="script">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#content').summernote({
+                placeholder: '내용을 입력해주세요.',
+                tabsize: 2,
+                height: 300
+            });
+        });
+    </script>
+</th:block>
+
+<!-- 본문 영역 -->
+<div layout:fragment="main" id="main" class="container mt-4">
+    <h2>게시글 작성</h2>
+
+    <form th:action="@{/post/new}" th:object="${postForm}" method="post" enctype="multipart/form-data">
+        <!-- 카테고리 -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <div class="form-group">
+            <label for="postCategory">카테고리</label>
+            <select id="postCategory" class="form-control" th:field="*{postCategory}">
+                <option th:value="FRIDGE_PRIDE">냉장고 자랑</option>
+                <option th:value="DISH_PRIDE">요리 자랑</option>
+                <option th:value="TIP">노하우</option>
+            </select>
+        </div>
+
+        <!-- 제목 -->
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input id="title" type="text" class="form-control" th:field="*{title}" placeholder="제목을 입력해주세요.">
+        </div>
+
+        <!-- 내용 -->
+        <div class="form-group">
+            <label for="content">내용</label>
+            <textarea id="content" th:field="*{content}" class="form-control"></textarea>
+        </div>
 
 
+        <!-- 에러 메시지 출력 -->
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-
-
-        </form>
-
-
-
-    </div>
+        <!-- 제출 버튼 -->
+        <button type="submit" class="btn btn-primary mt-3">작성하기</button>
+    </form>
 </div>
 </html>

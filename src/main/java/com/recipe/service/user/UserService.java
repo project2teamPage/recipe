@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
 
     // 회원가입 정보 저장
     public User saveUser(@Valid  MemberSignUpDto memberSignUpDto, PasswordEncoder passwordEncoder) {
-System.out.println(memberSignUpDto.getEmail());
+        System.out.println(memberSignUpDto.getEmail());
         User user = memberSignUpDto.toUser(passwordEncoder);
         ValidUserId(user);
 

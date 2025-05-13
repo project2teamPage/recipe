@@ -25,7 +25,7 @@ public class RecipeDetailDto {
     private LocalDateTime updateDate;
     private int viewCount;
     private RecipeDifficulty recipeDifficulty;
-    private LocalTime recipeTime;
+    private int recipeTime;
     private int recipeLikes;
 
 
@@ -41,6 +41,7 @@ public class RecipeDetailDto {
         RecipeDetailDto recipeDetailDto = new RecipeDetailDto();
         recipeDetailDto = modelMapper.map(recipe, RecipeDetailDto.class);
 
+        recipeDetailDto.setNickName( recipe.getUser().getNickName() );
         recipeDetailDto.setRecipeIngredientDtoList(recipeIngredientDtoList);
         recipeDetailDto.setRecipeCommentDtoList(recipeCommentDtoList);
         recipeDetailDto.setRecipeStepDtoList(recipeStepDtoList);
