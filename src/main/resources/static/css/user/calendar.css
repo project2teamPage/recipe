@@ -1,0 +1,213 @@
+* {
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  /* text-align: center; */
+  font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+body {
+  background-color: #f8f8f9;
+}
+.container {
+  width: 1180px;
+  margin-top: 50px;
+  /* background-color: red; */
+  display: flex;
+}
+
+/* sidemenu */
+.side-menu {
+  width: 170px;
+  height: 300px;
+  /* float: left; */
+}
+.side-menu-list li {
+  width: 140px;
+  height: 45px;
+  line-height: 45px;
+  font-weight: 700;
+  font-size: 16px;
+  padding-left: 20px;
+}
+.side-menu-list li a {
+  color: #767676;
+  text-decoration: none;
+}
+.side-menu-list li a:hover {
+  color: #ff6a00;
+}
+.side-menu-list-title {
+  background-color: white;
+  border-radius: 23px;
+}
+.s-m-l-calendar {
+  margin-top: 50px;
+}
+
+/* calendar */
+.calendar {
+    width: 910px;
+  box-sizing: border-box;
+}
+.title {
+  width: 910px;
+  padding-left: 40px;
+}
+.title span {
+  font-size: 30px;
+  font-weight: 800;
+}
+.title p {
+  font-size: 16px;
+  color: #bababa;
+  margin-top: 10px;
+}
+.content {
+  width: 910px;
+  height: 790px;
+  background-color: rgb(255, 255, 255);
+  margin-top: 30px;
+  border: 1px solid #bababa;
+  border-radius: 26px;
+}
+.cal-title {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+/* 좋아요 버튼  */
+.heart-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #bbb;
+  transition: color 0.2s ease;
+}
+
+.heart-btn.liked {
+  color: #ff3b3b;
+}
+
+.heart-box {
+  width: 150px;
+  height: 40px;
+  display: flex;
+  margin: 0;
+  margin-left: 40px;
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+.heart-count {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* 댓글  */
+.comment-box {
+  width: 910px;
+  height: 76px;
+  display: flex;
+  border-bottom: 1px solid #bababa;
+  margin-top: 15px;
+}
+.pro-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
+  background-color: #d9d9d9;
+}
+.user-info {
+  width: 600px;
+  height: 60px;
+
+  font-size: 16px;
+  line-height: 20px;
+}
+.user-info .user {
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+/* 댓글 버튼 */
+.com-btn {
+  margin-top: 10px;
+  font-size:14px;
+}
+.update-btn {
+  width: 90px;
+  height: 38px;
+  border-radius: 8px;
+  background-color: white;
+  border: 1px solid #ff6a00;
+  color: #ff6a00;
+}
+.delete-btn {
+  width: 90px;
+  height: 38px;
+  border-radius: 8px;
+  background-color: white;
+  border: 1px solid #ff6a00;
+  color: #ff6a00;
+  margin-left: 5px;
+}
+
+.create-comment-box {
+  margin-bottom: 100px;
+}
+
+/* 댓글 달기 */
+.create-comment-box {
+  width: 910px;
+  height: 220px;
+  display: flex;
+  margin-top: 60px;
+}
+.c-com-photo {
+  width: 85px;
+  height: 85px;
+  background-color: #d9d9d9;
+  border-radius: 80px;
+}
+.create-comment {
+  width: 806px;
+  height: 150px;
+  display: block;
+  margin-left: 10px;
+}
+.create-comment .create-user-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+.create-comment-form {
+  width: 775px;
+  height: 115px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #bababa;
+  padding-left: 20px;
+  margin-top: 15px;
+}
+
+.create-comment-form::placeholder {
+  font-size: 14px;
+  /* padding-left: 20px; */
+  color: #bababa;
+}
+
+.upload-btn {
+  width: 160px;
+  height: 58px;
+  background-color: #ff6a00;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  border-style: none;
+  margin-top: 10px;
+  margin-left: auto;
+}

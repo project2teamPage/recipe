@@ -7,15 +7,14 @@ import com.recipe.repository.user.UserRepo;
 import com.recipe.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -60,8 +59,23 @@ public class UserController {
             return "user/signup";
         }
 
-        return "redirect:/user/food";
+        return "redirect:/";
     }
+
+    // 아이디 중복체크
+    @GetMapping("/user-loginId/{loginId}/exists")
+    @ResponseBody
+    public boolean checkLoginIdDuplication(@PathVariable String loginId) {
+        return userService.checkLoginIdDuplication(loginId);
+    }
+    // 이메일 중복체크
+    @GetMapping("/user-email/{email}/exists")
+    @ResponseBody
+    public boolean checkEmailDuplication(@PathVariable String email) {
+        return userService.checkEmailDuplication(email);
+    }
+
+
 
 //    @PostMapping("/user/food")
 //    public String saveFood(@Valid MemberSignUpDto memberSignUpDto, BindingResult bindingResult, Model model){
@@ -70,7 +84,6 @@ public class UserController {
 //    }
 
     // 회원가입 음식 호불호 페이지
-    @GetMapping("/user/food")
     public String food(Model model){
         return "user/food";
     }
@@ -114,4 +127,10 @@ public class UserController {
     }
 
 
+
+    // 내 캘린더
+    @GetMapping("/user/calendar")
+    public String calendar(Model model){
+        return "user/calendar";
+    }
 }

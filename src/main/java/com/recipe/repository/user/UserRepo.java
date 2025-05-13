@@ -19,4 +19,11 @@ public interface UserRepo extends JpaRepository<User, Long> {
     public Optional<User> findByEmail(String email);
 
 
+    /* 유효성 검사 - 중복 체크
+     * 중복 : true
+     * 중복이 아닌 경우 : false
+     */
+    boolean existsByLoginId(String loginId);
+
+    boolean existsByEmail(String email);
 }

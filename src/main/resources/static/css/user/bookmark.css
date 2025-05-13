@@ -1,0 +1,165 @@
+* {
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  /* text-align: center; */
+  font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+body {
+  background-color: #f8f8f9;
+}
+.container {
+  width: 1180px;
+  margin-top: 50px;
+  /* background-color: red; */
+  display: flex;
+}
+/* sidemenu */
+.side-menu {
+  width: 170px;
+  height: 300px;
+  /* float: left; */
+}
+.side-menu-list li {
+  width: 140px;
+  height: 45px;
+  line-height: 45px;
+  font-weight: 700;
+  font-size: 16px;
+  padding-left: 20px;
+}
+.side-menu-list li a {
+  color: #767676;
+  text-decoration: none;
+}
+.side-menu-list li a:hover {
+  color: #ff6a00;
+}
+.side-menu-list-title {
+  background-color: white;
+  border-radius: 23px;
+}
+.s-m-l-calendar {
+  margin-top: 50px;
+}
+
+/* profile */
+.bookmark {
+  width: 1010px;
+  box-sizing: border-box;
+}
+.title {
+  width: 910px;
+  padding-left: 40px;
+}
+.title span {
+  font-size: 30px;
+  font-weight: 800;
+}
+.title p {
+  font-size: 16px;
+  color: #bababa;
+  margin-top: 10px;
+}
+
+.content {
+  width: 910px;
+  height: 560px;
+  background-color: rgb(255, 255, 255);
+  margin-top: 30px;
+  border: 1px solid #bababa;
+  border-radius: 26px;
+  float: right;
+}
+
+.bookmark-search-form {
+  width: 834px;
+  height: 50px;
+  background-color: #f8f8f9;
+  border-radius: 8px;
+  border: 1px solid #bababa;
+  margin-top: 30px;
+  padding: 0 30px;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  margin-left:38px;
+}
+
+.bookmark-search-form::placeholder {
+  font-size: 14px;
+  color: #bababa;
+}
+
+.con-menu {
+  width: 834px;
+  height: 50px;
+  border-bottom: 1px solid #bababa;
+  margin-top: 10px;
+}
+
+.con-menu-box {
+  width: 450px;
+  height: 50px;
+  display: flex;
+  line-height: 50px;
+}
+.con-menu-box li {
+  font-size: 16px;
+  font-weight: 600;
+  border-style: none;
+}
+.con-menu-box li.active {
+  border-bottom: 6px solid #ff6a00;
+  z-index: 1;
+  position: relative;
+}
+
+.main-dish-box {
+  margin-top: 20px;
+  width: 600px;
+  height: 160px;
+  font-weight: 400;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 20px;
+  box-sizing: border-box;justify-items: start;
+}
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.btn-box {
+  float: right;
+  margin-top: 10px;
+  margin-bottom: 100px;
+}
+.delete-btn {
+  width: 160px;
+  height: 50px;
+  line-height: 50px;
+  background-color: white;
+  border: 1px solid #bababa;
+  color: #bababa;
+  font-size: 16px;
+  border-radius: 12px;
+}
+.cal-update-btn {
+  width: 220px;
+  height: 50px;
+  line-height: 50px;
+  background-color: #ff6a00;
+  color: white;
+  font-size: 16px;
+  border-radius: 12px;
+  margin-left: 5px;
+  border-style: none;
+}

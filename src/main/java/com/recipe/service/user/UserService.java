@@ -7,6 +7,7 @@ import com.recipe.dto.user.UserProfileDto;
 import com.recipe.entity.user.User;
 import com.recipe.repository.user.UserRepo;
 import com.recipe.repository.user.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 import jakarta.websocket.EncodeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
 
     // 회원가입 정보 저장
     public User saveUser(@Valid  MemberSignUpDto memberSignUpDto, PasswordEncoder passwordEncoder) {
@@ -108,7 +110,20 @@ System.out.println(memberSignUpDto.getEmail());
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         return user.getId();
-
-
     }
+
+    // 아이디 중복검사
+    @Transactional(readOnly = true)
+    public boolean checkLoginIdDuplication(String loginId) {
+        return userRepo.existsByLoginId(loginId);
+    }
+
+    // 이메일 중복검사
+    @Transactional(readOnly = true)
+    public boolean checkEmailDuplication(String email) {
+        return userRepo.existsByEmail(email);
+    }
+
+
+    // 내 캘린더
 }
