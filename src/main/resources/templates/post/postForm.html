@@ -20,9 +20,36 @@
             $('#content').summernote({
                 placeholder: '내용을 입력해주세요.',
                 tabsize: 2,
-                height: 300
+                height: 300,
+                lang: "ko-KR",
+                callbacks: {
+                    onImageUpload: function (files) {
+                        for (let i = 0; i < files.length; i++) {
+                            sendFile(files[i]);
+                        }
+                    }
+                }
             });
         });
+
+        function sendFile(file) {
+            let data = new FormData();
+            data.append("file", file);
+
+            $.ajax({
+                url: "/post/imageUpload",
+                method: "POST",
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (url) {
+                    $('#content').summernote('insertImage', url);
+                },
+                error: function () {
+                    alert("이미지 업로드 실패");
+                }
+            });
+        }
     </script>
 </th:block>
 

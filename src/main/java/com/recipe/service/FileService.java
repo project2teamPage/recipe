@@ -43,6 +43,8 @@ public class FileService {
         UUID uuid = UUID.randomUUID();
         String saveName = uuid.toString() + ext;  // 새로운 파일 이름
         String fullPath = folderPath + "/" + saveName;
+        System.out.println("Saving file to: " + fullPath);  // 파일 경로 확인
+
 
         // 파일 저장
         try (FileOutputStream fos = new FileOutputStream(fullPath)) {

@@ -20,26 +20,29 @@ public class PostCommentDto {
     private LocalDateTime uploadDate;
     private LocalDateTime updateDate;
 
-    public static ModelMapper modelMapper = new ModelMapper();
 
     public static PostCommentDto from(PostComment postComment){
-        PostCommentDto dto = modelMapper.map(postComment, PostCommentDto.class);
+        PostCommentDto dto = new PostCommentDto();
+        dto.setId(postComment.getId());
+        dto.setPostId(postComment.getId());
+        dto.setUserId(postComment.getUser().getId());
         dto.setNickName(postComment.getUser().getNickName());
+        dto.setContent(postComment.getContent());
+        dto.setUploadDate(postComment.getUploadDate());
+        dto.setUpdateDate(postComment.getUpdateDate());
 
         return dto;
     }
 
     public PostComment to(Post post, User user){
 
-        PostComment comment = modelMapper.map(this, PostComment.class);
+        PostComment comment = new PostComment();
 
         comment.setPost(post);
         comment.setUser(user);
-        if(this.uploadDate == null){
-            comment.setUploadDate(LocalDateTime.now());
-        }else{
-            comment.setUpdateDate(LocalDateTime.now());
-        }
+        comment.setContent(this.content);
+        comment.setUploadDate(this.uploadDate);
+        comment.setUpdateDate(this.updateDate);
 
         return comment;
     }

@@ -25,6 +25,8 @@ repositories {
 }
 
 dependencies {
+	// https://mvnrepository.com/artifact/org.jsoup/jsoup
+	implementation 'org.jsoup:jsoup:1.17.2'
 	// https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0'
 	// https://mvnrepository.com/artifact/org.modelmapper/modelmapper

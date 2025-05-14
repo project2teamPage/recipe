@@ -42,16 +42,22 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/")
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/signup", "/user/**", "recipe/**", "post/**").permitAll()
+                        .requestMatchers("/", "/login", "/signup", "/user/**", "recipe/**", "post/**", "/post/imageUpload").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
                         .requestMatchers("/recipeImg/**", "/postImg/**").permitAll()
                         .anyRequest().authenticated()
-                );
+                )
 
-        http.csrf(
-                cr ->
-                        cr.csrfTokenRepository(
-                                CookieCsrfTokenRepository.withHttpOnlyFalse()));
+                .csrf(
+                        cr ->
+                                cr.csrfTokenRepository(
+                                        CookieCsrfTokenRepository.withHttpOnlyFalse()
+                                )
+                )
+                .csrf( cr ->
+                        cr.ignoringRequestMatchers("post/imageUpload")
+                )
+        ;
         //http.formLogin(Customizer.withDefaults());
 
         return http.build();

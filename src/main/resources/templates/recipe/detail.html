@@ -70,6 +70,13 @@
         <span th:text="${recipe.recipeLikes}">0</span>
     </div>
 
+    <!-- 추가 버튼 (수정, 삭제 등) -->
+    <div>
+        <a th:href="@{/recipe/edit/{id}(id=${recipe.id})}" class="btn btn-primary">수정</a>
+        <a th:href="@{/recipe/delete/{id}(id=${recipe.id})}" class="btn btn-danger">삭제</a>
+        <a th:href="@{/recipe}" class="btn btn-secondary">목록</a>
+    </div>
+
     <!-- 댓글 -->
     <div class="comments">
         <h5>댓글 <span th:text="${#lists.size(recipe.recipeCommentDtoList)}">0</span></h5>

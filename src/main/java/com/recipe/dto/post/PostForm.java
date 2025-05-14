@@ -19,8 +19,6 @@ public class PostForm {
     private String content;
     private PostCategory postCategory;
 
-    private List<MultipartFile> postImages;
-
     public Post to(User user){
         Post post = new Post();
         post.setUser(user);
