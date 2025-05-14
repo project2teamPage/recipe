@@ -1,26 +1,21 @@
 package com.recipe.service.user;
 
-import com.recipe.dto.user.MainUserListDto;
-import com.recipe.dto.user.MemberSignInDto;
 import com.recipe.dto.user.MemberSignUpDto;
-import com.recipe.dto.user.UserProfileDto;
 import com.recipe.entity.user.User;
 import com.recipe.repository.user.UserRepo;
 import com.recipe.repository.user.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
-import jakarta.websocket.EncodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -76,28 +71,28 @@ System.out.println(memberSignUpDto.getEmail());
 
     // 이미지 업로드
 
-    public void updateProfile(Long userId, UserProfileDto userProfileDto) throws Exception{
-        User user = userRepo.findById(userId).orElseThrow();
+    public void updateProfile(Long userId, MultipartFile profileImage) throws Exception {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // 닉네임 및 비밀번호 선택
-        user.setNickName(userProfileDto.getNickName());
-        if(userProfileDto.getPassword().isBlank()){
-            user.setPassword(userProfileDto.getPassword());
-        }
-
-        // 이미지 업로드 처리
-        if(userProfileDto.getProfileImage() != null && !userProfileDto.getProfileImage().isEmpty()){
-            String fileName = UUID.randomUUID() + "_" + userProfileDto.getProfileImage().getOriginalFilename();
+        if (profileImage != null && !profileImage.isEmpty()) {
+            // 파일 이름 생성
+            String fileName = UUID.randomUUID() + "_" + profileImage.getOriginalFilename();
             String uploadDir = "uploads/profile/";
 
-            File saveFile = new File(uploadDir + fileName);
-            userProfileDto.getProfileImage().transferTo(saveFile);
+            // 디렉토리 생성
+            File dir = new File(uploadDir);
+            if (!dir.exists()) dir.mkdirs();
 
-            user.setProfileImagePath("/" + uploadDir + fileName);
+            // 파일 저장
+            File savedFile = new File(uploadDir + fileName);
+            profileImage.transferTo(savedFile);
+
+            // DB에 경로 저장
+            user.setProfileImagePath("/" + uploadDir + fileName); // 예: /uploads/profile/uuid_filename.jpg
         }
 
-        userRepository.save(user);
-
+        userRepo.save(user);
     }
 
 
@@ -126,4 +121,12 @@ System.out.println(memberSignUpDto.getEmail());
 
 
     // 내 캘린더
+    public User getUserById(Long userId) {
+        return userRepo.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
+    public User getUserByLoginId(String loginId) {
+        return userRepo.findByLoginId(loginId);
+    }
 }

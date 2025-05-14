@@ -16,5 +16,5 @@ public class Calendar {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private int viewCount;
+    private int calendarLike;
 }

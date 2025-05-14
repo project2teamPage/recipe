@@ -1,13 +1,11 @@
 package com.recipe.control;
 
 import com.recipe.dto.user.MemberSignUpDto;
-import com.recipe.dto.user.UserProfileDto;
 import com.recipe.entity.user.User;
 import com.recipe.repository.user.UserRepo;
 import com.recipe.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -104,33 +103,47 @@ public class UserController {
 
     // 내 활동
     @GetMapping("/user/activity")
-    public String activity(Model model){
+    public String activity(Model model, Principal principal){
+        String loginId = principal.getName();
+        User user = userRepo.findByLoginId(loginId);
+        model.addAttribute("user", user);
         return "user/activity";
     }
 
     // 즐겨찾는 레시피
     @GetMapping("/user/bookmark")
-    public String bookmark(Model model){
+    public String bookmark(Model model, Principal principal){
+        String loginId = principal.getName();
+        User user = userRepo.findByLoginId(loginId);
+        model.addAttribute("user", user);
         return "user/bookmark";
     }
 
 
     // 프로필 이미지 전달받기
     @PostMapping("/user/profile")
-    public String updateProfile(@ModelAttribute UserProfileDto userProfileDto,
-                                @AuthenticationPrincipal Principal principal)throws Exception {
-        // @AuthenticationPrincipal로 로그인 사용자 식별
-        Long userId = userService.getUserIdByPrincipal(principal); // 로그인 사용자 정보
-        userService.updateProfile(userId, userProfileDto);
+    public String updateProfile(@RequestParam("profileImage") MultipartFile profileImage,
+                                Principal principal) throws Exception {
+
+        Long userId = userService.getUserIdByPrincipal(principal); // 로그인 사용자 ID
+        userService.updateProfile(userId, profileImage); // 이미지 업데이트
 
         return "redirect:/user/profile";
     }
 
 
 
-    // 내 캘린더
-    @GetMapping("/user/calendar")
-    public String calendar(Model model){
-        return "user/calendar";
-    }
+
+
+    // 닉네임 클릭 시 유저 캘린더로 이동
+//    @GetMapping("/user/{userId}")
+//    public String getNickName(@PathVariable Long userId, Model model){
+//        User user = userRepo.findByUserId(String.valueOf(userId));
+//        if (user != null){
+//            model.addAttribute("nickName", user.getNickName());
+//            return "/user/calendar"; // 사용자 캘린더 화면 이동
+//        }else {
+//            return "redirect:/"; // 사용자 없을 경우 홈으로 이동
+//        }
+//    }
 }

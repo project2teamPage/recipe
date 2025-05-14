@@ -43,7 +43,8 @@ public class SecurityConfig {
                         .invalidateHttpSession(true) // 로그아웃시 회원 세션 모두 삭제
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/user-loginId/**","/user-email/**","/signup", "/user/**", "recipe/**", "post/**").permitAll()
+                        .requestMatchers("/", "/login", "/user-loginId/**","/user-email/**"
+                                ,"/user/calendar/**","/signup", "/user/**", "recipe/**", "post/**").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
                         .anyRequest().authenticated()
                 );

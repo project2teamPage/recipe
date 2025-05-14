@@ -15,27 +15,35 @@ public class CalendarEntryMealListDto {
     private Long bookmarkRecipeId;
     private MealType mealType;
 
-    private static ModelMapper modelMapper = new ModelMapper();
 
-    public CalendarEntryMeal to (CalendarEntry calendarEntry,
-                                 BookmarkRecipe bookmarkRecipe){
+    // entity -> dto
+    // 화면 표현용
+    public static CalendarEntryMealListDto from(CalendarEntryMeal calendarEntryMeal){
 
-        CalendarEntryMeal calendarEntryMeal = modelMapper.map(this, CalendarEntryMeal.class);
+        CalendarEntryMealListDto dto = new CalendarEntryMealListDto();
+
+        dto.setMealType(calendarEntryMeal.getMealType());
+        dto.setCalendarEntryId(calendarEntryMeal.getCalendarEntry().getId());
+        dto.setBookmarkRecipeId(calendarEntryMeal.getBookmarkRecipe().getId());
+
+        return dto;
+    }
+
+    // dto-> entity
+    // 데이터 전송용
+    public static CalendarEntryMeal to(CalendarEntry calendarEntry,
+                                       BookmarkRecipe bookmarkRecipe){
+
+        CalendarEntryMeal calendarEntryMeal = new CalendarEntryMeal();
+
+        calendarEntryMeal.setMealType(calendarEntryMeal.getMealType());
         calendarEntryMeal.setCalendarEntry(calendarEntry);
         calendarEntryMeal.setBookmarkRecipe(bookmarkRecipe);
 
         return calendarEntryMeal;
-    }
-
-    public static CalendarEntryMealListDto from(CalendarEntryMeal calendarEntryMeal){
-
-        CalendarEntryMealListDto calendarEntryMealListDto = new CalendarEntryMealListDto();
-        calendarEntryMealListDto.setMealType(calendarEntryMeal.getMealType());
-        calendarEntryMealListDto.setCalendarEntryId(calendarEntryMeal.getCalendarEntry().getId());
-        calendarEntryMealListDto.setBookmarkRecipeId(calendarEntryMeal.getBookmarkRecipe().getId());
-
-        return calendarEntryMealListDto;
 
     }
+
+
 }
 
