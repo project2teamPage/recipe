@@ -5,6 +5,7 @@ import com.recipe.constant.DishType;
 import com.recipe.constant.OrderType;
 import com.recipe.constant.Theme;
 import com.recipe.dto.recipe.*;
+import com.recipe.entity.recipe.Recipe;
 import com.recipe.entity.user.User;
 import com.recipe.repository.recipe.RecipeRepo;
 import com.recipe.repository.user.UserRepo;
@@ -118,6 +119,16 @@ public class RecipeController {
 
 
         return "redirect:/recipe";
+    }
+
+    // 레시피 수정
+    @GetMapping("/recipe/edit/{id}")
+    public String editForm(@PathVariable Long id, Model model){
+        RecipeForm recipeFrom = recipeService.getRecipeForm(id);
+
+        model.addAttribute("recipeForm", recipeFrom);
+
+        return "recipe/editForm";
     }
 
 

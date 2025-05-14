@@ -151,22 +151,8 @@ public class PostService {
 
     }
 
-    // 좋아요 누를시
-    public void addLike(Long id, User user) {
-
-        PostLike postLike = new PostLike();
-        Post post = postRepo.findById(id).orElseThrow();
-        postLike.setPost(post);
-        postLike.setUser(user);
-
-        if( !postLikeRepo.findByPostIdAndUserId(id, user.getId()) ){
-            postLikeRepo.save(postLike);
-        } else {
-            postLikeRepo.delete(postLike);
-        }
 
 
-    }
 }
 
 

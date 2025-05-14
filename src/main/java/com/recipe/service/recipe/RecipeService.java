@@ -207,7 +207,28 @@ public class RecipeService {
         recipeRepo.save(recipe);
     }
 
-    
 
+    // 레시피 수정하기 위한 recipeFrom 반환
+    public RecipeForm getRecipeForm(Long id) {
+        Recipe recipe = recipeRepo.findById(id).orElseThrow();
+        List<RecipeIngredient> ingredients = recipeIngredientRepo.findAllByRecipeId(id);
+        List<RecipeStep> steps = recipeStepRepo.findAllByRecipeIdOrderByStepOrder(id);
 
+        // Entity -> Dto
+        List<RecipeIngredientDto> recipeIngredientDtoList = new ArrayList<>();
+        for(RecipeIngredient recipeIngredient : ingredients){
+
+            recipeIngredientDtoList.add( RecipeIngredientDto.from(recipeIngredient) );
+        }
+
+        // Entity -> Dto
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        for(RecipeStep recipeStep : steps){
+
+            recipeStepDtoList.add( RecipeStepDto.from(recipeStep) );
+        }
+
+        return RecipeForm.from(recipe, recipeIngredientDtoList, recipeStepDtoList);
+
+    }
 }

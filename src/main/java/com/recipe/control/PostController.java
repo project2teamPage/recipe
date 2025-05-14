@@ -6,16 +6,22 @@ import com.recipe.constant.PostCategory;
 import com.recipe.constant.UploadType;
 import com.recipe.dto.post.PostCommentDto;
 import com.recipe.dto.post.PostForm;
+import com.recipe.entity.post.Post;
+import com.recipe.entity.post.PostLike;
 import com.recipe.entity.user.User;
+import com.recipe.repository.post.PostLikeRepo;
 import com.recipe.repository.post.PostRepo;
+import com.recipe.repository.user.UserRepo;
 import com.recipe.service.FileService;
 import com.recipe.service.post.PostService;
+import com.recipe.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +40,10 @@ public class PostController {
     private final PostService postService;
     private final PostRepo postRepo;
     private final FileService fileService;
+    private final UserRepo userRepo;
+    private final UserService userService;
+    private final PostLikeRepo postLikeRepo;
+
 
     // 커뮤니티 리스트
     @GetMapping("/post")
@@ -113,16 +123,28 @@ public class PostController {
         return "redirect:/post/" + id;
     }
 
-    // 좋아요 누를 시 좋아요 저장
     @PostMapping("/post/{id}/like")
-    public String addLike(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
+    @ResponseBody
+    public ResponseEntity<?> likePost(@PathVariable Long id, Principal principal) {
 
-        User user = userDetails.getUser();
+        String loginId = principal.getName();
+        User user = userRepo.findByLoginId(loginId);
+        Post post = postRepo.findById(id).orElseThrow();
 
-        postService.addLike(id, user);
+        // 중복 체크
+        if (postLikeRepo.existsByPostAndUser(post, user)) {
+            return ResponseEntity.badRequest().body("이미 좋아요를 눌렀습니다.");
+        }
 
-        return "redirect:/post/" + id;
+        PostLike like = new PostLike();
+        like.setPost(post);
+        like.setUser(user);
+        postLikeRepo.save(like);
+
+        long likeCount = postLikeRepo.countByPost(post);
+        return ResponseEntity.ok(likeCount);
     }
+
 
     // 게시글 삭제
     @GetMapping("/post/delete/{postId}")

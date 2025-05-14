@@ -27,13 +27,10 @@
         <hr/>
 
         <!-- 좋아요 -->
-        <form th:action="@{/post/{id}/like(id=${post.id})}" method="post"></form>
-            <div class="like-section">
-                <button type="submit">
-                    <span>❤️ 좋아요</span>
-                    <span th:text="${post.postLikes}">0</span>
-                </button>
-            </div>
+        <div class="like-section">
+            <span>❤️ 좋아요</span>
+            <span th:text="${post.postLikes}">0</span>
+        </div>
 
         <!-- 추가 버튼 (수정, 삭제 등) -->
         <div>
