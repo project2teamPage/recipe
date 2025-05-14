@@ -90,6 +90,10 @@ body {
   margin-top: 25px;
   margin-bottom: 15px;
 }
+.pro-photo img {
+    overflow:hidden;
+}
+
 .pro-text {
   width: 160px;
   height: 40px;

@@ -1,12 +1,56 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
-</head>
-<body>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .report-table-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #3498db;
+            color: white;
+        }
+
+        th, td {
+            padding: 16px 12px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 15px;
+        }
+
+        th:first-child,
+        td:first-child {
+            width: 50px;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</th:block>
+<th:block layout:fragment="script"></th:block>
+
+<div layout:fragment="main" id="main">
+    <div class="report-table-container">
     <div>
         <table>
             <thead>
@@ -24,24 +68,15 @@
                     <td>
                         <input type="checkbox">
                     </td>
-                    <td th:text="${reportColumn.userId} + '(' + ${reportColumn.userNickName} + ')'">user1</td>
-                    <td th:text="${reportColumn.targetId} + '(' + ${reportColumn.userNickName} + ')'">user1</td>
-                    <td th:text="${reportColumn.targetType}">user2</td>
-                    <td th:text="${reportColumn.title}">레시피게시글</td>
-                    <td th:text="${reportColumn.date}">2025-04-18</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox">
-                    </td>
-                    <td>user3</td>
-                    <td>user4</td>
-                    <td>레시피댓글</td>
-                    <td>댓글 욕설</td>
-                    <td>2025-04-20</td>
+                    <td th:text="${reportColumn.userId} + '(' + ${reportColumn.userNickName} + ')'"></td>
+                    <td th:text="${reportColumn.targetId} + '(' + ${reportColumn.userNickName} + ')'"></td>
+                    <td th:text="${reportColumn.targetType}"></td>
+                    <td th:text="${reportColumn.title}"></td>
+                    <td th:text="${reportColumn.date}"></td>
                 </tr>
             </tbody>
         </table>
     </div>
-</body>
+</div>
+</div>
 </html>

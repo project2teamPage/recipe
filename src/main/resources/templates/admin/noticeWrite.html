@@ -1,95 +1,131 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #eef1f6;
             margin: 0;
-            padding: 30px;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px; /* 헤더 콘텐츠 영역 너비와 맞춤 */
+            margin: 0 auto;     /* 가운데 정렬 */
+            padding: 40px 20px; /* 상하 여백, 좌우는 적당한 패딩 */
         }
 
         .form-container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
+            font-size: 28px;
+            font-weight: 600;
             text-align: center;
-            margin-bottom: 25px;
-            color: #333;
+            color: #2c3e50;
+            margin-bottom: 40px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 16px;
+            color: #34495e;
+            font-weight: 500;
         }
 
         input[type="text"],
         textarea {
             width: 100%;
-            padding: 14px;
-            margin-bottom: 20px;
+            padding: 18px 20px;
             font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
+            border: 1px solid #ccd1d9;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
 
         textarea {
             resize: vertical;
-            min-height: 200px;
+            min-height: 250px;
         }
 
         .button-group {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 30px;
         }
 
         button {
-            padding: 12px 20px;
+            padding: 14px 28px;
             font-size: 16px;
+            font-weight: 500;
             background-color: #3498db;
-            color: white;
+            color: #fff;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.25s ease;
         }
 
         button:hover {
-            background-color: #2980b9;
+            background-color: #2c80b4;
+        }
+
+        button[type="button"] {
+            background-color: #7f8c8d;
+        }
+
+        button[type="button"]:hover {
+            background-color: #606c76;
         }
     </style>
-</head>
-<body>
-<div class="form-container">
-<h2>공지사항 작성</h2>
+</th:block>
+<th:block layout:fragment="script"></th:block>
 
-<form th:action="@{/admin/noticeWrite}" th:object="${noticeDto}" method="post">
-    <div>
-        <label for="title">제목:</label>
-        <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required>
-    </div>
+<div layout:fragment="main" id="main">
+    <div class="container">
+        <div class="form-container">
+            <h2>공지사항 작성</h2>
 
-    <div>
-        <label for="content">내용:</label>
-        <textarea id="content" th:field="*{content}" placeholder="내용을 입력하세요" rows="10" required></textarea>
-    </div>
+            <form th:action="@{/admin/noticeWrite}" th:object="${noticeDto}" method="post">
+                <!-- CSRF 토큰 추가 -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-    <div>
-        <button type="submit">작성 완료</button>
-        <button type="button" onclick="location.href='/admin/notice'">목록으로</button>
+                <div style="margin-bottom: 20px;">
+                    <label for="title">제목:</label>
+                    <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label for="content">내용:</label>
+                    <textarea id="content" th:field="*{content}" placeholder="내용을 입력하세요" rows="10" required></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit">작성 완료</button>
+                    <button type="button" onclick="location.href='/admin/notice'">목록으로</button>
+                </div>
+            </form>
+        </div>
     </div>
-</form>
-</body>
+</div>
 </html>
