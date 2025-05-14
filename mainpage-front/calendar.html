@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>내 캘린더</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="header.css" />
+    <link rel="stylesheet" href="calendar.css" />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+    />
+    <script src="calendar.js"></script>
+  </head>
+  <body>
+    <header>
+      <nav class="head">
+        <div class="main-logo"><img src="image/logo4.png" alt="" /></div>
+        <ul class="menu">
+          <li>
+            <a href="#">레시피</a>
+          </li>
+          <li>
+            <a href="#">커뮤니티</a>
+          </li>
+          <li class="mypage">
+            <a href="#">마이페이지</a>
+          </li>
+          <li>
+            <a href="#">로그인</a>
+          </li>
+          <li class="admin">
+            <a href="#">ADMIN</a>
+          </li>
+        </ul>
+        <form class="top-search" role="">
+          <input
+            class="top-search-form"
+            type="search"
+            placeholder="검색어를 입력해주세요."
+            aria-label="Search"
+          />
+          <button class="top-search-btn" type="top-search-btn">
+            <img src="image/top_search_logo.png" alt="검색 아이콘" />
+          </button>
+        </form>
+      </nav>
+    </header>
+    <div class="container">
+      <div class="side-menu">
+        <ul class="side-menu-list">
+          <li class="side-menu-list-title">마이페이지</li>
+          <li class="pro-change"><a href="#">프로필 편집</a></li>
+          <li><a href="#">내 활동</a></li>
+          <li><a href="#">즐겨찾는 레시피</a></li>
+          <li class="s-m-l-calendar"><a href="#">내 캘린더</a></li>
+        </ul>
+      </div>
+      <div class="calendar">
+        <div class="title">
+          <span
+            ><p class="calendarUser">@</p>
+            님의 월별 캘린더</span
+          >
+          <p>삼시세끼! 어떤 레시피를 활용한 식사를 하였는지 기록해주세요.</p>
+        </div>
+        <div class="content">
+          <div class="cal-title">2024년 4월</div>
+          <div class="cal-content">내용</div>
+        </div>
+        <div class="heart-box">
+          <button class="heart-btn" onclick="toggleLike(this)">
+            <i class="fa-regular fa-heart"></i>
+            <span class="heart-count">좋아요 1개</span>
+          </button>
+        </div>
+        <div class="comment-box">
+          <div class="pro-photo"></div>
+          <div class="user-info">
+            <div class="user">계림제자선우선우</div>
+            <div class="user-comment">
+              모두 좋아해주셔서 너무 감사드립니다~!
+            </div>
+          </div>
+          <div class="com-btn">
+            <button class="update-btn">수정</button>
+            <button class="delete-btn">삭제</button>
+          </div>
+        </div>
+        <div class="comment-box">
+          <div class="pro-photo"></div>
+          <div class="user-info">
+            <div class="user">지각쟁이재원</div>
+            <div class="user-comment">댓글 발자국 남기고 가요~</div>
+          </div>
+          <div class="com-btn">
+            <button class="update-btn">수정</button>
+            <button class="delete-btn">삭제</button>
+          </div>
+        </div>
+        <div class="comment-box">
+          <div class="pro-photo"></div>
+          <div class="user-info">
+            <div class="user">지각쟁이재원</div>
+            <div class="user-comment">댓글 발자국 남기고 가요~</div>
+          </div>
+          <div class="com-btn">
+            <button class="update-btn">수정</button>
+            <button class="delete-btn">삭제</button>
+          </div>
+        </div>
+        <div class="comment-box">
+          <div class="pro-photo"></div>
+          <div class="user-info">
+            <div class="user">정훈이의점심은</div>
+            <div class="user-comment">
+              방문합니다^^ 제 유부말이 레시피도 보고가세요~
+            </div>
+          </div>
+          <div class="com-btn">
+            <button class="update-btn">수정</button>
+            <button class="delete-btn">삭제</button>
+          </div>
+        </div>
+        <div class="create-comment-box">
+          <div class="c-com-photo"></div>
+          <div class="create-comment">
+            <span class="create-user-name">계림제자선우선우</span>
+            <input
+              class="create-comment-form"
+              type="text"
+              value=""
+              placeholder="내용을 입력하세요."
+              id="user-name"
+              checked
+            />
+            <label class="form-check-label" for="checkChecked" id="user-name">
+            </label>
+            <button class="upload-btn">등록</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

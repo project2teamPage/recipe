@@ -22,7 +22,7 @@
       <li sec:authorize="hasAnyAuthority('ROLE_USER')">
         <a href="/user/profile">마이페이지</a>
       </li>
-      <li>
+      <li sec:authorize="isAnonymous()">
         <a href="/user/login">로그인</a>
       </li>
       <li sec:authorize="hasAnyAuthority('ROLE_USER')">

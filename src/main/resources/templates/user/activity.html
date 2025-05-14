@@ -16,10 +16,10 @@
     <div class="side-menu">
       <ul class="side-menu-list">
         <li class="side-menu-list-title">마이페이지</li>
-        <li class="pro-change"><a href="#">프로필 편집</a></li>
-        <li><a href="#">내 활동</a></li>
-        <li><a href="#">즐겨찾는 레시피</a></li>
-        <li class="s-m-l-calendar"><a href="#">내 캘린더</a></li>
+        <li class="pro-change"><a href="/user/profile">프로필 편집</a></li>
+        <li><a href="/user/activity">내 활동</a></li>
+        <li><a href="/user/bookmark">즐겨찾는 레시피</a></li>
+        <li class="s-m-l-calendar"><a th:href="@{'/user/calendar/' + ${user.id}}">내 캘린더</a></li>
       </ul>
     </div>
     <div class="activity">

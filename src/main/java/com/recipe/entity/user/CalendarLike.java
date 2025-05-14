@@ -14,7 +14,7 @@ public class CalendarLike {
 
     @ManyToOne
     @JoinColumn(name = "calendar_id")
-    private CalendarLike calendarLike;
+    private Calendar calendar;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

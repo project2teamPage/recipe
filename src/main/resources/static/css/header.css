@@ -24,16 +24,17 @@
 }
 .head {
   display: flex;
-  width: 1440px;
+  width: 1200px;
 }
 .menu {
-  width: 600px;
+  width: 500px;
   height: 40px;
   display: flex;
   line-height: 40px;
   margin-top: 40px;
   font-size: 16px;
   font-weight: 600;
+  margin-right:20px;
 }
 .menu a {
   color: black;

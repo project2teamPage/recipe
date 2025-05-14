@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/user/calendar.css" />
+</th:block>
+<th:block layout:fragment="script">
+  <script th:src="@{/javascript/user/calendar.js}"></script>
+
+    <script>
+        <!-- 댓글 달기-->
+        document.querySelector('.upload-btn').addEventListener('click', function () {
+               const content = document.querySelector('.create-comment-form').value;
+               const calendarId = calendarComment;
+               fetch(`/api/comments/${calendarId}`, {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                   body: new URLSearchParams({ content })
+               }).then(() => location.reload());
+           });
+
+<!--           // 댓글 수정 버튼 (입력창 열기)-->
+document.querySelectorAll('.update-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        const commentId = this.getAttribute('data-comment-id');
+        const parent = this.closest('li');
+        const commentText = parent.querySelector('.user-comment');
+        const inputField = parent.querySelector('.edit-comment-input');
+        const saveButton = parent.querySelector('.save-btn');
+
+<!--        // 토글-->
+        commentText.style.display = 'none';
+        inputField.style.display = 'inline-block';
+        saveButton.style.display = 'inline-block';
+        this.style.display = 'none';
+    });
+});
+
+<!--// 댓글 저장 버튼 (PUT 요청)-->
+document.querySelectorAll('.save-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        const commentId = this.getAttribute('data-comment-id');
+        const parent = this.closest('li');
+        const inputField = parent.querySelector('.edit-comment-input');
+        const newContent = inputField.value;
+
+        if (newContent.trim()) {
+            fetch(`/user/${commentId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ content: newContent })
+            }).then(() => location.reload());
+        }
+    });
+});
+
+<!--// 댓글 삭제-->
+document.querySelectorAll('.delete-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        const commentId = this.getAttribute('data-comment-id');
+        fetch(`/user/${commentId}`, {
+            method: 'DELETE'
+        }).then(() => location.reload());
+    });
+});
+    </script>
+
+</th:block>
+
+<div layout:fragment="main" id="main">
+
+  <div class="container">
+    <div class="side-menu">
+      <ul class="side-menu-list">
+        <li class="side-menu-list-title">마이페이지</li>
+        <li class="pro-change"><a href="/user/profile">프로필 편집</a></li>
+        <li><a href="/user/activity">내 활동</a></li>
+        <li><a href="/user/bookmark">즐겨찾는 레시피</a></li>
+        <li class="s-m-l-calendar"><a th:href="@{'/user/calendar/' + ${user.id}}">내 캘린더</a></li>
+      </ul>
+    </div>
+    <div class="calendar">
+      <div class="title">
+          <span>
+     <a th:href="@{'/user/calendar/' + ${user.id}}" style="text-decoration: none; color: black;">
+      <p class="calendarUser" th:text="${user.nickName}"></p>
+    </a>
+    님의 월별 캘린더
+  </span>
+        <p>삼시세끼! 어떤 레시피를 활용한 식사를 하였는지 기록해주세요.</p>
+      </div>
+      <div class="content">
+        <div class="cal-title">2024년 4월</div>
+        <div class="cal-content">
+            <div class="flex gap-2 justify-center py-5">
+                <button id="prev-year"><<</button>
+                <button id="prev-month"><</button>
+                <button id="reset-date">Reset && 날짜 출력</button>
+                <button id="next-month">></button>
+                <button id="next-year">>></button>
+            </div>
+
+            <ul class="flex flex-wrap" id="calendar" style="width: 600px"></ul>
+        </div>
+      </div>
+      <div class="heart-box">
+        <button class="heart-btn" onclick="toggleLike()">
+          <i class="fa-regular fa-heart"></i>
+          <span class="heart-count" id="like-count">좋아요 0개</span>
+        </button>
+      </div>
+<!--      <div class="comment-box" th:each="comment : ${comments}">-->
+<!--        <div class="pro-photo"></div>-->
+<!--        <div class="user-info">-->
+<!--          <div class="user" th:text="${comment.user.nickName}" >계림제자선우선우</div>-->
+<!--          <div class="user-comment" th:text="${comment.content}" >-->
+<!--            모두 좋아해주셔서 너무 감사드립니다~!-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="com-btn">-->
+<!--          <button class="update-btn"  th:if="${comment.user.id == user.id}" >수정</button>-->
+<!--          <button class="delete-btn" th:if="${comment.user.id == user.id}">삭제</button>-->
+<!--        </div>-->
+<!--      </div>-->
+
+        <!-- 댓글 단거-->
+      <div class="comment-box">
+          <div class="pro-photo">프사</div>
+          <ul class="user-info">
+              <li id="calendarComment" th:each="comment : ${comments}">
+                  <div>
+                      <div class="user" th:text="${comment.nickName}"></div>
+                  </div>
+<!--                  수정전-->
+                  <p class="user-comment" th:text="${comment.content}"></p>
+<!--                  수정 후-->
+                  <input type="text" class="edit-comment-input" th:value="${comment.content}" style="display: none;" />
+                  <div class="com-btn">
+                      <button class="update-btn" th:if="${comment.userId == userId}"
+                              th:attr="data-comment-id=${comment.id}">수정</button>
+                      <button class="save-btn"  th:if="${comment.userId == userId}" th:attr="data-comment-id=${comment.id}"
+                              style="display: none;">저장</button>
+                      <button class="delete-btn" th:if="${comment.userId == userId}"
+                              th:attr="data-comment-id=${comment.id}">삭제</button>
+                  </div>
+              </li>
+          </ul>
+
+
+<!--        <div class="pro-photo"></div>-->
+<!--        <div class="user-info">-->
+<!--            <li th:each="comment : ${calendarCommentListDtos.}">gd<li>-->
+<!--          <div class="user" th:text="${comment.nickName}"></div>-->
+<!--          <div class="user-comment" th:text="${comment.content}">내용</div>-->
+<!--        </div>-->
+
+<!--        <div class="com-btn">-->
+<!--          <button class="update-btn" th:if="${comment.user.id == user.id}">수정</button>-->
+<!--          <button class="delete-btn" th:if="${comment.user.id == user.id}">삭제</button>-->
+<!--        </div>-->
+<!--      </div>-->
+
+
+
+
+        <!-- 댓글다는거  -->
+      <div class="create-comment-box">
+        <div class="c-com-photo"></div>
+        <div class="create-comment">
+            <form th:action=" '/user/calendar/' + ${user.id} " th:object="${addComment}" method="post">
+<!--            <form th:action=" '/user/calendar/commentSave/' + ${user.id} " th:object="${CalendarCommentDto}" method="get" >-->
+                <span class="create-user-name" th:text="${user.nickName}" ></span>
+                <textarea class="create-comment-form" th:field="*{content}" placeholder="댓글을 입력하세요"></textarea>
+<!--                <input th:text="*{content}"-->
+<!--                        name="content"-->
+<!--                        class="create-comment-form"-->
+<!--                        type="text"-->
+<!--                        value=""-->
+<!--                        placeholder="내용을 입력하세요."-->
+<!--                        id="user-name"-->
+<!--                        checked-->
+<!--                />-->
+<!--                <label class="form-check-label" id="user-name">ㅎㅇ?-->
+<!--                </label>-->
+                <button class="upload-btn" type="submit">등록</button>
+            </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</html>
