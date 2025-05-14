@@ -43,18 +43,25 @@ public class SecurityConfig {
                         .invalidateHttpSession(true) // 로그아웃시 회원 세션 모두 삭제
                 )
                 .authorizeHttpRequests(auth -> auth
-
-                        .requestMatchers("/", "/login", "/user-loginId/**","/user-email/**"
+                        .requestMatchers("/", "/login", "/user-loginId/**","/user-email/**", "/post/imageUpload"
                           ,"/user/calendar/**","/signup", "/user/**", "recipe/**", "post/**").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
                         .requestMatchers("/recipeImg/**", "/postImg/**").permitAll()
                         .anyRequest().authenticated()
                 )
+
+
                 .csrf(
                         cr ->
                                 cr.csrfTokenRepository(
-                                        CookieCsrfTokenRepository.withHttpOnlyFalse()));
-                //http.formLogin(Customizer.withDefaults());
+                                        CookieCsrfTokenRepository.withHttpOnlyFalse()
+                                )
+                )
+                .csrf( cr ->
+                        cr.ignoringRequestMatchers("post/imageUpload")
+                )
+        ;
+        //http.formLogin(Customizer.withDefaults());
 
 
         return http.build();

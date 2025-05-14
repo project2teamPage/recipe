@@ -92,6 +92,7 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
             <div class="col" th:each="post : ${fridgeList}">
                 <a th:href="@{'/post/' + ${post.id}}" class="text-decoration-none text-dark">
+
                     <div class="card h-100 shadow-sm">
                         <img th:src="@{'/postImg/' + ${post.imageUrl}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">
                         <div class="card-body">
@@ -111,7 +112,17 @@
     <!-- 요리 자랑 -->
     <div id="dish" class="mb-5">
         <h2>요리 자랑</h2>
-        <!-- 정렬 버튼 동일하게 복붙 -->
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="btn-group">
+                <a th:href="@{/post(orderType='RECENT')}" class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${param.orderType == 'RECENT'} ? ' active' : ''">최신순</a>
+                <a th:href="@{/post(orderType='LIKE')}" class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${param.orderType == 'LIKE'} ? ' active' : ''">추천순</a>
+                <a th:href="@{/post(orderType='VIEW')}" class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${param.orderType == 'VIEW'} ? ' active' : ''">조회순</a>
+            </div>
+        </div>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
             <div class="col" th:each="post : ${dishList}">
@@ -135,7 +146,17 @@
     <!-- 노하우 -->
     <div id="tip" class="mb-5">
         <h2>노하우</h2>
-        <!-- 정렬 버튼 동일하게 복붙 -->
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="btn-group">
+                <a th:href="@{/post(orderType='RECENT')}" class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${param.orderType == 'RECENT'} ? ' active' : ''">최신순</a>
+                <a th:href="@{/post(orderType='LIKE')}" class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${param.orderType == 'LIKE'} ? ' active' : ''">추천순</a>
+                <a th:href="@{/post(orderType='VIEW')}" class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${param.orderType == 'VIEW'} ? ' active' : ''">조회순</a>
+            </div>
+        </div>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
             <div class="col" th:each="post : ${tipList}">
