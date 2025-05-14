@@ -1,6 +1,7 @@
 package com.recipe.service.post;
 
 import com.recipe.constant.OrderType;
+import com.recipe.constant.PostCategory;
 import com.recipe.constant.UploadType;
 import com.recipe.dto.post.*;
 import com.recipe.entity.post.Post;
@@ -36,10 +37,10 @@ public class PostService {
     private final FileService fileService;
 
     // 게시글 작성
-    public Post savePost(PostCreateDto postCreateDto) throws IOException {
-        User user = userRepo.findById(postCreateDto.getUserId()).orElseThrow();
+    public void savePost(PostForm postForm) throws IOException {
+        User user = userRepo.findById(postForm.getUserId()).orElseThrow();
 
-        Post post = postCreateDto.to(user);
+        Post post = postForm.to(user);
         post.setUploadDate(LocalDateTime.now());
         post.setViewCount(0);
         post.setDeleted(false);
@@ -47,9 +48,9 @@ public class PostService {
         Post savedPost = postRepo.save(post);
 
         // 이미지 저장
-        if (postCreateDto.getPostImages() != null) {
-            for (int i = 0; i < postCreateDto.getPostImages().size(); i++) {
-                MultipartFile image = postCreateDto.getPostImages().get(i);
+        if (postForm.getPostImages() != null) {
+            for (int i = 0; i < postForm.getPostImages().size(); i++) {
+                MultipartFile image = postForm.getPostImages().get(i);
                 if (!image.isEmpty()) {
                     String imgName = fileService.uploadFile(image.getOriginalFilename(), image.getBytes(), UploadType.POST); // 저장된 파일 이름
                     String url = "/postImg/" + imgName;
@@ -65,12 +66,25 @@ public class PostService {
             }
         }
 
-        return savedPost;
     }
 
-    // 게시글 리스트 (페이징)
-    public Page<PostListDto> getPostList(Pageable pageable) {
-        Page<Post> posts = postRepo.findByIsDeletedFalseOrderByUploadDateDesc(pageable);
+    // 커뮤니티 게시글 리스트
+    public Page<PostListDto> getPostList(Pageable pageable, PostCategory postCategory, OrderType orderType) {
+
+        Page<Post> posts;
+
+        switch (orderType){
+            case LIKE :
+                posts = postRepo.findByPostCategoryAndIsDeletedFalseOrderByLikeCountDesc(postCategory, pageable);
+                break;
+            case VIEW :
+                posts= postRepo.findByPostCategoryAndIsDeletedFalseOrderByViewCountDesc(postCategory, pageable);
+                break;
+            case RECENT:
+            default:
+                posts= postRepo.findByPostCategoryAndIsDeletedFalseOrderByUploadDateDesc(postCategory, pageable);
+
+        }
 
         List<PostListDto> postListDtos = new ArrayList<>();
 

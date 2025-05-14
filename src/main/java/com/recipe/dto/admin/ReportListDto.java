@@ -1,4 +1,4 @@
-package com.recipe.dto.recipe;
+package com.recipe.dto.admin;
 
 import com.recipe.entity.admin.Report;
 import lombok.Getter;

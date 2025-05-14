@@ -17,19 +17,26 @@ public class RecipeCommentDto {
     private LocalDateTime uploadDate;
     private LocalDateTime updateDate;
 
-    public static ModelMapper modelMapper = new ModelMapper();
 
     public static RecipeCommentDto from(RecipeComment recipeComment){
-        RecipeCommentDto recipeCommentDto = modelMapper.map(recipeComment, RecipeCommentDto.class);
-        recipeCommentDto.setNickName(recipeComment.getUser().getNickName());
+        RecipeCommentDto dto = new RecipeCommentDto();
 
-        return recipeCommentDto;
+        dto.setId(recipeComment.getId());
+        dto.setNickName(recipeComment.getUser().getNickName());
+        dto.setContent(recipeComment.getContent());
+        dto.setUploadDate(recipeComment.getUploadDate());
+        dto.setUpdateDate(recipeComment.getUpdateDate());
+
+        return dto;
     }
 
     public RecipeComment to(User user, Recipe recipe){
-        RecipeComment recipeComment = modelMapper.map(this, RecipeComment.class);
+        RecipeComment recipeComment = new RecipeComment();
+        recipeComment.setContent(this.content);
         recipeComment.setRecipe(recipe);
         recipeComment.setUser(user);
+        recipeComment.setUpdateDate(this.getUpdateDate());
+        recipeComment.setUploadDate(this.getUploadDate());
 
         return recipeComment;
     }

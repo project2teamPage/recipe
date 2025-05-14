@@ -43,20 +43,23 @@ public class SecurityConfig {
                         .invalidateHttpSession(true) // 로그아웃시 회원 세션 모두 삭제
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/user-loginId/**","/user-email/**"
-                                ,"/user/calendar/**","/signup", "/user/**", "recipe/**", "post/**").permitAll()
-                        .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
-                        .anyRequest().authenticated()
-                );
 
-        http.csrf(
-                cr ->
-                        cr.csrfTokenRepository(
-                                CookieCsrfTokenRepository.withHttpOnlyFalse()));
-        //http.formLogin(Customizer.withDefaults());
+                        .requestMatchers("/", "/login", "/user-loginId/**","/user-email/**"
+                          ,"/user/calendar/**","/signup", "/user/**", "recipe/**", "post/**").permitAll()
+                        .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
+                        .requestMatchers("/recipeImg/**", "/postImg/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .csrf(
+                        cr ->
+                                cr.csrfTokenRepository(
+                                        CookieCsrfTokenRepository.withHttpOnlyFalse()));
+                //http.formLogin(Customizer.withDefaults());
+
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -64,5 +67,8 @@ public class SecurityConfig {
     }
 
 
+
+
 }
+
 

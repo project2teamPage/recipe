@@ -22,6 +22,7 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
             "WHERE (:dishType IS NULL OR r.dishType = :dishType) " +
             "AND (:theme IS NULL OR r.theme = :theme) " +
             "AND (:spicy IS NULL OR r.spicy = :spicy) " +
+            "AND r.isDeleted = false " +
             "ORDER BY r.uploadDate DESC")
     Page<Recipe> findRecent(@Param("dishType") DishType dishType,
                                   @Param("theme") Theme theme,
@@ -33,6 +34,7 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
             "WHERE (:dishType IS NULL OR r.dishType = :dishType) " +
             "AND (:theme IS NULL OR r.theme = :theme) " +
             "AND (:spicy IS NULL OR r.spicy = :spicy) " +
+            "AND r.isDeleted = false " +
             "ORDER BY (SELECT COUNT(l) FROM RecipeLike l WHERE l.recipe = r) DESC")
     Page<Recipe> findByLikes(@Param("dishType") DishType dishType,
                              @Param("theme") Theme theme,
@@ -44,6 +46,7 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
             "WHERE (:dishType IS NULL OR r.dishType = :dishType) " +
             "AND (:theme IS NULL OR r.theme = :theme) " +
             "AND (:spicy IS NULL OR r.spicy = :spicy) " +
+            "AND r.isDeleted = false " +
             "ORDER BY r.viewCount DESC")
     Page<Recipe> findByViews(@Param("dishType") DishType dishType,
                              @Param("theme") Theme theme,

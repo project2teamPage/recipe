@@ -1,6 +1,6 @@
 package com.recipe.service.admin;
 
-import com.recipe.dto.recipe.ReportListDto;
+import com.recipe.dto.admin.ReportListDto;
 import com.recipe.entity.admin.Report;
 import com.recipe.repository.admin.ReportRepository;
 import lombok.RequiredArgsConstructor;
