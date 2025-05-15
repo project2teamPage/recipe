@@ -16,6 +16,7 @@ import java.util.List;
 public class RecipeDetailDto {
 
     private Long id;
+    private String loginId;
     private String nickName;
     private String title;
     private DishType dishtype;
@@ -41,6 +42,7 @@ public class RecipeDetailDto {
         RecipeDetailDto recipeDetailDto = new RecipeDetailDto();
         recipeDetailDto = modelMapper.map(recipe, RecipeDetailDto.class);
 
+        recipeDetailDto.setLoginId(recipe.getUser().getLoginId());
         recipeDetailDto.setNickName( recipe.getUser().getNickName() );
         recipeDetailDto.setRecipeIngredientDtoList(recipeIngredientDtoList);
         recipeDetailDto.setRecipeCommentDtoList(recipeCommentDtoList);

@@ -13,6 +13,7 @@ import java.util.List;
 public class PostDetailDto {
 
     private Long id;
+    private String loginId;
     private String nickName;
     private String title;
     private String content;
@@ -29,8 +30,9 @@ public class PostDetailDto {
     public static PostDetailDto from(Post post, int postLikes,
                                      List<PostCommentDto> postCommentDtoList, List<PostImageDto> postImageDtoList){
 
-        PostDetailDto dto = new PostDetailDto();
-        dto = modelMapper.map(post, PostDetailDto.class);
+        PostDetailDto dto = modelMapper.map(post, PostDetailDto.class);
+        dto.setLoginId(post.getUser().getLoginId());
+        dto.setNickName(post.getUser().getNickName());
         dto.setPostLikes(postLikes);
         dto.setPostCommentDtoList(postCommentDtoList);
         dto.setPostImageDtoList(postImageDtoList);

@@ -99,12 +99,6 @@
         }
     }
 
-    function removeIngredient(badgeId) {
-        document.getElementById(badgeId)?.remove();
-        document.getElementById(`${badgeId}-name`)?.remove();
-        document.getElementById(`${badgeId}-amount`)?.remove();
-    }
-
     function addIngredient() {
         const name = document.getElementById("ingredientName").value.trim();
         const amount = document.getElementById("ingredientAmount").value.trim();
@@ -142,6 +136,12 @@
 
         document.getElementById("ingredientName").value = "";
         document.getElementById("ingredientAmount").value = "";
+    }
+
+    function removeIngredient(badgeId) {
+            document.getElementById(badgeId)?.remove();
+            document.getElementById(`${badgeId}-name`)?.remove();
+            document.getElementById(`${badgeId}-amount`)?.remove();
     }
   </script>
 </th:block>

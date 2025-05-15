@@ -64,9 +64,10 @@ public class RecipeForm {
         recipe.setSpicy(this.spicy);
         recipe.setRecipeDifficulty(this.recipeDifficulty);
         recipe.setRecipeTime(this.recipeTime);
-        recipe.setUploadDate(LocalDateTime.now()); // 직접 설정
-        recipe.setViewCount(0); // 초기값 설정
+        recipe.setUploadDate(LocalDateTime.now());
+        recipe.setViewCount(0);
         recipe.setDeleted(false);
+
 
         return recipe;
     }

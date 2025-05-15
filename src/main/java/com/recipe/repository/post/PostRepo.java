@@ -10,6 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Repository
 public interface PostRepo extends JpaRepository<Post, Long> {
 
@@ -30,4 +33,7 @@ public interface PostRepo extends JpaRepository<Post, Long> {
     @Modifying
     @Query("UPDATE Post p SET p.viewCount = p.viewCount + 1 WHERE p.id = :id")
     void increaseViewCount(@Param("id") Long id);
+
+    // 삭제일이 될 때 삭제될 게시글 리스트
+    List<Post> findAllByIsDeletedTrueAndDeletedDateBefore(LocalDateTime now);
 }

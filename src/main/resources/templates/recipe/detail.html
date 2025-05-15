@@ -72,10 +72,17 @@
 
     <!-- 추가 버튼 (수정, 삭제 등) -->
     <div>
-        <a th:href="@{/recipe/edit/{id}(id=${recipe.id})}" class="btn btn-primary">수정</a>
-        <a th:href="@{/recipe/delete/{id}(id=${recipe.id})}" class="btn btn-danger">삭제</a>
+        <div th:if="${user != null and user.loginId == recipe.loginId}">
+            <a th:href="@{/recipe/edit/{id}(id=${recipe.id})}" class="btn btn-primary">수정</a>
+
+            <form th:action="@{/recipe/delete/{id}(id=${recipe.id})}" method="post" style="display:inline;">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+            </form>
+        </div>
         <a th:href="@{/recipe}" class="btn btn-secondary">목록</a>
     </div>
+
 
     <!-- 댓글 -->
     <div class="comments">

@@ -117,10 +117,16 @@ public class PostController {
 
     // 게시글 상세페이지
     @GetMapping("/post/{postId}")
-    public String postDetail(Model model, @PathVariable("postId") Long postId){
+    public String postDetail(Model model, @PathVariable Long postId,
+                             @AuthenticationPrincipal CustomUserDetails userDetails){
 
         model.addAttribute("post", postService.getPostDetail(postId));
         model.addAttribute("newComment", new PostCommentDto() );
+
+        if (userDetails != null) {
+            model.addAttribute("user", userDetails.getUser());
+        }
+
         postService.increaseViewCount(postId);
 
 
@@ -162,13 +168,46 @@ public class PostController {
     }
 
 
-    // 게시글 삭제
-    @GetMapping("/post/delete/{postId}")
-    public String deletePost(@PathVariable("postId") Long postId){
+    // 게시글 삭제 (임시)
+    @PostMapping("/post/delete/{postId}")
+    public String deletePost(@PathVariable Long postId, Principal principal){
 
-        postService.deletePost(postId);
+        postService.deletePost(postId, principal.getName());
 
-        return "post/post";
+        return "redirect:/post";
+    }
+
+    // 게시글 수정 페이지
+    @GetMapping("post/edit/{id}")
+    public String editPost(@PathVariable Long id, Model model){
+
+        Post post = postRepo.findById(id).orElseThrow();
+        PostForm postForm = PostForm.from(post);
+
+        model.addAttribute("postForm", postForm);
+
+
+        return "post/editForm";
+    }
+
+    // 게시글 수정 후 저장
+    @PostMapping("post/edit/{id}")
+    public String editSave(@PathVariable Long id, @Valid PostForm postForm,
+                           BindingResult bindingResult, Model model,
+                           Principal principal){
+
+        if(bindingResult.hasErrors()){ // 필수입력값 을 작성하지 않은 경우
+            return "post/postForm";
+        }
+
+        try {
+            postService.savePost(postForm, principal.getName() );
+        } catch(IOException e) {
+            model.addAttribute("errorMessage", "게시글 작성 실패");
+            return "post/editForm";
+        }
+
+        return "redirect:/post/"+id;
     }
 
 

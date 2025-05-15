@@ -19,11 +19,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -56,11 +58,18 @@ public class RecipeController {
 
     // 레시피 상세
     @GetMapping("/recipe/{id}")
-    public String recipeDetail(@PathVariable Long id, Model model) {
+    public String recipeDetail(@PathVariable Long id, Model model,
+                               @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         RecipeDetailDto recipeDetailDto = recipeService.recipeDetail(id);
         model.addAttribute("recipe", recipeDetailDto);
         model.addAttribute("newComment", new RecipeCommentDto() );
+
+        // 현재 로그인한 사용자 정보도 모델에 추가
+        if (userDetails != null) {
+            model.addAttribute("user", userDetails.getUser());
+        }
+
         recipeService.increaseViewCount(id);
         return "recipe/detail";
     }
@@ -79,14 +88,17 @@ public class RecipeController {
     }
 
 
-    // 레시피 삭제
+    // 레시피 삭제 (임시)
 
-    @DeleteMapping("/recipe/{id}")
-    public String recipeDelete(@PathVariable Long id){
-        recipeService.deleteRecipe(id);
+    @PostMapping("/recipe/delete/{id}")
+    public String deleteRecipe(@PathVariable Long id, Principal principal) {
 
-        return "recipe/list";
+        recipeService.deleteRecipe(id, principal.getName());
+
+
+        return "redirect:/recipe";
     }
+
     // 레시피 작성
 
     @GetMapping("/recipe/new")
@@ -112,7 +124,7 @@ public class RecipeController {
         }
 
         try{
-            recipeService.createRecipe(recipeForm);
+            recipeService.saveRecipeAll(recipeForm);
         } catch (Exception e) {
             model.addAttribute("errorMessage", "레시피 작성 실패");
             e.printStackTrace();
@@ -136,21 +148,22 @@ public class RecipeController {
     // 레시피 수정
     @PostMapping("/recipe/edit/{id}")
     public String editedRecipe(@PathVariable Long id, @Valid RecipeForm recipeForm,
-                               BindingResult bindingResult, Model model){
+                               BindingResult bindingResult,
+                               @RequestParam(required = false)List<Long> deletedIngredientsId, Model model){
 
         if(bindingResult.hasErrors()){ // 필수입력값 을 작성하지 않은 경우
-            return "recipe/recipeForm";
+            return "recipe/editForm";
         }
         List<RecipeStepDto> stepList = recipeForm.getRecipeStepDtoList();
 
         if( stepList == null || stepList.isEmpty() ){
             // 이미지를 선택하지 않을 경우 에러메세지 보내주기
             model.addAttribute("errorMessage", "each recipeSteps needs image");
-            return "recipe/recipeForm";
+            return "recipe/editForm";
         }
 
         try{
-            recipeService.createRecipe(recipeForm);
+            recipeService.saveRecipeAll(recipeForm);
         } catch (Exception e) {
             model.addAttribute("errorMessage", "레시피 작성 실패");
             e.printStackTrace();

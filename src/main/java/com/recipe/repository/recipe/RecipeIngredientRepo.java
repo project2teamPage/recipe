@@ -21,5 +21,5 @@ public interface RecipeIngredientRepo extends JpaRepository<RecipeIngredient, Lo
     public List<Recipe> selectFridgeIngredient(@Param("names") List<String> names);
 
 
-
+    void deleteByRecipe(Recipe recipe);
 }
