@@ -27,7 +27,7 @@ public class ReportService {
 
         List<ReportListDto> reportListDtos = new ArrayList<>();
         // 레포지토리를 통해서 테이블의 데이터 가져오기
-        List<Report> reportList = reportRepository.findAll();
+        List<Report> reportList = reportRepository.findAllByOrderByDateDesc();
 
         // 엔티티를 dto에 넘겨서 arraryList로 저장
         for(Report report : reportList) {

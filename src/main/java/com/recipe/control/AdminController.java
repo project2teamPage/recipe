@@ -42,23 +42,6 @@ public class AdminController {
         return "admin/report";
     }
 
-//    @GetMapping("/admin/report/detail/{id}")
-//    @ResponseBody
-//    public ReportListDto getReportDetail(@PathVariable Long id) {
-//        Report report = reportService.findById(id);
-//        if(report == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-//
-//        String targetNickName = "";
-//        String targetLoginId = "";
-//
-//        switch (report.getTargetType()) {
-//            case R
-//        }
-//    }
-
-
     // 공지사항 관리 페이지 (사용자 역할에 따라 공지사항 다르게 처리)
     @GetMapping("/admin/notice")
     public String noticePage(@RequestParam(value = "role", required = false) Role role, Model model) {
