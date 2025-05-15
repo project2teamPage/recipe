@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/css/recipe/recipeForm.css}">
+</th:block>
+
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    let ingredientCount = 0;
+    let stepCount = 0;
+
+    function initExistingIngredients() {
+        /* 기존 재료 렌더링 */
+        [[${recipeForm.recipeIngredientDtoList}]].forEach((ingredient, i) => {
+            const name = ingredient.name;
+            const amount = ingredient.amount;
+            const badgeId = `ingredient-${i}`;
+            ingredientCount = i + 1;
+
+            const badge = document.createElement("span");
+            badge.className = "badge bg-light text-dark me-2";
+            badge.id = badgeId;
+            badge.innerHTML = `${name} ${amount} <button type="button" class="btn-close btn-sm ms-1" onclick="removeIngredient('${badgeId}')"></button>`;
+            document.getElementById("ingredientBadgeContainer").appendChild(badge);
+
+            const hiddenName = document.createElement("input");
+            hiddenName.type = "hidden";
+            hiddenName.name = `recipeIngredientDtoList[${i}].name`;
+            hiddenName.value = name;
+            hiddenName.id = `${badgeId}-name`;
+
+            const hiddenAmount = document.createElement("input");
+            hiddenAmount.type = "hidden";
+            hiddenAmount.name = `recipeIngredientDtoList[${i}].amount`;
+            hiddenAmount.value = amount;
+            hiddenAmount.id = `${badgeId}-amount`;
+
+            document.getElementById("hiddenIngredients").appendChild(hiddenName);
+            document.getElementById("hiddenIngredients").appendChild(hiddenAmount);
+        });
+    }
+
+    function initExistingSteps() {
+        const steps = [[${recipeForm.recipeStepDtoList}]];
+        steps.forEach((step, i) => {
+            const container = document.getElementById("stepsContainer");
+
+            const stepDiv = document.createElement("div");
+            stepDiv.className = "recipe-step";
+
+            stepDiv.innerHTML = `
+              <h4>STEP ${i + 1}</h4>
+              <div class="image-upload-container">
+                  <label class="image-upload-box">
+                      <span class="plus-icon" style="display: none;">+</span>
+                      <img class="preview-image" src="${step.imgUrl}" style="display:block;" />
+                      <input type="file" name="recipeStepDtoList[${i}].imgFile"
+                             accept="image/*" class="image-upload-input"
+                             onchange="previewImage(event, this)" />
+                      <input type="hidden" name="recipeStepDtoList[${i}].imgName" value="${step.imgName}" />
+                      <input type="hidden" name="recipeStepDtoList[${i}].imgOriginalName" value="${step.imgOriginalName}" />
+                      <input type="hidden" name="recipeStepDtoList[${i}].imgUrl" value="${step.imgUrl}" />
+                  </label>
+              </div>
+              <div>
+                  <label>제목:</label>
+                  <input type="text" name="recipeStepDtoList[${i}].title" value="${step.title}" />
+              </div>
+              <div>
+                  <label>내용:</label>
+                  <textarea name="recipeStepDtoList[${i}].content">${step.content}</textarea>
+              </div>
+              <hr/>
+          `;
+
+            container.appendChild(stepDiv);
+            stepCount++;
+        });
+    }
+
+    window.onload = function () {
+        initExistingIngredients();
+        initExistingSteps();
+    }
+
+    function previewImage(event, input) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = input.parentElement.querySelector('.preview-image');
+                const plusIcon = input.parentElement.querySelector('.plus-icon');
+                preview.src = e.target.result;
+                preview.style.display = "block";
+                plusIcon.style.display = "none";
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function addIngredient() {
+        const name = document.getElementById("ingredientName").value.trim();
+        const amount = document.getElementById("ingredientAmount").value.trim();
+
+        if (!name || !amount) {
+            alert("재료명과 양을 모두 입력해주세요.");
+            return;
+        }
+
+        const badgeId = `ingredient-${ingredientCount}`;
+
+        const badge = document.createElement("span");
+        badge.className = "badge bg-light text-dark me-2";
+        badge.id = badgeId;
+        badge.innerHTML = `${name} ${amount} <button type="button" class="btn-close btn-sm ms-1" onclick="removeIngredient('${badgeId}')"></button>`;
+
+        document.getElementById("ingredientBadgeContainer").appendChild(badge);
+
+        const hiddenName = document.createElement("input");
+        hiddenName.type = "hidden";
+        hiddenName.name = `recipeIngredientDtoList[${ingredientCount}].name`;
+        hiddenName.value = name;
+        hiddenName.id = `${badgeId}-name`;
+
+        const hiddenAmount = document.createElement("input");
+        hiddenAmount.type = "hidden";
+        hiddenAmount.name = `recipeIngredientDtoList[${ingredientCount}].amount`;
+        hiddenAmount.value = amount;
+        hiddenAmount.id = `${badgeId}-amount`;
+
+        document.getElementById("hiddenIngredients").appendChild(hiddenName);
+        document.getElementById("hiddenIngredients").appendChild(hiddenAmount);
+
+        ingredientCount++;
+
+        document.getElementById("ingredientName").value = "";
+        document.getElementById("ingredientAmount").value = "";
+    }
+
+    function removeIngredient(badgeId) {
+            document.getElementById(badgeId)?.remove();
+            document.getElementById(`${badgeId}-name`)?.remove();
+            document.getElementById(`${badgeId}-amount`)?.remove();
+    }
+  </script>
+</th:block>
+
+<div layout:fragment="main" id="main">
+  <div class="container mt-5">
+    <form th:action="@{/recipe/edit/{id}(id=${recipeForm.id})}" th:object="${recipeForm}" method="post" enctype="multipart/form-data">
+      <input type="hidden" th:field="*{id}" />
+
+      <div class="mb-3">
+        <label>제목</label>
+        <input type="text" class="form-control" th:field="*{title}" />
+      </div>
+
+      <div class="mb-3">
+        <label>카테고리</label>
+        <select class="form-select" th:field="*{dishType}">
+          <option value="MAINDISH">메인요리</option>
+          <option value="SIDEDISH">반찬</option>
+          <option value="DESSERT">디저트</option>
+          <option value="DRINK">음료</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label>테마</label>
+        <select class="form-select" th:field="*{theme}">
+          <option value="DIET">다이어트</option>
+          <option value="SLOW_AGING">저속노화</option>
+          <option value="VEGAN">채식주의</option>
+          <option value="LOW_SUGAR">저당</option>
+          <option value="HIGH_PROTEIN">고단백</option>
+          <option value="LCHF">저탄고지</option>
+        </select>
+      </div>
+
+      <!-- 조리 단계 -->
+      <div id="stepsContainer"></div>
+      <button type="button" onclick="addStep()" class="btn btn-outline-secondary mb-4">+ 단계 추가</button>
+
+      <!-- 재료 입력 -->
+      <div class="mb-3">
+        <label>재료</label>
+        <div class="row mb-2">
+          <div class="col"><input type="text" id="ingredientName" class="form-control" placeholder="재료명"></div>
+          <div class="col"><input type="text" id="ingredientAmount" class="form-control" placeholder="양"></div>
+          <div class="col-auto"><button type="button" class="btn btn-outline-primary" onclick="addIngredient()">등록</button></div>
+        </div>
+        <div id="ingredientBadgeContainer" class="mb-2"></div>
+        <div id="hiddenIngredients"></div>
+      </div>
+
+      <div class="mb-3">
+        <label>조리시간</label>
+        <input type="text" class="form-control" th:field="*{recipeTime}" />
+      </div>
+
+      <div class="mb-3">
+        <label>난이도</label>
+        <div>
+          <label><input type="radio" th:field="*{recipeDifficulty}" value="TOO_EASY" /> 최하</label>
+          <label><input type="radio" th:field="*{recipeDifficulty}" value="EASY" /> 하</label>
+          <label><input type="radio" th:field="*{recipeDifficulty}" value="MEDIUM" /> 중</label>
+          <label><input type="radio" th:field="*{recipeDifficulty}" value="HARD" /> 상</label>
+          <label><input type="radio" th:field="*{recipeDifficulty}" value="TOO_HARD" /> 최상</label>
+        </div>
+      </div>
+
+      <div class="text-end">
+        <button type="submit" class="btn btn-primary">수정 완료</button>
+      </div>
+
+      <p th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger mt-3"></p>
+    </form>
+  </div>
+</div>
+
+</html>

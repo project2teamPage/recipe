@@ -6,6 +6,7 @@
 
 <th:block layout:fragment="css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/post/list.css}">
 </th:block>
 
 <th:block layout:fragment="script">
@@ -80,18 +81,23 @@
 
         <div class="d-flex justify-content-between align-items-center mb-2">
             <div class="btn-group">
-                <a th:href="@{/post(orderType='RECENT')}" class="btn btn-outline-secondary btn-sm"
-                   th:classappend="${param.orderType == 'RECENT'} ? ' active' : ''">최신순</a>
-                <a th:href="@{/post(orderType='LIKE')}" class="btn btn-outline-secondary btn-sm"
-                   th:classappend="${param.orderType == 'LIKE'} ? ' active' : ''">추천순</a>
-                <a th:href="@{/post(orderType='VIEW')}" class="btn btn-outline-secondary btn-sm"
-                   th:classappend="${param.orderType == 'VIEW'} ? ' active' : ''">조회순</a>
+                <a th:href="@{/post(fridgeOrder='RECENT', dishOrder=${dishOrder}, tipOrder=${tipOrder})}"
+                   class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${fridgeOrder == 'RECENT'} ? ' active' : ''">최신순</a>
+                <a th:href="@{/post(fridgeOrder='LIKE', dishOrder=${dishOrder}, tipOrder=${tipOrder})}"
+                   class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${fridgeOrder == 'LIKE'} ? ' active' : ''">추천순</a>
+                <a th:href="@{/post(fridgeOrder='VIEW', dishOrder=${dishOrder}, tipOrder=${tipOrder})}"
+                   class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${fridgeOrder == 'VIEW'} ? ' active' : ''">조회순</a>
+
             </div>
         </div>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
             <div class="col" th:each="post : ${fridgeList}">
                 <a th:href="@{'/post/' + ${post.id}}" class="text-decoration-none text-dark">
+
                     <div class="card h-100 shadow-sm">
                         <img th:src="@{'/postImg/' + ${post.imageUrl}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">
                         <div class="card-body">
@@ -106,12 +112,39 @@
                 </a>
             </div>
         </div>
+        <!-- 페이징 -->
+        <div class="pagination">
+            <ul class="d-inline-flex gap-2">
+                <li class="page-item" th:classappend="${fridgeList.first} ? 'disabled'">
+                    <a class="page-link" th:href="@{/post(fridgePage=${fridgePage - 1}, fridgeOrder=${fridgeOrder}, dishOrder=${dishOrder}, dishPage=${dishPage}, tipOrder=${tipOrder}, tipPage=${tipPage})}">&laquo; 이전</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, fridgeList.totalPages - 1)}" th:classappend="${fridgePage == i} ? 'active'">
+                    <a class="page-link" th:href="@{/post(fridgePage=${i}, fridgeOrder=${fridgeOrder}, dishOrder=${dishOrder}, dishPage=${dishPage}, tipOrder=${tipOrder}, tipPage=${tipPage})}" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${fridgeList.last} ? 'disabled'">
+                    <a class="page-link" th:href="@{/post(fridgePage=${fridgePage + 1}, fridgeOrder=${fridgeOrder}, dishOrder=${dishOrder}, dishPage=${dishPage}, tipOrder=${tipOrder}, tipPage=${tipPage})}">다음 &raquo;</a>
+                </li>
+            </ul>>
+        </div>
     </div>
 
     <!-- 요리 자랑 -->
     <div id="dish" class="mb-5">
         <h2>요리 자랑</h2>
-        <!-- 정렬 버튼 동일하게 복붙 -->
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="btn-group">
+                <a th:href="@{/post(dishOrder='RECENT', fridgeOrder=${fridgeOrder}, tipOrder=${tipOrder})}"
+                   class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${dishOrder == 'RECENT'} ? ' active' : ''">최신순</a>
+                <a th:href="@{/post(dishOrder='LIKE', fridgeOrder=${fridgeOrder}, tipOrder=${tipOrder})}"
+                   class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${dishOrder == 'LIKE'} ? ' active' : ''">추천순</a>
+                <a th:href="@{/post(dishOrder='VIEW', fridgeOrder=${fridgeOrder}, tipOrder=${tipOrder})}"
+                   class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${dishOrder == 'VIEW'} ? ' active' : ''">조회순</a>
+            </div>
+        </div>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
             <div class="col" th:each="post : ${dishList}">
@@ -130,12 +163,39 @@
                 </a>
             </div>
         </div>
+        <!-- 페이징 -->
+        <div class="pagination">
+            <ul class="d-inline-flex gap-2">
+                <li class="page-item" th:classappend="${dishList.first} ? 'disabled'">
+                    <a class="page-link" th:href="@{/post(dishPage=${dishPage - 1}, dishOrder=${dishOrder}, fridgeOrder=${fridgeOrder}, fridgePage=${fridgePage}, tipOrder=${tipOrder}, tipPage=${tipPage})}">&laquo; 이전</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, dishList.totalPages - 1)}" th:classappend="${dishPage == i} ? 'active'">
+                    <a class="page-link" th:href="@{/post(dishPage=${i}, dishOrder=${dishOrder}, fridgeOrder=${fridgeOrder}, fridgePage=${fridgePage}, tipOrder=${tipOrder}, tipPage=${tipPage})}" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${dishList.last} ? 'disabled'">
+                    <a class="page-link" th:href="@{/post(dishPage=${dishPage + 1}, dishOrder=${dishOrder}, fridgeOrder=${fridgeOrder}, fridgePage=${fridgePage}, tipOrder=${tipOrder}, tipPage=${tipPage})}">다음 &raquo;</a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <!-- 노하우 -->
     <div id="tip" class="mb-5">
         <h2>노하우</h2>
-        <!-- 정렬 버튼 동일하게 복붙 -->
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="btn-group">
+                <a th:href="@{/post(tipOrder='RECENT', fridgeOrder=${fridgeOrder}, dishOrder=${dishOrder})}"
+                   class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${tipOrder == 'RECENT'} ? ' active' : ''">최신순</a>
+                <a th:href="@{/post(tipOrder='LIKE', fridgeOrder=${fridgeOrder}, dishOrder=${dishOrder})}"
+                   class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${tipOrder == 'LIKE'} ? ' active' : ''">추천순</a>
+                <a th:href="@{/post(tipOrder='VIEW', fridgeOrder=${fridgeOrder}, dishOrder=${dishOrder})}"
+                   class="btn btn-outline-secondary btn-sm"
+                   th:classappend="${tipOrder == 'VIEW'} ? ' active' : ''">조회순</a>
+            </div>
+        </div>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
             <div class="col" th:each="post : ${tipList}">
@@ -153,6 +213,26 @@
                     </div>
                 </a>
             </div>
+        </div>
+        <!-- 페이징 -->
+        <div class="pagination">
+            <ul class="d-inline-flex gap-2">
+
+                <!-- 이전 페이지 -->
+                <li class="page-item" th:classappend="${tipList.first} ? 'disabled'">
+                    <a class="page-link" th:href="@{/post(tipPage=${tipPage - 1}, tipOrder=${tipOrder}, fridgeOrder=${fridgeOrder}, fridgePage=${fridgePage}, dishOrder=${dishOrder}, dishPage=${dishPage})}">&laquo; 이전</a>
+                </li>
+
+                <!-- 페이지 번호 -->
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, tipList.totalPages - 1)}" th:classappend="${tipPage == i} ? 'active'">
+                    <a class="page-link" th:href="@{/post(tipPage=${i}, tipOrder=${tipOrder}, fridgeOrder=${fridgeOrder}, fridgePage=${fridgePage}, dishOrder=${dishOrder}, dishPage=${dishPage})}" th:text="${i + 1}">1</a>
+                </li>
+
+                <!-- 다음 페이지 -->
+                <li class="page-item" th:classappend="${tipList.last} ? 'disabled'">
+                    <a class="page-link" th:href="@{/post(tipPage=${tipPage + 1}, tipOrder=${tipOrder}, fridgeOrder=${fridgeOrder}, fridgePage=${fridgePage}, dishOrder=${dishOrder}, dishPage=${dishPage})}">다음 &raquo;</a>
+                </li>
+            </ul>
         </div>
     </div>
 

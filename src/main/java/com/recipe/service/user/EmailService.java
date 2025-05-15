@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class EmailService {
 
+    // 이메일 인증
     @Autowired
     private JavaMailSender mailSender;
 

@@ -1,11 +1,14 @@
 package com.recipe.service.user;
 
+
 import com.recipe.config.CustomUserDetails;
 import com.recipe.dto.user.MainUserListDto;
 import com.recipe.dto.user.MemberSignInDto;
 import com.recipe.dto.user.MemberSignUpDto;
 import com.recipe.entity.user.User;
 import com.recipe.repository.user.UserRepo;
+import com.recipe.repository.user.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,18 +18,24 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.security.Principal;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private UserRepository userRepository;
+
 
     // 회원가입 정보 저장
     public User saveUser(@Valid  MemberSignUpDto memberSignUpDto, PasswordEncoder passwordEncoder) {
@@ -81,4 +90,76 @@ public class UserService implements UserDetailsService {
     }
 
 
+    // 이미지 업로드
+
+    public void updateProfile(Long userId, MultipartFile profileImage) throws Exception {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (profileImage != null && !profileImage.isEmpty()) {
+            // 파일 이름 생성
+            String fileName = UUID.randomUUID() + "_" + profileImage.getOriginalFilename();
+            String uploadDir = "uploads/profile/";
+
+            // 디렉토리 생성
+            File dir = new File(uploadDir);
+            if (!dir.exists()) dir.mkdirs();
+
+            // 파일 저장
+            File savedFile = new File(uploadDir + fileName);
+            profileImage.transferTo(savedFile);
+
+            // DB에 경로 저장
+            user.setProfileImagePath("/" + uploadDir + fileName); // 예: /uploads/profile/uuid_filename.jpg
+        }
+
+        userRepo.save(user);
+    }
+
+
+    public Long getUserIdByPrincipal(Principal principal) {
+// 로그인된 사용자의 아이디(loginId)를 가져옴
+        String loginId = principal.getName();
+
+        // loginId로 사용자 조회
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        return user.getId();
+    }
+
+    // 아이디 중복검사
+    @Transactional(readOnly = true)
+    public boolean checkLoginIdDuplication(String loginId) {
+        return userRepo.existsByLoginId(loginId);
+    }
+
+    // 이메일 중복검사
+    @Transactional(readOnly = true)
+    public boolean checkEmailDuplication(String email) {
+        return userRepo.existsByEmail(email);
+    }
+
+
+    // 내 캘린더
+    public User getUserById(Long userId) {
+        return userRepo.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
+    public User getUserByLoginId(String loginId) {
+        return userRepo.findByLoginId(loginId);
+    }
+
+    // 회원 탈퇴
+    public boolean getOut(String email, String password){
+        User user = userRepo.findByEmail(email).orElseThrow(
+                ()-> new UsernameNotFoundException("사용자 없음")
+        );
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            return false;
+        }
+        userRepo.delete(user);
+        return true;
+    }
 }

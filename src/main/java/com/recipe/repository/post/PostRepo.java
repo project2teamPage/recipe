@@ -5,9 +5,13 @@ import com.recipe.entity.post.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface PostRepo extends JpaRepository<Post, Long> {
@@ -25,6 +29,11 @@ public interface PostRepo extends JpaRepository<Post, Long> {
     // 조회순
     Page<Post> findByPostCategoryAndIsDeletedFalseOrderByViewCountDesc(PostCategory postCategory, Pageable pageable);
 
+    // 게시글 클릭 시 조회수 증가
+    @Modifying
+    @Query("UPDATE Post p SET p.viewCount = p.viewCount + 1 WHERE p.id = :id")
+    void increaseViewCount(@Param("id") Long id);
 
-
+    // 삭제일이 될 때 삭제될 게시글 리스트
+    List<Post> findAllByIsDeletedTrueAndDeletedDateBefore(LocalDateTime now);
 }
