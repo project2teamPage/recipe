@@ -19,6 +19,8 @@ import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,60 +45,105 @@ public class RecipeService {
 
     
     // 레시피 작성시 레시피 entity 로 저장
-    public void saveRecipe(Recipe recipe){
+    public Recipe saveRecipe(RecipeForm dto){
+        User user = userService.getCurrentUser();
+        Recipe recipe;
 
-        recipeRepo.save( recipe );
+        if(dto.getId() == null){ // 새 레시피 작성
+            recipe = dto.toRecipe(user);
+        } else{ // 레시피 수정
+            recipe = recipeRepo.findById(dto.getId()).orElseThrow();
 
+            if (!recipe.getUser().getLoginId().equals(user.getLoginId())) {
+                throw new IllegalStateException("작성자만 수정할 수 있습니다.");
+            }
+
+
+            recipe.setTitle(dto.getTitle());
+            recipe.setDishType(dto.getDishType());
+            recipe.setTheme(dto.getTheme());
+            recipe.setSpicy(dto.getSpicy());
+            recipe.setRecipeDifficulty(dto.getRecipeDifficulty());
+            recipe.setRecipeTime(dto.getRecipeTime());
+
+        }
+
+        return recipeRepo.save( recipe );
     }
 
     // 레시피 재료 저장
     public void saveIngredient(RecipeForm dto, Recipe recipe){
 
+        recipeIngredientRepo.deleteByRecipe(recipe); // 수정 할 경우 대비
+
+
         List<RecipeIngredient> recipeIngredientList = dto.toIngredient(recipe);
 
-        for (RecipeIngredient ri : recipeIngredientList) {
-            System.out.println("Ingredient: id=" + ri.getId() + ", name=" + ri.getName());
+        for (int i = recipeIngredientList.size() -1; i >=0; i--){
+            RecipeIngredient recipeIngredient = recipeIngredientList.get(i);
+            if(recipeIngredient.getName() == null || recipeIngredient.getAmount() == null){
+                recipeIngredientList.remove(i);
+            }
+
         }
 
         recipeIngredientRepo.saveAll(recipeIngredientList);
+
 
     }
 
     // 레시피 step 저장
     public void saveRecipeStep(RecipeForm dto, Recipe recipe) throws IOException {
 
+        recipeStepRepo.deleteByRecipe(recipe); // 수정 할 경우 대비
+
+
         List<RecipeStepDto> stepDtos = dto.getRecipeStepDtoList();
+
+        if (stepDtos == null || stepDtos.isEmpty()) {
+            throw new IllegalArgumentException("조리 단계를 1개 이상 입력해야 합니다.");
+        }
+
         List<RecipeStep> recipeStep = new ArrayList<>();
 
         for( int i = 0; i < stepDtos.size(); i++ ){
             RecipeStepDto stepDto = stepDtos.get(i);
             MultipartFile file = stepDto.getImgFile();
-            System.out.println("업로드 파밀명 : " + file.getOriginalFilename());
-            String imgName = "";
-            String originalFileName = "";
 
-            try {
-                originalFileName = file.getOriginalFilename();
-                imgName = fileService.uploadFile(originalFileName, file.getBytes(), UploadType.RECIPE);
+            String imgName = stepDto.getImgName();
+            String originalFileName = stepDto.getImgOriginalName();
+            String imgUrl = stepDto.getImgUrl();
 
-            } catch (IOException e) {
-                throw new FileUploadException("파일 업로드 중 오류 발생: " + e.getMessage());
+            if (!file.isEmpty()) {
+                // 새 파일 업로드
+                try {
+                    originalFileName = file.getOriginalFilename();
+                    imgName = fileService.uploadFile(originalFileName, file.getBytes(), UploadType.RECIPE);
+                    imgUrl = "/recipeImg/" + imgName;
+                } catch (IOException e) {
+                    throw new FileUploadException("파일 업로드 중 오류 발생: " + e.getMessage());
+                }
             }
 
-            stepDto.setStepOrder(i+1);
-            stepDto.setImgOriginalName( originalFileName );
-            stepDto.setImgName( imgName );
-            stepDto.setImgUrl("/recipeImg/"+ imgName);
+            stepDto.setStepOrder(i + 1);
+            stepDto.setImgOriginalName(originalFileName);
+            stepDto.setImgName(imgName);
+            stepDto.setImgUrl(imgUrl);
 
-            System.out.println("Saving step: " + stepDto.getTitle() + ", id=" + stepDto.getId());
-
-
-            recipeStep.add( stepDto.to(recipe) );
+            recipeStep.add(stepDto.to(recipe));
 
         }
 
-        RecipeStep thumbnailStep = recipeStep.get( recipeStep.size() -1 );
-        thumbnailStep.setThumbnail(true);
+        // 마지막 이미지 == 썸네일
+        for(int i = recipeStep.size()-1; i >= 0 ; i--){
+            String imgUrl = recipeStep.get(i).getImgUrl();
+            if( imgUrl != null && !imgUrl.trim().isEmpty()){
+                RecipeStep thumbnailStep = recipeStep.get(i);
+                thumbnailStep.setThumbnail(true);
+                break;
+            };
+
+        }
 
 
         recipeStepRepo.saveAll(recipeStep);
@@ -105,12 +152,11 @@ public class RecipeService {
 
     // 한번에 저장하는 메서드
     @Transactional
-    public void createRecipe(RecipeForm dto) throws IOException {
-        User user = userService.getCurrentUser();
-        Recipe recipe = dto.toRecipe(user);
-        saveRecipe(recipe);
-        saveIngredient(dto, recipe);
-        saveRecipeStep(dto, recipe);
+    public void saveRecipeAll(RecipeForm dto) throws IOException {
+
+            Recipe recipe = saveRecipe(dto);
+            saveIngredient(dto, recipe);
+            saveRecipeStep(dto, recipe);
     }
 
     // 레시피 목록 (카테고리별 포함)
@@ -135,7 +181,10 @@ public class RecipeService {
 
         for(Recipe recipe : recipes.getContent()){
             RecipeStep recipeStep = recipeStepRepo.findByRecipeIdAndIsThumbnailIsTrue(recipe.getId()); // 레시피의 썸네일 step 찾기
-            String imgUrl = recipeStep.getImgUrl(); // 레시피 썸네일 imgUrl
+            String imgUrl = "";
+            if( recipeStep != null && recipeStep.getImgUrl() != null){
+                imgUrl = recipeStep.getImgUrl();
+            }
 
             int recipeLikes = recipeLikeRepo.countByRecipeId( recipe.getId() );
 
@@ -196,18 +245,57 @@ public class RecipeService {
 
     }
 
-    // 레시피 댓글 목록
 
-
-    // 레시피 삭제
-    public void deleteRecipe(Long recipeId){
+    // 레시피 삭제 ( isDeleted = true, deletedDate + 7일 )
+    @Transactional
+    public void deleteRecipe(Long recipeId, String loginId){
         Recipe recipe = recipeRepo.findById(recipeId).orElseThrow();
+
+        // 현재 로그인한 사용자 확인
+        if (!recipe.getUser().getLoginId().equals(loginId)) {
+            throw new AccessDeniedException("작성자만 삭제할 수 있습니다.");
+        }
+
         recipe.setDeleted(true);
-        recipe.setDeletedDate(LocalDateTime.now());
-        recipeRepo.save(recipe);
+        recipe.setDeletedDate(LocalDateTime.now().plusDays(7));
     }
 
-    
+    // 스케쥴러로 deletedDate 가 될 시 레시피 자동 삭제
+    @Scheduled(cron = "0 0 3 * * *")
+    @Transactional
+    public void expireRecipe(){
+        List<Recipe> expired = recipeRepo.findAllByIsDeletedTrueAndDeletedDateBefore(LocalDateTime.now());
+
+        recipeRepo.deleteAll(expired);
+    }
 
 
+    // 레시피 수정하기 위한 recipeFrom 반환
+    public RecipeForm getRecipeForm(Long id) {
+        Recipe recipe = recipeRepo.findById(id).orElseThrow();
+        List<RecipeIngredient> ingredients = recipeIngredientRepo.findAllByRecipeId(id);
+        List<RecipeStep> steps = recipeStepRepo.findAllByRecipeIdOrderByStepOrder(id);
+
+        // Entity -> Dto
+        List<RecipeIngredientDto> recipeIngredientDtoList = new ArrayList<>();
+        for(RecipeIngredient recipeIngredient : ingredients){
+
+            recipeIngredientDtoList.add( RecipeIngredientDto.from(recipeIngredient) );
+        }
+
+        // Entity -> Dto
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        for(RecipeStep recipeStep : steps){
+
+            recipeStepDtoList.add( RecipeStepDto.from(recipeStep) );
+        }
+
+        return RecipeForm.from(recipe, recipeIngredientDtoList, recipeStepDtoList);
+
+    }
+
+    @Transactional
+    public void increaseViewCount(Long id) {
+        recipeRepo.increaseViewCount(id);
+    }
 }

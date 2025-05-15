@@ -42,12 +42,12 @@
             width: 50px;
         }
 
-        tr:hover {
-            background-color: #f1f1f1;
-        }
     </style>
 </th:block>
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="script">
+
+    </script>
+</th:block>
 
 <div layout:fragment="main" id="main">
     <div class="report-table-container">
@@ -68,10 +68,12 @@
                     <td>
                         <input type="checkbox">
                     </td>
-                    <td th:text="${reportColumn.userId} + '(' + ${reportColumn.userNickName} + ')'"></td>
-                    <td th:text="${reportColumn.targetId} + '(' + ${reportColumn.userNickName} + ')'"></td>
+                    <td th:text="${reportColumn.targetLoginId} + '(' + ${reportColumn.targetNickName} + ')'"></td> <!-- 피신고자 -->
+                    <td th:text="${reportColumn.userId} + '(' + ${reportColumn.userNickName} + ')'"></td> <!-- 신고자 -->
                     <td th:text="${reportColumn.targetType}"></td>
-                    <td th:text="${reportColumn.title}"></td>
+                    <td>
+                        <a th:href="${reportColumn.targetUrl}" th:text="${reportColumn.title}"></a>
+                    </td>
                     <td th:text="${reportColumn.date}"></td>
                 </tr>
             </tbody>

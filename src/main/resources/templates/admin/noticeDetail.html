@@ -58,7 +58,7 @@
                     document.getElementById("saveBtn").style.display = "none";
 
                     alert("수정되었습니다.");
-                    location.href = "/admin/notice"; // 수정 후 목록 페이지로 돌아가기
+                    window.location.replace("/admin/noticeDetail/" + noticeId);
                 } else {
                     alert("수정 실패");
                 }

@@ -8,6 +8,7 @@ import com.recipe.entity.post.Post;
 import com.recipe.entity.post.PostComment;
 import com.recipe.entity.post.PostImage;
 import com.recipe.entity.post.PostLike;
+import com.recipe.entity.recipe.Recipe;
 import com.recipe.entity.user.User;
 import com.recipe.repository.post.PostCommentRepo;
 import com.recipe.repository.post.PostImageRepo;
@@ -22,6 +23,8 @@ import org.jsoup.nodes.Element;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,11 +48,23 @@ public class PostService {
     @Transactional
     public void savePost(PostForm postForm, String loginId) throws IOException {
         User user = userRepo.findByLoginId(loginId);
+        Post post;
 
-        Post post = postForm.to(user);
-        post.setUploadDate(LocalDateTime.now());
-        post.setViewCount(0);
-        post.setDeleted(false);
+        if(postForm.getId() == null){ // 새 게시글 작성
+            post = postForm.to(user);
+        }else{ // 수정
+            post = postRepo.findById(postForm.getId()).orElseThrow();
+
+            if (!post.getUser().getLoginId().equals(loginId)) {
+                throw new IllegalStateException("작성자만 수정할 수 있습니다.");
+            }
+
+            post.setTitle(postForm.getTitle());
+            post.setContent(postForm.getContent());
+            post.setPostCategory(postForm.getPostCategory());
+            post.setUpdateDate(LocalDateTime.now());
+
+        }
 
         Post savedPost = postRepo.save(post);
 
@@ -131,11 +146,25 @@ public class PostService {
     }
 
     // 게시글 삭제
-    public void deletePost(Long postId) {
+    @Transactional
+    public void deletePost(Long postId, String loginId) {
         Post post = postRepo.findById(postId).orElseThrow();
+
+        if(!post.getUser().getLoginId().equals(loginId)){
+            throw new AccessDeniedException("작성자만 삭제할 수 있습니다.");
+        }
+
         post.setDeleted(true);
-        post.setDeletedTime(LocalDateTime.now());
-        postRepo.save(post);
+        post.setDeletedDate(LocalDateTime.now().plusDays(7));
+    }
+
+    // 스케쥴러로 deletedDate 가 될 시 게시글 자동 삭제
+    @Scheduled(cron = "0 0 3 * * *")
+    @Transactional
+    public void expireRecipe(){
+        List<Post> expired = postRepo.findAllByIsDeletedTrueAndDeletedDateBefore(LocalDateTime.now());
+
+        postRepo.deleteAll(expired);
     }
 
     // 댓글 작성
@@ -151,22 +180,15 @@ public class PostService {
 
     }
 
-    // 좋아요 누를시
-    public void addLike(Long id, User user) {
 
-        PostLike postLike = new PostLike();
-        Post post = postRepo.findById(id).orElseThrow();
-        postLike.setPost(post);
-        postLike.setUser(user);
-
-        if( !postLikeRepo.findByPostIdAndUserId(id, user.getId()) ){
-            postLikeRepo.save(postLike);
-        } else {
-            postLikeRepo.delete(postLike);
-        }
-
-
+    // 조회수 증가
+    @Transactional
+    public void increaseViewCount(Long postId) {
+        postRepo.increaseViewCount(postId);
     }
+
+
+
 }
 
 
