@@ -109,40 +109,41 @@ public class RecipeService {
         for( int i = 0; i < stepDtos.size(); i++ ){
             RecipeStepDto stepDto = stepDtos.get(i);
             MultipartFile file = stepDto.getImgFile();
-            System.out.println("업로드 파밀명 : " + file.getOriginalFilename());
-            String imgName = "";
-            String originalFileName = "";
 
-            if( !file.isEmpty() ){
+            String imgName = stepDto.getImgName();
+            String originalFileName = stepDto.getImgOriginalName();
+            String imgUrl = stepDto.getImgUrl();
 
+            if (!file.isEmpty()) {
+                // 새 파일 업로드
                 try {
                     originalFileName = file.getOriginalFilename();
                     imgName = fileService.uploadFile(originalFileName, file.getBytes(), UploadType.RECIPE);
-
+                    imgUrl = "/recipeImg/" + imgName;
                 } catch (IOException e) {
                     throw new FileUploadException("파일 업로드 중 오류 발생: " + e.getMessage());
                 }
-
-                stepDto.setStepOrder(i+1);
-                stepDto.setImgOriginalName( originalFileName );
-                stepDto.setImgName( imgName );
-                stepDto.setImgUrl("/recipeImg/"+ imgName);
-            } else{
-                stepDto.setStepOrder(i+1);
-                stepDto.setImgOriginalName( "");
-                stepDto.setImgName( "" );
-                stepDto.setImgUrl("" );
-
             }
 
+            stepDto.setStepOrder(i + 1);
+            stepDto.setImgOriginalName(originalFileName);
+            stepDto.setImgName(imgName);
+            stepDto.setImgUrl(imgUrl);
 
-
-            recipeStep.add( stepDto.to(recipe) );
+            recipeStep.add(stepDto.to(recipe));
 
         }
 
-        RecipeStep thumbnailStep = recipeStep.get( recipeStep.size() -1 );
-        thumbnailStep.setThumbnail(true);
+        // 마지막 이미지 == 썸네일
+        for(int i = recipeStep.size()-1; i >= 0 ; i--){
+            String imgUrl = recipeStep.get(i).getImgUrl();
+            if( imgUrl != null && !imgUrl.trim().isEmpty()){
+                RecipeStep thumbnailStep = recipeStep.get(i);
+                thumbnailStep.setThumbnail(true);
+                break;
+            };
+
+        }
 
 
         recipeStepRepo.saveAll(recipeStep);
@@ -180,7 +181,10 @@ public class RecipeService {
 
         for(Recipe recipe : recipes.getContent()){
             RecipeStep recipeStep = recipeStepRepo.findByRecipeIdAndIsThumbnailIsTrue(recipe.getId()); // 레시피의 썸네일 step 찾기
-            String imgUrl = recipeStep.getImgUrl(); // 레시피 썸네일 imgUrl
+            String imgUrl = "";
+            if( recipeStep != null && recipeStep.getImgUrl() != null){
+                imgUrl = recipeStep.getImgUrl();
+            }
 
             int recipeLikes = recipeLikeRepo.countByRecipeId( recipe.getId() );
 

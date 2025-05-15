@@ -54,26 +54,30 @@
             stepDiv.className = "recipe-step";
 
             stepDiv.innerHTML = `
-                <h4>STEP ${i + 1}</h4>
-                <div class="image-upload-container">
-                    <label class="image-upload-box">
-                        <span class="plus-icon" style="display: none;">+</span>
-                        <img class="preview-image" src="/recipeStepImg/${step.imgUrl}" style="display:block;" />
-                        <input type="file" name="recipeStepDtoList[${i}].imgFile"
-                               accept="image/*" class="image-upload-input"
-                               onchange="previewImage(event, this)" />
-                    </label>
-                </div>
-                <div>
-                    <label>제목:</label>
-                    <input type="text" name="recipeStepDtoList[${i}].title" value="${step.title}" />
-                </div>
-                <div>
-                    <label>내용:</label>
-                    <textarea name="recipeStepDtoList[${i}].content">${step.content}</textarea>
-                </div>
-                <hr/>
-            `;
+              <h4>STEP ${i + 1}</h4>
+              <div class="image-upload-container">
+                  <label class="image-upload-box">
+                      <span class="plus-icon" style="display: none;">+</span>
+                      <img class="preview-image" src="${step.imgUrl}" style="display:block;" />
+                      <input type="file" name="recipeStepDtoList[${i}].imgFile"
+                             accept="image/*" class="image-upload-input"
+                             onchange="previewImage(event, this)" />
+                      <input type="hidden" name="recipeStepDtoList[${i}].imgName" value="${step.imgName}" />
+                      <input type="hidden" name="recipeStepDtoList[${i}].imgOriginalName" value="${step.imgOriginalName}" />
+                      <input type="hidden" name="recipeStepDtoList[${i}].imgUrl" value="${step.imgUrl}" />
+                  </label>
+              </div>
+              <div>
+                  <label>제목:</label>
+                  <input type="text" name="recipeStepDtoList[${i}].title" value="${step.title}" />
+              </div>
+              <div>
+                  <label>내용:</label>
+                  <textarea name="recipeStepDtoList[${i}].content">${step.content}</textarea>
+              </div>
+              <hr/>
+          `;
+
             container.appendChild(stepDiv);
             stepCount++;
         });
