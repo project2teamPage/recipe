@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/user/profile.css" />
+</th:block>
+<script th:src="@{/javascript/user/profile.js}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelector('.info-out').addEventListener('click', function () {
+      document.getElementById('withdrawal-popup').classList.remove('hidden');
+    });
+
+    document.querySelector('.cancel-btn').addEventListener('click', function () {
+      document.getElementById('withdrawal-popup').classList.add('hidden');
+    });
+
+    document.querySelector('.confirm-btn').addEventListener('click', function (e) {
+      e.preventDefault(); // form submit 막기
+      const password = document.querySelector('input[name="password"]').value;
+
+      if (!password) {
+        alert('비밀번호를 입력해주세요.');
+        return;
+      }
+
+      fetch('/user/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({ password })
+      })
+      .then(response => {
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else {
+          return response.text().then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+          });
+        }
+      });
+    });
+  });
+</script>
+
+
+<div layout:fragment="main" id="main">
+
+  <!--여기다가 넣어주세여-->
+  <div class="container">
+    <div class="side-menu">
+      <ul class="side-menu-list">
+        <li class="side-menu-list-title">마이페이지</li>
+        <li class="pro-change"><a href="/user/profile">프로필 편집</a></li>
+        <li><a href="/user/activity">내 활동</a></li>
+        <li><a href="/user/bookmark">즐겨찾는 레시피</a></li>
+        <li class="s-m-l-calendar"><a th:href="@{'/user/calendar/' + ${user.id}}">내 캘린더</a></li>
+      </ul>
+    </div>
+    <div class="profile">
+      <div class="title">
+        <span>프로필 편집</span>
+        <p>내 프로필을 편집하고 관리할 수 있어요.</p>
+      </div>
+      <div class="content">
+        <form th:action="@{/user/profile}" method="post" enctype="multipart/form-data">
+          <div class="profile-content">
+            <div class="pro-title">내 프로필</div>
+            <div class="pro-photo">
+
+              <img th:src="${user.profileImagePath} ?: '/images/logo4.png'" alt="프로필 이미지" />
+            </div>
+            <div class="pro-text">
+              날 표현할 수 있는 <br>
+              프로필 사진을 지정해 보세요!
+            </div>
+            <input type="file" name="profileImage" accept="image/*" onchange="previewImage(event)" />
+            <button class="pro-btn" type="submit">프로필 사진 수정</button>
+          </div>
+        </form>
+        <div class="myinfo">
+          <form class="myinfo-form" role="">
+            <div>
+              <label for="name" class="info-nick-name">닉네임 </label>
+              <input
+                      id="name"
+                      class="info-nick-name-form"
+                      type="search"
+                      placeholder="ex. 계림제자선우선우"
+                      aria-label="Search"
+              />
+            </div>
+            <div>
+              <label for="id" class="info-nick-name">아이디 </label>
+              <input
+                      id="id"
+                      class="info-nick-name-form1"
+                      type="search"
+                      disabled
+                      placeholder="kimsicktak1234"
+                      aria-label="Search"
+              />
+            </div>
+
+            <div>
+              <label for="passowrd" class="info-password-name">비밀번호</label>
+              <input
+                      id="passowrd"
+                      class="info-nick-name-form"
+                      type="password"
+                      placeholder="비밀번호 재설정"
+                      aria-label="Search"
+              />
+            </div>
+
+            <div>
+              <label for="email" class="info-nick-name">이메일 </label>
+              <input
+                      id="email"
+                      class="info-nick-name-form1"
+                      type="search"
+                      disabled
+                      placeholder="example@naver.com"
+                      aria-label="Search"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="btn">
+          <button type="button" class="info-out">회원탈퇴</button>
+
+          <!-- 회원탈퇴 팝업창 -->
+          <div id="withdrawal-popup" class="popup-overlay hidden">
+            <div class="popup-content">
+              <h2>회원 탈퇴</h2>
+              <p>정말 탈퇴하시겠습니까?<br>비밀번호를 입력해주세요.</p>
+              <form method="post" th:action="@{/user/profile}">
+                <input type="password" name="password" placeholder="비밀번호 입력" required />
+                <div class="popup-buttons">
+                  <button type="submit" class="confirm-btn">탈퇴하기</button>
+                  <button type="button" class="cancel-btn">취소</button>
+                </div>
+            </div>
+          </div>
+
+          <button type="button" class="info-change">내 정보 수정</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</html>

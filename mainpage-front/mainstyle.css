@@ -1,0 +1,59 @@
+
+
+* {
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    /* text-align: center; */
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+.mainpage {
+  width: 1440px;
+  background-color: antiquewhite;
+}
+
+/* main */
+main {
+  width: 1180px;
+}
+.main {
+  height: 800px;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.main-content {
+  width: 100%;
+  height: 650px;
+  background-color: aquamarine;
+}
+/* ㅇㅇㅇㅇㅇ */
+.hot-recipe {
+  height: 635px;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.recipe-brag {
+  height: 635px;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+.member-list {
+  height: 120px;
+  background-color: rgba(255, 0, 0, 0.2);
+}
+.community {
+  height: 635px;
+  background-color: rgba(255, 0, 0, 0.4);
+}
+.notice {
+  height: 635px;
+  background-color: rgba(255, 0, 0, 0.6);
+}
+.question {
+  height: 635px;
+  background-color: rgba(255, 0, 0, 0.8);
+}
+ 
+/* footer */
+footer {
+    height: 200px;
+    background-color: black;
+}

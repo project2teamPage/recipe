@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/recipe/detail.css}">
+</th:block>
+<th:block layout:fragment="script">
+    <script th:src="@{/javascript/recipe/detail.js}"></script>
+</th:block>
+
+<div layout:fragment="main" id="main" class="container">
+
+    <!-- 제목 및 정보 -->
+    <div class="recipe-title-area">
+        <div class="tags">
+            <span th:text="${recipe.dishtype}">메인요리</span>
+            <span th:text="${recipe.theme}">가족식사</span>
+            <span th:text="'매운맛: ' + ${recipe.spicy}">매운맛</span>
+        </div>
+        <h2 th:text="${recipe.title}">레시피 제목</h2>
+        <div class="info">
+            <span th:text="${#temporals.format(recipe.uploadDate, 'yyyy.MM.dd HH:mm')}">작성일</span> |
+            <span th:text="${recipe.nickName}">작성자</span> |
+            <span th:text="'조회수 ' + ${recipe.viewCount}">조회수</span>
+        </div>
+    </div>
+
+    <!-- 요리 난이도, 시간 -->
+    <div class="summary-box">
+        <span th:text="'난이도: ' + ${recipe.recipeDifficulty}">쉬움</span>
+        <span th:text="'조리시간: ' + ${recipe.recipeTime} + '분'">20분</span>
+    </div>
+
+    <!-- Step 슬라이드 -->
+    <div class="recipe-slider" th:if="${recipe.recipeStepDtoList != null}">
+        <div class="slides">
+            <div class="step-wrapper" th:each="step, iterStat : ${recipe.recipeStepDtoList}"
+                 th:classappend="${iterStat.index == 0} ? 'active'">
+                <div class="step-image">
+                    <img th:src="@{${step.imgUrl}}" th:alt="${step.title}" />
+                </div>
+                <div class="step-label">
+                    <span th:text="'STEP. ' + ${step.stepOrder}"></span>
+                    <h3 th:text="${step.title}">제목</h3>
+                    <p th:text="${step.content}">설명</p>
+                </div>
+            </div>
+        </div>
+        <div class="slider-controls">
+            <button class="prev">이전</button>
+            <button class="next">다음</button>
+        </div>
+    </div>
+
+
+    <!-- 재료 목록 -->
+    <div class="ingredient-section">
+        <h4>재료 준비</h4>
+        <ul>
+            <li th:each="ing : ${recipe.recipeIngredientDtoList}" th:text="${ing.name + ' ' + ing.amount}">재료</li>
+        </ul>
+    </div>
+
+    <!-- 좋아요 -->
+    <div class="like-section">
+        <span>❤️ 좋아요</span>
+        <span th:text="${recipe.recipeLikes}">0</span>
+    </div>
+
+    <!-- 추가 버튼 (수정, 삭제 등) -->
+    <div>
+        <a th:href="@{/recipe/edit/{id}(id=${recipe.id})}" class="btn btn-primary">수정</a>
+        <a th:href="@{/recipe/delete/{id}(id=${recipe.id})}" class="btn btn-danger">삭제</a>
+        <a th:href="@{/recipe}" class="btn btn-secondary">목록</a>
+    </div>
+
+    <!-- 댓글 -->
+    <div class="comments">
+        <h5>댓글 <span th:text="${#lists.size(recipe.recipeCommentDtoList)}">0</span></h5>
+        <ul>
+            <li th:each="comment : ${recipe.recipeCommentDtoList}">
+                <div class="comment-header">
+                    <strong th:text="${comment.nickName}">닉네임</strong>
+                    <small th:text="${#temporals.format(comment.uploadDate, 'yyyy.MM.dd HH:mm:ss')}">날짜</small>
+                </div>
+                <p th:text="${comment.content}">내용</p>
+            </li>
+        </ul>
+
+        <form th:action="@{/recipe/{id}/comment(id=${recipe.id})}" th:object="${newComment}" method="post">
+            <textarea th:field="*{content}" placeholder="댓글을 입력하세요"></textarea>
+            <button type="submit">등록</button>
+        </form>
+
+    </div>
+
+    <!-- 관련 요리자랑 -->
+    <div class="related-recipes">
+        <h4>이 레시피 관련 요리자랑</h4>
+        <div class="related-item">
+            <p>관련 게시글 제목</p>
+            <p>관련 게시글 내용</p>
+        </div>
+    </div>
+
+    <!-- 목록 버튼 -->
+    <div class="btn-area">
+        <a th:href="@{/recipe/list}" class="btn">목록</a>
+    </div>
+
+</div>
+</html>

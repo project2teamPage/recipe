@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<th:block layout:fragment="css"></th:block>
+
+<th:block th:fragment="headerCss">
+  <link rel="stylesheet" th:href="@{/css/header.css}" />
+</th:block>
+
+<div th:fragment="header" id="header">
+<div class="top">
+  <nav class="head">
+    <a href="/"><div class="main-logo"><img th:src="@{/images/logo4.png}" alt="로고이미지" /></div></a>
+    <ul class="menu">
+      <li>
+        <a href="/recipe">레시피</a>
+      </li>
+      <li>
+        <a href="/post">커뮤니티</a>
+      </li>
+      <li sec:authorize="hasAnyAuthority('ROLE_USER')">
+        <a href="/user/profile">마이페이지</a>
+      </li>
+      <li sec:authorize="isAnonymous()">
+        <a href="/user/login">로그인</a>
+      </li>
+      <li sec:authorize="hasAnyAuthority('ROLE_USER')">
+        <a href="/logout">로그아웃</a>
+      </li>
+      <li class="admin" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+        <a href="#" >ADMIN</a>
+      </li>
+    </ul>
+    <form class="top-search" role="">
+      <input
+              class="top-search-form"
+              type="search"
+              placeholder="검색어를 입력해주세요."
+              aria-label="Search"
+      />
+      <button class="top-search-btn" type="top-search-btn">
+        <img th:src="@{/images/top_search_logo.png}" alt="검색 아이콘" />
+      </button>
+    </form>
+  </nav>
+</div>
+
+
+</div>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+<th:block layout:fragment="css">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+</th:block>
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+
+        function enableEdit() {
+            document.getElementById("titleText").style.display = "none";
+            document.getElementById("contentText").style.display = "none";
+
+            document.getElementById("titleInput").style.display = "inline";
+            document.getElementById("contentInput").style.display = "block";
+
+            document.getElementById("editBtn").style.display = "none";
+            document.getElementById("saveBtn").style.display = "inline";
+        }
+
+        function saveEdit(noticeId) {
+            const title = document.getElementById("titleInput").value;
+            const content = document.getElementById("contentInput").value;
+
+            if (!title || !content) {
+                alert("제목과 내용을 모두 입력해주세요.");
+                return;
+            }
+
+            const csrfDiv = document.getElementById("csrf");
+            const csrfToken = csrfDiv.dataset.token;
+            const csrfHeader = csrfDiv.dataset.header;
+
+            fetch(`/admin/notice/update/${noticeId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify({ title, content })
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById("titleText").innerText = title;
+                    document.getElementById("contentText").innerText = content;
+
+                    document.getElementById("titleInput").style.display = "none";
+                    document.getElementById("contentInput").style.display = "none";
+
+                    document.getElementById("titleText").style.display = "inline";
+                    document.getElementById("contentText").style.display = "block";
+
+                    document.getElementById("editBtn").style.display = "inline";
+                    document.getElementById("saveBtn").style.display = "none";
+
+                    alert("수정되었습니다.");
+                    location.href = "/admin/notice"; // 수정 후 목록 페이지로 돌아가기
+                } else {
+                    alert("수정 실패");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("에러가 발생했습니다.");
+            });
+        }
+
+            function deleteNotice(noticeId) {
+                if (confirm("정말 삭제하시겠습니까?")) {
+                    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+                    fetch(`/admin/notice/delete/${noticeId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            [csrfHeader]: csrfToken
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("삭제되었습니다.");
+                            location.href = "/admin/notice";
+                        }
+                    })
+                    .catch(err => {
+                        alert(err.message || '삭제 중 오류가 발생했습니다.');
+                    });
+                }
+            }
+    </script>
+
+</th:block>
+
+<div layout:fragment="main" id="main">
+    <div id="csrf"
+         th:data-token="${_csrf.token}"
+         th:data-header="${_csrf.headerName}"
+         style="display:none;"></div>
+    <script th:inline="javascript">
+        let noticeId = [[${notice.id}]];
+    </script>
+    <div>
+        <div>
+            <label>제목 : </label>
+            <span id="titleText" th:text="${notice.title}"></span>
+            <input type="text" id="titleInput" th:value="${notice.title}" style="display:none;">
+        </div>
+        <p>
+            <strong>작성자 : </strong>
+            <span th:text="${notice.adminNickName}">관리자</span>
+        </p>
+        <p>
+            <strong>작성일 : </strong>
+            <span th:text="${notice.updateDate != null ? notice.updateDate : notice.writeDate}">날짜</span>
+        </p>
+    </div>
+    <div>
+       <p id="contentText" th:text="${notice.content}"></p>
+        <textarea id="contentInput" style="display:none;" rows="10" cols="80">[[${notice.content}]]</textarea>
+
+    </div>
+
+    <div>
+        <button type="button"
+                onclick="location.href='/admin/notice'">목록으로</button>
+        <button id="editBtn" onclick="enableEdit()">수정</button>
+        <button id="saveBtn" onclick="saveEdit(noticeId)" style="display:none;">저장</button>
+        <button type="button" onclick="deleteNotice(noticeId)">삭제</button>
+    </div>
+</div>
+</html>

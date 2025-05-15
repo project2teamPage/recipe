@@ -1,0 +1,115 @@
+* {
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  /* text-align: center; */
+  font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+body {
+  background-color: #f8f8f9;
+}
+.container {
+  width: 1180px;
+  margin-top: 50px;
+  /* background-color: red; */
+  display: flex;
+}
+/* sidemenu */
+.side-menu {
+  width: 170px;
+  height: 300px;
+  /* float: left; */
+}
+.side-menu-list li {
+  width: 140px;
+  height: 45px;
+  line-height: 45px;
+  font-weight: 700;
+  font-size: 16px;
+  padding-left: 20px;
+}
+.side-menu-list li a {
+  color: #767676;
+  text-decoration:none;
+}
+.side-menu-list li a:hover {
+  color: #ff6a00;
+}
+.side-menu-list-title {
+  background-color: white;
+  border-radius: 23px;
+}
+.s-m-l-calendar {
+  margin-top: 50px;
+}
+/* title */
+.title {
+  width: 910px;
+  padding-left: 40px;
+}
+.title span {
+  font-size: 30px;
+  font-weight: 800;
+}
+.title p {
+  font-size: 16px;
+  color: #bababa;
+  margin-top: 10px;
+}
+
+
+
+.content {
+  background-color:red;
+}
+.con-recipe, .con-write, .con-comment{
+  width: 910px;
+  height: 400px;
+  background-color: rgb(255, 255, 255);
+  margin-top: 30px;
+  border: 1px solid #bababa;
+  border-radius: 26px;
+  float: right;
+  display: flex;
+}
+.con-recipe, .con-write, .con-comment title {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+/* 내 댓글 */
+.comment {
+  width: 827px;
+  height: 80px;
+  display: flex;
+  border-bottom: 1px solid #bababa;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+.com {
+  width: 680px;
+  margin-top: 16px;
+}
+.com-writer {
+  font-size: 16px;
+  font-weight: 700;
+}
+.com-content {
+  font-size: 18px;
+  margin-top: 5px;
+}
+.com-btn {
+  width: 140px;
+  height: 48px;
+  background-color: white;
+  color: #bababa;
+  border: 1px solid #bababa;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 15px;
+}

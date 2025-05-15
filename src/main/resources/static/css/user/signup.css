@@ -1,0 +1,116 @@
+* {
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  /* text-align: center; */
+  font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+.sign-up-title {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 80px;
+  margin-bottom: 50px;
+}
+
+.role {
+  font-size: 12px;
+  color: #bababa;
+  margin-top: 5px;
+}
+
+.signup {
+  width: 360px;
+}
+
+.nick-name-title,
+.id-title,
+.pw-title,
+.eamil-title {
+  margin-top: 20px;
+  font-weight: 600;
+}
+.nick-name-create-form,
+.pw-create-form,
+.pw-create-form-2,
+.email-create-form,
+.id-create-form {
+  width: 360px;
+  height: 64px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  border: 1px solid #bababa;
+  margin-top: 10px;
+  padding: 0 20px;
+}
+.id-create-form::placeholder,
+.pw-create-form::placeholder,
+.nick-name-create-form::placeholder,
+.email-create-form::placeholder,
+.pw-create-form-2::placeholder {
+  font-size: 14px;
+  /* padding-left: 20px; */
+  color: #bababa;
+}
+
+.sign-up-btn {
+  width: 360px;
+  height: 64px;
+  line-height: 64px;
+  background-color: #ff6a00;
+  border-radius: 8px;
+  border-style: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 20px;
+  margin-bottom: 100px;
+}
+
+/* check-box */
+.check-box {
+  height: 100px;
+  background-color: #f8f8f8;
+  margin-top: 20px;
+  width: 100%;
+  padding: 5px;
+}
+.form-check {
+  margin-left: 20px;
+  margin-top: 5px;
+  accent-color: #3b3b3b;
+  font-size:14px;
+}
+.form-check label {
+  margin-left: 10px;
+}
+
+.check-box a {
+  color: #bababa;
+  text-align: right;
+}
+
+/* footer */
+footer {
+  width: 100%;
+  height: 120px;
+  background-color: #ededed;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+.foot-box {
+  width: 200px;
+  height: 20px;
+  display: flex;
+  margin: auto;
+}
+.con1 > a,
+.con2 > a {
+  color: #929292;
+}

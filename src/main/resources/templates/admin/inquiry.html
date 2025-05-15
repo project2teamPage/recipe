@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css"></th:block>
+<th:block layout:fragment="script"></th:block>
+
+<div layout:fragment="main" id="main">
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th></th>
+                <th>내용</th>
+                <th>작성일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="inquiryColumn : ${inquiryList}">
+                <td></td>
+                <td th:text="${inquiryColumn.content}">내용1</td>
+                <td th:text="${inquiryColumn.writeDate}">날짜</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</html>
