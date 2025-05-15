@@ -12,6 +12,23 @@
 body {
   background-color: #f8f8f9;
 }
+* {
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  /* text-align: center; */
+  font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+.myactivity a {
+  color: #ff6a00;
+}
+body {
+  background-color: #f8f8f9;
+}
 .container {
   width: 1180px;
   margin-top: 50px;
@@ -22,7 +39,6 @@ body {
 .side-menu {
   width: 170px;
   height: 300px;
-  /* float: left; */
 }
 .side-menu-list li {
   width: 140px;
@@ -34,7 +50,7 @@ body {
 }
 .side-menu-list li a {
   color: #767676;
-  text-decoration:none;
+  text-decoration: none;
 }
 .side-menu-list li a:hover {
   color: #ff6a00;
@@ -61,55 +77,177 @@ body {
   margin-top: 10px;
 }
 
-
-
-.content {
-  background-color:red;
+.con-recipe {
+  width: 912px;
+  height: 470px;
+  background-color: rgb(255, 255, 255);
+  margin-top: 30px;
+  border: 1px solid #bababa;
+  border-radius: 26px;
 }
-.con-recipe, .con-write, .con-comment{
-  width: 910px;
+
+.con-write {
+  width: 912px;
   height: 400px;
   background-color: rgb(255, 255, 255);
   margin-top: 30px;
   border: 1px solid #bababa;
   border-radius: 26px;
-  float: right;
-  display: flex;
 }
-.con-recipe, .con-write, .con-comment title {
-  font-size: 30px;
-  font-weight: 700;
+
+.con-comment {
+  width: 912px;
+  height: 460px;
+  background-color: rgb(255, 255, 255);
+  margin-top: 30px;
+  border: 1px solid #bababa;
+  border-radius: 26px;
+}
+
+/* content */
+.container {
+  width: 1180px;
+  height: 1600px;
+  margin-top: 50px;
+}
+
+.con-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-left: 50px;
+  display: block;
+  margin-top: 30px;
+}
+
+.content {
+  width: 910px;
+  height: 400px;
+}
+
+/* 레시피 */
+.recipe-box {
+  width: 820px;
+  height: 275px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  gap: 20px;
+}
+.con-recipe {
+  width: 910px;
+}
+.recipe-content {
+  width: 180px;
+  height: 270px;
+}
+.thumbnail {
+  width: 180px;
+  height: 200px;
+  border-radius: 15px;
+  background-color: #d9d9d9;
+  justify-content: space-between;
+}
+.text-box {
+  margin-top: 10px;
+}
+.text-box a {
+  font-size: 16px;
+  color: #767676;
+  font-weight: 600;
+}
+.text-box .recipe-text {
+  font-size: 14px;
+  color: #767676;
+  margin-top: 5px;
+}
+
+.thumbnail a {
+  color: #767676;
+  font-size: 14px;
+  font-weight: 600;
+}
+.thumbnail .recipe-text {
+  color: #bababa;
+  font-size: 10px;
+}
+
+/* 카테고리 */
+.write-content {
+  width: 820px;
+  height: 70px;
+  margin-top: 20px;
+}
+.write-content li {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  border-bottom: 1px solid #bababa;
+  align-items: center;
+}
+
+.write-content .catego {
+  width: 100px;
+  height: 34px;
+  border-radius: 20px;
+  background-color: #ff6a00;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 34px;
+  text-align: center;
+}
+
+.write-content button {
+  width: 140px;
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid #bababa;
+  background-color: white;
+  color: #bababa;
+  font-size: 16px;
+  font-weight: 500;
+}
+.write-content .write-title {
+  width: 660px;
+  height: 48px;
+  line-height: 48px;
+  font-weight: 500;
+  margin-left: 20px;
 }
 
 /* 내 댓글 */
+.con-box {
+  margin-top: 20px;
+}
+.comment-box {
+  width: 820px;
+  height: 70px;
+}
 .comment {
-  width: 827px;
-  height: 80px;
+  width: 820px;
+  height: 70px;
   display: flex;
+  align-items: center;
   border-bottom: 1px solid #bababa;
-  margin-top: 30px;
-  margin-bottom: 10px;
 }
 .com {
   width: 680px;
-  margin-top: 16px;
 }
-.com-writer {
-  font-size: 16px;
-  font-weight: 700;
+.com .com-writer {
+  font-size: 14px;
+  font-weight: 600;
 }
-.com-content {
+.com .com-content {
   font-size: 18px;
-  margin-top: 5px;
 }
 .com-btn {
   width: 140px;
   height: 48px;
+  border-radius: 8px;
+  border: 1px solid #bababa;
   background-color: white;
   color: #bababa;
-  border: 1px solid #bababa;
-  border-radius: 8px;
   font-size: 16px;
-  font-weight: 600;
-  margin-top: 15px;
+  font-weight: 500;
 }

@@ -63,79 +63,115 @@
           <p>냉털키친에서 활동한 나의 내역을 확인할 수 있어요.</p>
         </div>
         <div class="content">
-
           <div class="con-recipe">
             <span class="con-title">최근 본 레시피</span>
-            <div class="recipe-content">
-              <ul class="recipe-content">
-                <li><div class="thumbnail">썸네일박스</div>
-                  <a href="#">비건마라로제저당분모자볶음</a>
-                <p class="recipe-text">살찔 걱정 없이 저당으로 즐기는
-                  비건주의 회원들도 만족할 속세맛 마라로제!</p>
-                </li>
-              </ul>
-              <ul class="recipe-content">
-                <li><div class="thumbnail">썸네일박스</div>
-                  <a href="#">전자레인지마라탕</a>
-                <p class="recipe-text">전자레인지 5분이면 완료!
-                  간편하게 집에서 즐기는 마라탕탕탕탕</p>
-                </li>
-              </ul>
-              <ul class="recipe-content">
-                <li><div class="thumbnail">썸네일박스</div>
-                  <a href="#">원팬 토마토바질파스타</a>
-                <p class="recipe-text">설거지가 귀찮은 자취생을 위한
-                  원팬 토마토 바질 파스타</p>
-                </li>
-              </ul>
-              <ul class="recipe-content">
-                <li><div class="thumbnail">썸네일박스</div>
-                  <a href="#">굴소스 요리 TOP 5</a>
-                <p class="recipe-text">냉장고 필수템으로 자리잡은 굴소스
-                  이렇게 활용이 가능하다고?</p>
-                </li>
-              </ul>
-            </div>
-
-            </div>
-
-
-            <div class="con-write">
-              <span class="con-title">내 게시글</span>
-              <ul class="write-content">
-                <li>
-                  <div class="catego">카테고리</div>
-                  <p class="write-title">title</p>
-                  <button type="button">작성된 글 보기</button>
-                </li>
-                <li>
-                  <div class="catego">카테고리</div>
-                  <p class="write-title">title</p>
-                  <button type="button">작성된 글 보기</button>
-                </li>
-                <li>
-                  <div class="catego">카테고리</div>
-                  <p class="write-title">title</p>
-                  <button type="button">작성된 글 보기</button>
-                </li>
-              </ul>
-            </div>
-            <div class="con-comment">
-              <span class="con-title">내 댓글</span>
-              <div class="comment">
-                <div class="com">
-                  <div class="com-writer">계림제자선우선우</div>
-                  <div class="com-content">식단 구성이 좋아요~</div>
-                </div>
-                <button class="com-btn">작성된 글 보기</button>
+            <div class="recipe-box">
+              <div class="recipe-content">
+                <ul>
+                  <li>
+                    <div class="thumbnail">썸네일박스</div>
+                    <div class="text-box">
+                      <a href="#">비건마라로제저당분모자볶음</a>
+                      <p class="recipe-text">
+                        살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
+                        속세맛 마라로제!
+                      </p>
+                    </div>
+                  </li>
+                </ul>
               </div>
-              <div class="comment">
-                  <div class="com">
-                    <div class="com-writer">계림제자선우선우</div>
-                    <div class="com-content">식단 구성이 좋아요~</div>
-                  </div>
-                  <button class="com-btn">작성된 글 보기</button>
-                </div>
+              <div class="recipe-content">
+                <ul>
+                  <li>
+                    <div class="thumbnail">썸네일박스</div>
+                    <div class="text-box">
+                      <a href="#">비건마라로제저당분모자볶음</a>
+                      <p class="recipe-text">
+                        살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
+                        속세맛 마라로제!
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="recipe-content">
+                <ul>
+                  <li>
+                    <div class="thumbnail">썸네일박스</div>
+                    <div class="text-box">
+                      <a href="#">비건마라로제저당분모자볶음</a>
+                      <p class="recipe-text">
+                        살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
+                        속세맛 마라로제!
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="recipe-content">
+                <ul>
+                  <li>
+                    <div class="thumbnail">썸네일박스</div>
+                    <div class="text-box">
+                      <a href="#">비건마라로제저당분모자볶음</a>
+                      <p class="recipe-text">
+                        살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
+                        속세맛 마라로제!
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+              <ul class="d-inline-flex gap-2">
+                <!-- 이전 페이지 -->
+                <li></li>
+                <!-- 페이지 번호 -->
+                <li></li>
+                <!-- 다음 페이지 -->
+                <li></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="con-write">
+            <span class="con-title">내 게시글</span>
+            <ul class="write-content">
+              <li>
+                <div class="catego">카테고리</div>
+                <p class="write-title"><a href="#">title</a></p>
+                <button type="button">작성된 글 보기</button>
+              </li>
+              <li>
+                <div class="catego">카테고리</div>
+                <p class="write-title"><a href="#">title</a></p>
+                <button type="button">작성된 글 보기</button>
+              </li>
+              <li>
+                <div class="catego">카테고리</div>
+                <p class="write-title"><a href="#">title</a></p>
+                <button type="button">작성된 글 보기</button>
+              </li>
+            </ul>
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+              <ul class="d-inline-flex gap-2">
+                <!-- 이전 페이지 -->
+                <li></li>
+                <!-- 페이지 번호 -->
+                <li></li>
+                <!-- 다음 페이지 -->
+                <li></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="con-comment">
+            <span class="con-title">내 댓글</span>
+            <div class="con-box">
+              <div class="comment-box">
                 <div class="comment">
                   <div class="com">
                     <div class="com-writer">계림제자선우선우</div>
@@ -143,10 +179,47 @@
                   </div>
                   <button class="com-btn">작성된 글 보기</button>
                 </div>
+              </div>
+              <div class="comment-box">
+                <div class="comment">
+                  <div class="com">
+                    <div class="com-writer">계림제자선우선우</div>
+                    <div class="com-content">식단 구성이 좋아요~</div>
+                  </div>
+                  <button class="com-btn">작성된 글 보기</button>
+                </div>
+              </div>
+              <div class="comment-box">
+                <div class="comment">
+                  <div class="com">
+                    <div class="com-writer">계림제자선우선우</div>
+                    <div class="com-content">식단 구성이 좋아요~</div>
+                  </div>
+                  <button class="com-btn">작성된 글 보기</button>
+                </div>
+              </div>
+              <div class="comment-box">
+                <div class="comment">
+                  <div class="com">
+                    <div class="com-writer">계림제자선우선우</div>
+                    <div class="com-content">식단 구성이 좋아요~</div>
+                  </div>
+                  <button class="com-btn">작성된 글 보기</button>
+                </div>
+              </div>
             </div>
-
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+              <ul class="d-inline-flex gap-2">
+                <!-- 이전 페이지 -->
+                <li></li>
+                <!-- 페이지 번호 -->
+                <li></li>
+                <!-- 다음 페이지 -->
+                <li></li>
+              </ul>
+            </div>
           </div>
-
         </div>
       </div>
     </div>
