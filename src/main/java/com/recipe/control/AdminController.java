@@ -1,27 +1,27 @@
 package com.recipe.control;
 
+import com.recipe.constant.Role;
 import com.recipe.dto.admin.NoticeDto;
 import com.recipe.dto.admin.NoticeListDto;
-import com.recipe.entity.admin.Notice;
+import com.recipe.dto.admin.ReportListDto;
+import com.recipe.entity.admin.Report;
 import com.recipe.service.admin.InquiryService;
 import com.recipe.service.admin.NoticeService;
 import com.recipe.service.admin.ReportService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 
 @Controller
 public class AdminController {
+
     @Autowired
     private ReportService reportService;
     @Autowired
@@ -29,141 +29,139 @@ public class AdminController {
     @Autowired
     private InquiryService inquiryService;
 
+    // 관리자 페이지
     @GetMapping("/admin")
     public String adminPage() {
-
         return "main";
     }
 
+    // 신고 관리 페이지
     @GetMapping("/admin/report")
     public String reportPage(Model model) {
-
         model.addAttribute("reportList", reportService.getReports());
         return "admin/report";
     }
 
+//    @GetMapping("/admin/report/detail/{id}")
+//    @ResponseBody
+//    public ReportListDto getReportDetail(@PathVariable Long id) {
+//        Report report = reportService.findById(id);
+//        if(report == null) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
+//
+//        String targetNickName = "";
+//        String targetLoginId = "";
+//
+//        switch (report.getTargetType()) {
+//            case R
+//        }
+//    }
+
+
+    // 공지사항 관리 페이지 (사용자 역할에 따라 공지사항 다르게 처리)
     @GetMapping("/admin/notice")
-    public String noticePage(Model model) {
+    public String noticePage(@RequestParam(value = "role", required = false) Role role, Model model) {
+        // 로그인 연동이 안 되어 있을 때 임시로 관리자 역할을 하드코딩
+        if (role == null) {
+            role = Role.ADMIN;  // 임시로 관리자로 설정
+        }
 
-        // 전체 공지 가져오기
-        List<NoticeListDto> allNotices = noticeService.getAllNoticeDtos();
+        List<NoticeListDto> noticeList = noticeService.getNoticesByRole(role);
 
-        // 고정 리스트: 고정된 게시글만
-        List<NoticeListDto> pinnedNotices = allNotices.stream()
-                .filter(n -> n.isPinned() && !n.isHidden())
-                .collect(Collectors.toList());
-
-        // 일반 리스트: 모든 공지 포함 (고정도 포함) — 숨김된 것도 포함해야 함!
-        List<NoticeListDto> noticeList = allNotices;
-
-        System.out.println(noticeList.get(6).getAdminNickName());
+        // 고정된 공지사항은 별도로 처리
+        List<NoticeListDto> pinnedNotices = noticeService.getPinnedNoticeDtos();
 
         model.addAttribute("pinnedNotices", pinnedNotices);
         model.addAttribute("noticeList", noticeList);
         model.addAttribute("pinnedCount", pinnedNotices.size());
-
         return "admin/notice";
     }
 
-    // 📌 작성 폼 페이지
+    // 공지사항 작성 페이지
     @GetMapping("/admin/noticeWrite")
     public String showNoticeWriteForm(Model model) {
         model.addAttribute("noticeDto", new NoticeDto());
         return "admin/noticeWrite";
     }
 
-    // 📌 작성 폼 제출 처리
+    // 공지사항 작성 처리
     @PostMapping("/admin/noticeWrite")
-    public String submitNotice(@ModelAttribute("notice") NoticeDto dto) {
+    public String createNotice(@ModelAttribute("noticeDto") NoticeDto dto) {
         noticeService.saveNotice(dto);
-        return "redirect:/admin/notice"; // 작성 완료 후 목록 페이지로 이동
+        return "redirect:/admin/notice";
     }
 
-    // 공지사항 고정리스트
+    // 공지사항 고정 처리
     @PostMapping("/admin/notice/pin")
     @ResponseBody
     public ResponseEntity<String> pinNotice(@RequestBody Long id) {
-        try {
-            noticeService.setPinned(id, true);
-            return ResponseEntity.ok("success");
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return handleServiceCall(() -> noticeService.setPinned(id, true), "고정 완료");
     }
 
+    // 공지사항 고정 해제 처리
     @PostMapping("/admin/notice/unpin")
     @ResponseBody
-    public String unpinNotice(@RequestBody Long id) {
-        noticeService.setPinned(id, false);
-        return "success";
+    public ResponseEntity<String> unpinNotice(@RequestBody Long id) {
+        return handleServiceCall(() -> noticeService.setPinned(id, false), "고정 해제 완료");
     }
 
+    // 공지사항 숨김 처리
     @PostMapping("/admin/notice/hide")
     @ResponseBody
     public ResponseEntity<String> hideNotice(@RequestBody Long id) {
-
-        try {
-            noticeService.setHidden(id, true); // 여기서 고정해제도 같이 처리됨
-            return ResponseEntity.ok("숨김 처리 완료");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return handleServiceCall(() -> noticeService.setHidden(id, true), "숨김 처리 완료");
     }
 
+    // 공지사항 숨김 취소 처리
     @PostMapping("/admin/notice/unhide")
     @ResponseBody
     public ResponseEntity<String> unhideNotice(@RequestBody Long id) {
-        try {
-            noticeService.setHidden(id, false);
-            return ResponseEntity.ok("숨김 취소 완료");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return handleServiceCall(() -> noticeService.setHidden(id, false), "숨김 취소 완료");
     }
 
-    // 공지사항 상세페이지
+    // 공지사항 상세보기
     @GetMapping("/admin/noticeDetail/{noticeId}")
     public String noticeDetail(@PathVariable("noticeId") Long noticeId, Model model) {
-
         model.addAttribute("notice", noticeService.getNotice(noticeId));
-
-
         return "admin/noticeDetail";
     }
 
+    // 공지사항 수정 처리
     @PostMapping("/admin/notice/update/{id}")
     @ResponseBody
     public ResponseEntity<String> updateNotice(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
-        try {
+        return handleServiceCall(() -> {
             String title = payload.get("title");
             String content = payload.get("content");
-
             NoticeDto existing = noticeService.getNotice(id);
-            existing.setTitle(title); // 제목 수정
-            existing.setContent(content); // 내용 수정
-
+            existing.setTitle(title);
+            existing.setContent(content);
             noticeService.saveNotice(existing);
-            return ResponseEntity.ok("수정 완료");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("수정 실패: " + e.getMessage());
-        }
+        }, "수정 완료");
     }
 
+    // 공지사항 삭제 처리
     @DeleteMapping("/admin/notice/delete/{id}")
     @ResponseBody
     public ResponseEntity<String> deleteNotice(@PathVariable Long id) {
-        try {
-            noticeService.deleteNotice(id); // 서비스에 삭제 로직 추가 필요
-            return ResponseEntity.ok("삭제 완료");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("삭제 실패: " + e.getMessage());
-        }
+        return handleServiceCall(() -> noticeService.deleteNotice(id), "삭제 완료");
     }
 
+    // 문의 관리 페이지
     @GetMapping("/admin/inquiry")
     public String inquiryPage(Model model) {
-
         model.addAttribute("inquiryList", inquiryService.getInquirys());
         return "admin/inquiry";
+    }
+
+    // 서비스 호출 시 성공/실패 응답 처리
+    private ResponseEntity<String> handleServiceCall(Runnable action, String successMsg) {
+        try {
+            action.run();
+            return ResponseEntity.ok(successMsg);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("실패: " + e.getMessage());
+        }
     }
 }

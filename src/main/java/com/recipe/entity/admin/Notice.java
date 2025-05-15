@@ -22,6 +22,8 @@ public class Notice {
     @JoinColumn(name = "admin_id")
     private User admin; // 공지사항 작성자
     private String title; // 공지사항 제목
+
+    @Column(columnDefinition = "TEXT")
     private String content; // 공지사항 내용
     private LocalDateTime writeDate; // 공지사항 작성날짜
     private LocalDateTime updateDate; // 공지사항 수정날짜 추가
