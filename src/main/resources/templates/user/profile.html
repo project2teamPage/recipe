@@ -7,9 +7,48 @@
 <th:block layout:fragment="css">
   <link rel="stylesheet" href="/css/user/profile.css" />
 </th:block>
-<th:block layout:fragment="script">
-  <script th:src="@{/javascript/user/profile.js}"> </script>
-</th:block>
+<script th:src="@{/javascript/user/profile.js}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelector('.info-out').addEventListener('click', function () {
+      document.getElementById('withdrawal-popup').classList.remove('hidden');
+    });
+
+    document.querySelector('.cancel-btn').addEventListener('click', function () {
+      document.getElementById('withdrawal-popup').classList.add('hidden');
+    });
+
+    document.querySelector('.confirm-btn').addEventListener('click', function (e) {
+      e.preventDefault(); // form submit 막기
+      const password = document.querySelector('input[name="password"]').value;
+
+      if (!password) {
+        alert('비밀번호를 입력해주세요.');
+        return;
+      }
+
+      fetch('/user/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({ password })
+      })
+      .then(response => {
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else {
+          return response.text().then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+          });
+        }
+      });
+    });
+  });
+</script>
+
 
 <div layout:fragment="main" id="main">
 
@@ -95,8 +134,25 @@
         </div>
       </div>
       <div class="btn">
-        <button class="info-out">회원탈퇴</button>
-        <button class="info-change">내 정보 수정</button>
+          <button type="button" class="info-out">회원탈퇴</button>
+
+          <!-- 회원탈퇴 팝업창 -->
+          <div id="withdrawal-popup" class="popup-overlay hidden">
+            <div class="popup-content">
+              <h2>회원 탈퇴</h2>
+              <p>정말 탈퇴하시겠습니까?<br>비밀번호를 입력해주세요.</p>
+              <form method="post" th:action="@{/user/profile}">
+                <input type="password" name="password" placeholder="비밀번호 입력" required />
+                <div class="popup-buttons">
+                  <button type="submit" class="confirm-btn">탈퇴하기</button>
+                  <button type="button" class="cancel-btn">취소</button>
+                </div>
+            </div>
+          </div>
+
+          <button type="button" class="info-change">내 정보 수정</button>
+        </form>
+
       </div>
     </div>
   </div>

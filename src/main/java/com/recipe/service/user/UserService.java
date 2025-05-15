@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.security.Principal;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -148,5 +149,17 @@ public class UserService implements UserDetailsService {
 
     public User getUserByLoginId(String loginId) {
         return userRepo.findByLoginId(loginId);
+    }
+
+    // 회원 탈퇴
+    public boolean getOut(String email, String password){
+        User user = userRepo.findByEmail(email).orElseThrow(
+                ()-> new UsernameNotFoundException("사용자 없음")
+        );
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            return false;
+        }
+        userRepo.delete(user);
+        return true;
     }
 }

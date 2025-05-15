@@ -6,7 +6,9 @@ import com.recipe.repository.user.UserRepo;
 import com.recipe.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -87,7 +89,7 @@ public class UserController {
         return "user/food";
     }
 
-    // 내 프로필 편집
+    // 내 프로필사진 편집
     @GetMapping("/user/profile")
     public String profile(Model model, Principal principal){
         String loginId = principal.getName();
@@ -99,6 +101,27 @@ public class UserController {
         }
         
         return "user/profile";
+    }
+
+    // 회원 탈퇴
+    @PostMapping("/user/profile/logout")
+    // authentication = 사용자의 신원을 확인하기 위해 씀
+    public String getOutUser(@RequestParam String password, Model model, Authentication authentication){
+        User user = (User) authentication.getPrincipal();
+
+        // 이제 getEmail() 가능!
+        String email = user.getEmail();
+
+        boolean result = userService.getOut(email, password);
+
+        if (result) {
+            return "redirect:/logout";
+        } else {
+            model.addAttribute("wrongPassword", "비밀번호가 맞지 않습니다.");
+            return "user/profile";
+        }
+
+
     }
 
     // 내 활동

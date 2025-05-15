@@ -44,7 +44,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/user-loginId/**","/user-email/**", "/post/imageUpload"
-                          ,"/user/calendar/**","/signup", "/user/**", "recipe/**", "post/**").permitAll()
+                          ,"/user/calendar/**","/signup", "/user/**", "/recipe/**", "/post/**").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
                         .requestMatchers("/recipeImg/**", "/postImg/**").permitAll()
                         .anyRequest().authenticated()
