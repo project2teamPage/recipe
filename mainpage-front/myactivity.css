@@ -70,6 +70,11 @@ body {
   margin-top: 50px;
 }
 
+.con-title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
 .content {
   width: 910px;
   float: right;
@@ -85,18 +90,38 @@ body {
   border-radius: 26px;
 }
 
-/* con-title */
+/* con-recipe */
 .con-recipe {
   width: 910px;
+  display: flex;
+  
 }
-.con-recipe title {
-  font-size: 30px;
-  font-weight: 700;
+.recipe-content {
+  width: 180px;
+  height: 270px;
+  background-color: #ff6a00;
 }
 .title p {
   font-size: 16px;
   color: #bababa;
   margin-top: 10px;
+}
+.thumbnail {
+  width: 180px;
+  height: 200px;
+  border-radius: 15px;
+  background-color: #D9D9D9;
+  justify-content: space-between;
+}
+
+.thumbnail a {
+  color: #767676;
+  font-size: 14px;
+  font-weight: 600;
+}
+.thumbnail .recipe-text {
+  color: #BABABA;
+  font-size: 10px;
 }
 
 /* 내 댓글 */
