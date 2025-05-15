@@ -22,6 +22,7 @@ public class Post {
 
     private String title;
 
+
     @Lob // varchar -> text
     private String content;
 
