@@ -18,6 +18,7 @@ import com.recipe.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -45,21 +46,35 @@ public class PostController {
     private final PostLikeRepo postLikeRepo;
 
 
-    // 커뮤니티 리스트
     @GetMapping("/post")
-    public String post(@RequestParam(defaultValue = "RECENT") OrderType orderType,
-                       @PageableDefault(size=8, sort="uploadDate", direction = Sort.Direction.DESC) Pageable pageable,
-                       Model model){
+    public String post(@RequestParam(defaultValue = "RECENT") OrderType fridgeOrder,
+                       @RequestParam(defaultValue = "RECENT") OrderType dishOrder,
+                       @RequestParam(defaultValue = "RECENT") OrderType tipOrder,
+            //            @PageableDefault(size=8, sort="uploadDate", direction = Sort.Direction.DESC) Pageable pageable,
+                       @RequestParam(defaultValue = "0", name = "fridgePage") int fridgePage,
+                       @RequestParam(defaultValue = "0", name = "dishPage") int dishPage,
+                       @RequestParam(defaultValue = "0", name = "tipPage") int tipPage,
+                       Model model) {
 
+        Pageable fridgePageable = PageRequest.of(fridgePage, 8, Sort.by("uploadDate").descending());
+        Pageable dishPageable = PageRequest.of(dishPage, 8, Sort.by("uploadDate").descending());
+        Pageable tipPageable = PageRequest.of(tipPage, 8, Sort.by("uploadDate").descending());
 
-                model.addAttribute("fridgeList", postService.getPostList( pageable , PostCategory.FRIDGE_PRIDE , orderType) );
-                model.addAttribute("dishList", postService.getPostList( pageable, PostCategory.DISH_PRIDE , orderType) );
-                model.addAttribute("tipList", postService.getPostList( pageable, PostCategory.TIP, orderType ));
-                model.addAttribute("orderType", orderType);
+        model.addAttribute("fridgeList", postService.getPostList(fridgePageable, PostCategory.FRIDGE_PRIDE, fridgeOrder));
+        model.addAttribute("dishList", postService.getPostList(dishPageable, PostCategory.DISH_PRIDE, dishOrder));
+        model.addAttribute("tipList", postService.getPostList(tipPageable, PostCategory.TIP, tipOrder));
 
+        model.addAttribute("fridgeOrder", fridgeOrder);
+        model.addAttribute("dishOrder", dishOrder);
+        model.addAttribute("tipOrder", tipOrder);
+
+        model.addAttribute("fridgePage", fridgePage);
+        model.addAttribute("dishPage", dishPage);
+        model.addAttribute("tipPage", tipPage);
 
         return "post/list";
     }
+
 
     // 게시글 작성
     @GetMapping("/post/new")
@@ -70,7 +85,7 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-    public String createPost(@Valid PostForm postForm, BindingResult bindingResult,
+    public String savePost(@Valid PostForm postForm, BindingResult bindingResult,
                              Principal principal, Model model) {
 
         if( bindingResult.hasErrors() ){
@@ -106,6 +121,7 @@ public class PostController {
 
         model.addAttribute("post", postService.getPostDetail(postId));
         model.addAttribute("newComment", new PostCommentDto() );
+        postService.increaseViewCount(postId);
 
 
         return "post/detail";

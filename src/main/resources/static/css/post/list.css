@@ -1,0 +1,25 @@
+.pagination {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.page-item.disabled .page-link {
+  pointer-events: none;
+  color: #999;
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.page-item.active .page-link {
+  background-color: #333;
+  border-color: #333;
+  color: white;
+}
+
+.page-link {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #333;
+}

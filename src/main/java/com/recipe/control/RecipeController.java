@@ -57,9 +57,11 @@ public class RecipeController {
     // 레시피 상세
     @GetMapping("/recipe/{id}")
     public String recipeDetail(@PathVariable Long id, Model model) {
+
         RecipeDetailDto recipeDetailDto = recipeService.recipeDetail(id);
         model.addAttribute("recipe", recipeDetailDto);
         model.addAttribute("newComment", new RecipeCommentDto() );
+        recipeService.increaseViewCount(id);
         return "recipe/detail";
     }
 
@@ -121,7 +123,7 @@ public class RecipeController {
         return "redirect:/recipe";
     }
 
-    // 레시피 수정
+    // 레시피 수정 페이지
     @GetMapping("/recipe/edit/{id}")
     public String editForm(@PathVariable Long id, Model model){
         RecipeForm recipeFrom = recipeService.getRecipeForm(id);
@@ -129,6 +131,35 @@ public class RecipeController {
         model.addAttribute("recipeForm", recipeFrom);
 
         return "recipe/editForm";
+    }
+
+    // 레시피 수정
+    @PostMapping("/recipe/edit/{id}")
+    public String editedRecipe(@PathVariable Long id, @Valid RecipeForm recipeForm,
+                               BindingResult bindingResult, Model model){
+
+        if(bindingResult.hasErrors()){ // 필수입력값 을 작성하지 않은 경우
+            return "recipe/recipeForm";
+        }
+        List<RecipeStepDto> stepList = recipeForm.getRecipeStepDtoList();
+
+        if( stepList == null || stepList.isEmpty() ){
+            // 이미지를 선택하지 않을 경우 에러메세지 보내주기
+            model.addAttribute("errorMessage", "each recipeSteps needs image");
+            return "recipe/recipeForm";
+        }
+
+        try{
+            recipeService.createRecipe(recipeForm);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "레시피 작성 실패");
+            e.printStackTrace();
+            return "recipe/recipeForm";
+        }
+
+
+        return "redirect:/recipe/"+id;
+
     }
 
 

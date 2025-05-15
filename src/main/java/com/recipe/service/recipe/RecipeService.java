@@ -231,4 +231,9 @@ public class RecipeService {
         return RecipeForm.from(recipe, recipeIngredientDtoList, recipeStepDtoList);
 
     }
+
+    @Transactional
+    public void increaseViewCount(Long id) {
+        recipeRepo.increaseViewCount(id);
+    }
 }

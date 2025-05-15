@@ -152,7 +152,11 @@ public class PostService {
     }
 
 
-
+    // 조회수 증가
+    @Transactional
+    public void increaseViewCount(Long postId) {
+        postRepo.increaseViewCount(postId);
+    }
 }
 
 
