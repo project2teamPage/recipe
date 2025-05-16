@@ -19,4 +19,6 @@ public class ReportRequestDto {
 
     private String title;
     private String reason;
+
+    private String userId; // 유저 식별자 (User 엔티티 ID)
 }

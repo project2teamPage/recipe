@@ -4,6 +4,7 @@ import com.recipe.constant.Role;
 import com.recipe.dto.admin.NoticeDto;
 import com.recipe.dto.admin.NoticeListDto;
 import com.recipe.dto.admin.ReportListDto;
+import com.recipe.dto.admin.ReportRequestDto;
 import com.recipe.entity.admin.Report;
 import com.recipe.entity.user.User;
 import com.recipe.service.admin.InquiryService;
@@ -42,6 +43,17 @@ public class AdminController {
     public String reportPage(Model model) {
         model.addAttribute("reportList", reportService.getReports());
         return "admin/report";
+    }
+
+    @PostMapping("/report")
+    @ResponseBody
+    public ResponseEntity<?> createReport(@RequestBody ReportRequestDto reportRequestDto) {
+        try {
+            reportService.saveReport(reportRequestDto); // 서비스에서 저장 처리
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("신고 저장 실패");
+        }
     }
 
     // 공지사항 관리 페이지 (사용자 역할에 따라 공지사항 다르게 처리)
