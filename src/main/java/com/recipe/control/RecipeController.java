@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -26,7 +27,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @AllArgsConstructor
@@ -65,10 +68,17 @@ public class RecipeController {
         model.addAttribute("recipe", recipeDetailDto);
         model.addAttribute("newComment", new RecipeCommentDto() );
 
+        boolean liked = false;
+
         // 현재 로그인한 사용자 정보도 모델에 추가
         if (userDetails != null) {
-            model.addAttribute("user", userDetails.getUser());
+            User user = userDetails.getUser();
+            liked = recipeService.hasLiked(id, user);
+
+            model.addAttribute("user", user);
         }
+
+        model.addAttribute("liked", liked);
 
         recipeService.increaseViewCount(id);
         return "recipe/detail";
@@ -174,6 +184,25 @@ public class RecipeController {
         return "redirect:/recipe/"+id;
 
     }
+
+    //좋아요 누를 시
+    @ResponseBody
+    @PostMapping("/recipe/like")
+    public ResponseEntity<Map<String, Object>> toggleLike(@RequestParam Long recipeId , @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        User user = userDetails.getUser();
+
+        boolean liked = recipeService.toggleLike(recipeId, user);
+        int likeCount = recipeService.getLikeCount(recipeId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("liked", liked);
+        response.put("likeCount", likeCount);
+
+
+        return ResponseEntity.ok(response);
+    }
+
 
 
 

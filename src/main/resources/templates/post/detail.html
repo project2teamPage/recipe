@@ -4,19 +4,73 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/default}">
 
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
 <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/post/detail.css}">
 </th:block>
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="script">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (btn.disabled) return;
+                    btn.disabled = true;
+
+                    const postId = btn.dataset.postId;
+
+                    fetch('/post/like', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ postId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const icon = document.querySelector(`#likeIcon_${postId}`);
+                        const count = document.querySelector(`#likeCount_${postId}`);
+
+                        if (data.liked) {
+                            icon.style.color = 'red';
+                            btn.dataset.liked = "true";
+                            icon.innerText = '❤️ 좋아요';
+                        } else {
+                            icon.style.color = 'gray';
+                            btn.dataset.liked = "false";
+                            icon.innerText = '💔 좋아요 취소';
+                        }
+
+                        if (count && data.likeCount !== undefined) {
+                            count.innerText = data.likeCount;
+                        }
+                    })
+                    .catch(err => console.error(err))
+                    .finally(() => {
+                        btn.disabled = false;
+                    });
+                });
+            });
+        });
+
+
+    </script>
+
+
+
+</th:block>
+
 
 <div layout:fragment="main" id="main">
 
     <div class="container mt-4">
         <h2 th:text="${post.title}">제목</h2>
         <p class="text-muted">
-            작성자: <span th:text="${post.nickName}">작성자</span> |
-            작성일: <span th:text="${#temporals.format(post.uploadDate, 'yyyy-MM-dd HH:mm')}">날짜</span> |
-            조회수: <span th:text="${post.viewCount}">0</span>
+            <span th:text="'작성자:' + ${post.nickName} + ' | '">작성자</span>
+            <span th:text="${'작성일:' + #temporals.format(post.uploadDate, 'yyyy-MM-dd HH:mm')} + ' | '">날짜</span>
+            <span th:text="${'조회수:' + post.viewCount}">0</span>
         </p>
 
         <hr/>
@@ -27,10 +81,19 @@
         <hr/>
 
         <!-- 좋아요 -->
-        <div class="like-section">
-            <span>❤️ 좋아요</span>
-            <span th:text="${post.postLikes}">0</span>
-        </div>
+        <button class="like-section like-btn"
+                th:id="'likeButton_' + ${post.id}"
+                th:data-post-id="${post.id}"
+                th:data-liked="${liked}">
+
+            <span th:id="'likeIcon_' + ${post.id}"
+                  th:style="'color:' + (${liked} ? 'red' : 'gray')">
+                ❤️ 좋아요
+            </span>
+            <span th:id="'likeCount_' + ${post.id}" th:text="${post.postLikes}">0</span>
+        </button>
+
+
 
         <!-- 추가 버튼 (수정, 삭제 등) -->
         <div>
@@ -45,27 +108,27 @@
             <a th:href="@{/post}" class="btn btn-secondary">목록</a>
         </div>
 
+        <!-- 댓글 -->
+        <div class="comments">
+            <h5>댓글 <span th:text="${#lists.size(post.postCommentDtoList)}">0</span></h5>
+            <ul>
+                <li th:each="comment : ${post.postCommentDtoList}">
+                    <div class="comment-header">
+                        <strong th:text="${comment.nickName}">닉네임</strong>
+                        <small th:text="${#temporals.format(comment.uploadDate, 'yyyy.MM.dd HH:mm:ss')}">날짜</small>
+                    </div>
+                    <p th:text="${comment.content}">내용</p>
+                </li>
+            </ul>
+
+            <form th:action="@{/post/{id}/comment(id=${post.id})}" th:object="${newComment}" method="post">
+                <textarea th:field="*{content}" placeholder="댓글을 입력하세요"></textarea>
+                <button type="submit">등록</button>
+            </form>
+
+        </div>
     </div>
 
-    <!-- 댓글 -->
-    <div class="comments">
-        <h5>댓글 <span th:text="${#lists.size(post.postCommentDtoList)}">0</span></h5>
-        <ul>
-            <li th:each="comment : ${post.postCommentDtoList}">
-                <div class="comment-header">
-                    <strong th:text="${comment.nickName}">닉네임</strong>
-                    <small th:text="${#temporals.format(comment.uploadDate, 'yyyy.MM.dd HH:mm:ss')}">날짜</small>
-                </div>
-                <p th:text="${comment.content}">내용</p>
-            </li>
-        </ul>
-
-        <form th:action="@{/post/{id}/comment(id=${post.id})}" th:object="${newComment}" method="post">
-            <textarea th:field="*{content}" placeholder="댓글을 입력하세요"></textarea>
-            <button type="submit">등록</button>
-        </form>
-
-    </div>
 
 
 
