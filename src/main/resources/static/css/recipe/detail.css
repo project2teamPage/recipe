@@ -145,6 +145,8 @@
 
 /* 좋아요 */
 .like-section {
+    all: unset;
+    cursor:pointer;
     font-size: 18px;
     color: #f76c6c;
     font-weight: bold;

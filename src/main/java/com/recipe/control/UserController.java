@@ -103,7 +103,7 @@ public class UserController {
         return "user/profile";
     }
 
-    // 회원 탈퇴
+    // 로그아웃
     @PostMapping("/user/profile/logout")
     // authentication = 사용자의 신원을 확인하기 위해 씀
     public String getOutUser(@RequestParam String password, Model model, Authentication authentication){

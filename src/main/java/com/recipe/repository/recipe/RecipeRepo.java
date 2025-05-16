@@ -66,4 +66,11 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
 
     // 삭제일이 될 때 삭제
     List<Recipe> findAllByIsDeletedTrueAndDeletedDateBefore(LocalDateTime now);
+
+
+    // 메인페이지용 좋아요 수 상위3개
+    @Query("SELECT r FROM Recipe r " +
+            "WHERE r.isDeleted = false " +
+            "ORDER BY (SELECT COUNT(l) FROM RecipeLike l WHERE l.recipe = r ) DESC")
+    List<Recipe> findTop3OrderByLikes(Pageable pageable);
 }

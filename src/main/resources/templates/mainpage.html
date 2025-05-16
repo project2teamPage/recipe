@@ -3,31 +3,204 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/default}">
-<th:block layout:fragment="css"></th:block>
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/user/mainpage.css" />
+</th:block>
 <th:block layout:fragment="script"></th:block>
 
 <div layout:fragment="main" id="main">
 
-<div class="mainpage">
-    <main>
-        <div class="main">메인</div>
-        <div class="hot-recipe">인기레시피</div>
-        <div class="recipe-brag">레시피자랑</div>
-        <div class="member-list">
-            <ul>
-                <li th:each="info : ${userInfo}">
-                    <span th:text="${info.nickName}"> </span>
-                    <span th:text="${info.id}"> </span>
-                </li>
-            </ul>
-        </div>
-        <div class="community">커뮤니티</div>
-        <div class="notice">공지사항</div>
-        <div class="question">문의사항</div>
+    <div class="mainpage">
+        <main>
+            <div class="main">
+                <div class="main-content">
+                    <div class="main-con-question">
+                        <button class="top-mypage-icon">my page</button>
+                        <div class="main-title">
+                <span>
+                    <p th:unless="${isLogin}"  class="nick-name">선우님,</p>
+                    <p th:if="${isLogin}" th:text="${user.nickName} + '님,'" class="nick-name">닉네임</p>
+                  냉장고 안에 어떤 재료가 있나요?</span>
+                            <p class="m-t-text">
+                                당신의 냉장고 속 남아 있는 식재료를 알려주세요! 저희가 최적의
+                                레시피를 제공하겠습니다!
+                            </p>
+                        </div>
+                        <form action="">
+                            <label for="recipe-search"></label>
+                            <input
+                                    id="recipe-search"
+                                    name="ingredients"
+                                    class="main-recipe-search"
+                                    type="search"
+                                    placeholder="재료를 입력해주세요. 관련 레시피를 제공합니다."
+                            />
+                            <ul class="recipe-ul">
+                                <li class="recipe-result">굴소스</li>
+                                <li class="recipe-result">팽이벗서</li>
+                            </ul>
+                        </form>
+                    </div>
+                    <div class="mypage-icon"></div>
+                </div>
+            </div>
+            <div class="hot-recipe">
+                <div class="title">
+                    <p class="s-recipe-title">Recipe</p>
+                    <span class="recipe-title">간편하고 쉽게 즐기는 인기레시피</span>
+                    <p class="t-recipe-text">
+                        어때요,
+                        <span th:unless="${isLogin}"  class="nick-name">선우</span>
+                        <span th:if="${isLogin}" th:text="${user.nickName}" class="nick-name">닉네임</span>
+                        님의 취향에 맞나요?
+                    </p>
+                </div>
 
-    </main>
-</div>
-</div>
-<footer>푸터</footer>
+                <div class="recipe-box" style="display: grid;">
+                    <a th:href="@{'/recipe/' + ${recipe.id}}"  th:each="recipe : ${likedRecipes}">
+                        <div class="card box">
+                            <div class="recipe-card active">
+                                <img th:src="@{${recipe.imgUrl} }" alt="썸네일" style="object-fit: cover; height: 180px;">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate" th:text="${recipe.title}">제목</h5>
+                                    <p class="card-text small text-muted mb-1" th:text="${recipe.nickName}">닉네임</p>
+                                </div>
+                            </div>
+                            <!-- <div class="recipe-card"></div>
+                            <div class="recipe-card"></div> -->
+                        </div>
+                    </a>
+                    <button class="carousel-btn prev">‹</button>
+                    <button class="carousel-btn next">›</button>
+                </div>
 
+                <a th:href="@{/recipe(orderType='LIKE')}" class="btn more-view-btn">더보기 ></a>
+            </div>
+            <div class="recipe-brag">
+                <div class="title">
+                    <p class="s-recipe-brag-title">Show member recipe</p>
+                    <span class="recipe-brag-title">냉털키친 회원님들의 요리 자랑</span>
+                </div>
+
+                <div class="recipe-brag-box">
+                    <a th:href="@{'/post/' + ${post.id}}" th:each="post : ${posts}">
+                        <div class="brag-card" >
+                            <img th:src="@{'/postImg/' + ${post.imageUrl}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">
+                            <div class="card-body">
+                                <h5 class="card-title text-truncate" th:text="${post.title}">제목</h5>
+                                <p class="card-text small text-muted mb-1" th:text="${post.nickName}">작성자</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <button class="more-view-btn">더보기 ></button>
+            </div>
+            <div class="member-list">
+                <p class="s-member-title">member</p>
+                <div class="member-list-box">
+                    <div class="memeber-box">
+                        <div class="profile"></div>
+                        <div class="member-name">사용자이름</div>
+                    </div>
+                    <div class="memeber-box">
+                        <div class="profile"></div>
+                        <div class="member-name">사용자이름</div>
+                    </div>
+                    <div class="memeber-box">
+                        <div class="profile"></div>
+                        <div class="member-name">사용자이름</div>
+                    </div>
+                </div>
+                <button class="more-view-btn">더보기 ></button>
+            </div>
+            <div class="community">
+                <div class="title">
+                    <span class="community-title">Community</span>
+                </div>
+                <div class="community-box">
+                    <div class="community-content">
+                        <li>
+                            <div class="thumbnail"></div>
+                            <div class="com-catego">
+                                <a href="#"><p>카테고리</p></a>
+                                <p class="com-text">
+                                    살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
+                                    속세맛 마라로제!
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="thumbnail"></div>
+                            <div class="com-catego">
+                                <a href="#"><p>카테고리</p></a>
+                                <p class="com-text">
+                                    살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
+                                    속세맛 마라로제!
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="thumbnail"></div>
+                            <div class="com-catego">
+                                <a href="#"><p>카테고리</p></a>
+                                <p class="com-text">
+                                    살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
+                                    속세맛 마라로제!
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="thumbnail"></div>
+                            <div class="com-catego">
+                                <a href="#"><p>카테고리</p></a>
+                                <p class="com-text">
+                                    살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
+                                    속세맛 마라로제!
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="thumbnail"></div>
+                            <div class="com-catego">
+                                <a href="#"><p>카테고리</p></a>
+                                <p class="com-text">
+                                    살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
+                                    속세맛 마라로제!
+                                </p>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+                <button class="more-view-btn">더보기</button>
+            </div>
+            <div class="bt-notice">
+                <div class="notice">
+                    <p>공지사항</p>
+                    <button>공지사항 더보기 ></button>
+                    <div>
+                        <ul class="notice-box">
+                            <li th:each="notice : ${notice5}">
+                                <span class="no-title" th:text="${notice.title}">내용내용내용</span>
+                                <span class="date" th:text="${notice.writeDate}">2025.00.00</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="question">
+                    <p>문의사항</p>
+                    <form action="" class="question-form-box">
+                        <input
+                                class="question-form"
+                                type="search"
+                                placeholder="ex. 김식탁"
+                                aria-label="Search"
+                        />
+                        <button>의견 제출하기</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer>푸터</footer>
+</div>
 </html>

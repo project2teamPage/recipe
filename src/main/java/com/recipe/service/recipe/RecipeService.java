@@ -5,10 +5,8 @@ import com.recipe.constant.OrderType;
 import com.recipe.constant.Theme;
 import com.recipe.constant.UploadType;
 import com.recipe.dto.recipe.*;
-import com.recipe.entity.recipe.Recipe;
-import com.recipe.entity.recipe.RecipeComment;
-import com.recipe.entity.recipe.RecipeIngredient;
-import com.recipe.entity.recipe.RecipeStep;
+import com.recipe.entity.post.PostLike;
+import com.recipe.entity.recipe.*;
 import com.recipe.entity.user.User;
 import com.recipe.repository.recipe.*;
 import com.recipe.repository.user.UserRepo;
@@ -18,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
@@ -30,6 +29,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -297,5 +297,62 @@ public class RecipeService {
     @Transactional
     public void increaseViewCount(Long id) {
         recipeRepo.increaseViewCount(id);
+    }
+
+    // 이미 좋아요 눌럿는지 확인용
+    public boolean hasLiked(Long id, User user) {
+        Recipe recipe = recipeRepo.findById(id).orElseThrow();
+
+        return recipeLikeRepo.existsByRecipeAndUser(recipe, user);
+    }
+
+
+    // 좋아요 누를 시
+    @Transactional
+    public boolean toggleLike(Long recipeId, User user) {
+        Recipe recipe = recipeRepo.findById(recipeId).orElseThrow();
+
+        boolean existing = recipeLikeRepo.existsByRecipeAndUser(recipe, user);
+
+        if (existing) {
+            recipeLikeRepo.deleteByRecipeAndUser(recipe, user);
+            return false; // 좋아요 취소됨
+        } else {
+            RecipeLike like = new RecipeLike();
+            like.setRecipe(recipe);
+            like.setUser(user);
+            recipeLikeRepo.save(like);
+            return true; // 좋아요 추가됨
+        }
+    }
+
+    public int getLikeCount(Long recipeId) {
+        return recipeLikeRepo.countByRecipeId(recipeId);
+    }
+
+    // 메인페이지용 레시피 좋아요순으로 3개 가져오기
+    public List<RecipeListDto> getLikedRecipes() {
+
+        // 리스트 3개까지 가져온다
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        List<Recipe> recipeList = recipeRepo.findTop3OrderByLikes(pageRequest);
+        List<RecipeListDto> dtoList = new ArrayList<>();
+
+        for(Recipe recipe : recipeList){
+            RecipeStep recipeStep = recipeStepRepo.findByRecipeIdAndIsThumbnailIsTrue(recipe.getId()); // 레시피의 썸네일 step 찾기
+            String imgUrl = "";
+            if( recipeStep != null && recipeStep.getImgUrl() != null){
+                imgUrl = recipeStep.getImgUrl();
+            }
+
+            int recipeLikes = recipeLikeRepo.countByRecipeId( recipe.getId() );
+
+            dtoList.add( RecipeListDto.of(recipe, imgUrl, recipeLikes) );
+        }
+
+        return dtoList;
+
+
     }
 }

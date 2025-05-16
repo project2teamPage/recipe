@@ -32,7 +32,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @AllArgsConstructor
@@ -123,10 +125,16 @@ public class PostController {
         model.addAttribute("post", postService.getPostDetail(postId));
         model.addAttribute("newComment", new PostCommentDto() );
 
+        boolean liked = false;
+
         if (userDetails != null) {
-            model.addAttribute("user", userDetails.getUser());
+            User user = userDetails.getUser();
+            liked = postService.hasLiked(postId, user);
+            model.addAttribute("user", user);
+
         }
 
+        model.addAttribute("liked", liked);
         postService.increaseViewCount(postId);
 
 
@@ -208,6 +216,24 @@ public class PostController {
         }
 
         return "redirect:/post/"+id;
+    }
+
+    //좋아요 누를 시
+    @ResponseBody
+    @PostMapping("/post/like")
+    public ResponseEntity<Map<String, Object>> toggleLike(@RequestParam Long postId ,@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Long userId = userDetails.getUser().getId(); // 현재 로그인 사용자 ID
+
+        boolean liked = postService.toggleLike(postId, userId);
+        int likeCount = postService.getLikeCount(postId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("liked", liked);
+        response.put("likeCount", likeCount);
+
+
+        return ResponseEntity.ok(response);
     }
 
 
