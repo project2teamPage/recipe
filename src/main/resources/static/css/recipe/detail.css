@@ -337,3 +337,15 @@
     background-color: #e55353;
 }
 
+.comment-report-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+    height: 28px;
+    line-height: 1.2;
+    cursor: pointer;
+    background-color: #f76c6c;
+    border: none;
+    border-radius: 4px;
+    color: white;
+}
+

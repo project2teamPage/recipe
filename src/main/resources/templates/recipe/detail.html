@@ -138,7 +138,15 @@
         </span>
         <a th:href="@{/recipe}" class="btn btn-secondary">목록</a>
         <!-- 신고 버튼 -->
-        <button type="button" class="btn btn-danger" id="reportBtn" onclick="openReportModal()">신고</button>
+        <button type="button"
+                class="btn btn-danger"
+                id="reportBtn"
+                th:data-target-id="${recipe.id}"
+                th:data-target-nickname="${recipe.nickName}"
+                th:data-target-type="'RECIPE_POST'"
+                onclick="openReportModal()">
+            신고
+        </button>
     </div>
 
     <!-- 신고 모달창 -->
@@ -164,11 +172,11 @@
                 <!-- 사용자에겐 보여주되 읽기 전용 -->
                 <div class="horizontal-row">
                     <label>대상 글 종류:</label>
-                    <span th:text="'레시피 게시글'">레시피 게시글</span>
+                    <span class="target-type-display">레시피 게시글</span>
                 </div>
                 <div class="horizontal-row">
                     <label>신고 대상자:</label>
-                    <span th:text="${recipe.nickName}">작성자 닉네임</span>
+                    <span class="target-nickname-display" th:text="${recipe.nickName}">작성자 닉네임</span>
                 </div>
 
                 <!-- 입력 받는 필드 -->
@@ -196,6 +204,15 @@
                 <div class="comment-header">
                     <strong th:text="${comment.nickName}">닉네임</strong>
                     <small th:text="${#temporals.format(comment.uploadDate, 'yyyy.MM.dd HH:mm:ss')}">날짜</small>
+                    <!-- 댓글 신고 버튼 추가 -->
+                    <button type="button"
+                            class="btn btn-danger comment-report-btn"
+                            th:data-target-id="${comment.id}"
+                            th:data-target-nickname="${comment.nickName}"
+                            th:data-target-type="'RECIPE_COMMENT'"
+                            onclick="openReportModal(this)">
+                        댓글 신고
+                    </button>
                 </div>
                 <p th:text="${comment.content}">내용</p>
             </li>
