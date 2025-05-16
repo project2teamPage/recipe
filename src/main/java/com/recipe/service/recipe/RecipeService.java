@@ -137,7 +137,7 @@ public class RecipeService {
         // 마지막 이미지 == 썸네일
         for(int i = recipeStep.size()-1; i >= 0 ; i--){
             String imgUrl = recipeStep.get(i).getImgUrl();
-            // imgUrl 이 null 이거나 비엇을때 대비
+            // 이미지 비면 다음꺼루
             if( imgUrl != null && !imgUrl.trim().isEmpty() && !"null".equalsIgnoreCase(imgUrl.trim()) ){
                 RecipeStep thumbnailStep = recipeStep.get(i);
                 thumbnailStep.setThumbnail(true);
