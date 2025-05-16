@@ -36,14 +36,12 @@ public class NoticeService {
             notice.setPinned(false);
             notice.setHidden(false);
 
-            // 관리자 계정을 임시로 하드코딩하여 설정
-            User admin = userRepository.findByRole(Role.ADMIN); // 실제 관리자가 연동되면 제거 예정
+            User admin = userRepository.findByRole(Role.ADMIN);
             if (admin != null) {
                 notice.setAdmin(admin);
             } else {
-                // 임시로 관리자를 설정하는 부분
                 admin = new User();
-                admin.setRole(Role.ADMIN);  // 임시 관리자 설정
+                admin.setRole(Role.ADMIN);
                 notice.setAdmin(admin);
             }
         }
@@ -53,14 +51,12 @@ public class NoticeService {
 
     public List<NoticeListDto> getNoticesByRole(Role role) {
         if (role == Role.ADMIN) {
-            // 관리자는 숨김 여부와 관계없이 모든 공지사항을 조회
             return noticeRepository.findAllOrderByLatestDateDesc().stream()
-                    .map(notice -> NoticeListDto.from(notice, "관리자"))
+                    .map(notice -> NoticeListDto.from(notice, getAdminNickName(notice)))
                     .collect(Collectors.toList());
         } else {
-            // 사용자는 숨김 처리된 공지사항을 제외하고 조회
             return noticeRepository.findAllVisibleOrderByLatestDateDesc().stream()
-                    .map(notice -> NoticeListDto.from(notice, "관리자"))
+                    .map(notice -> NoticeListDto.from(notice, getAdminNickName(notice)))
                     .collect(Collectors.toList());
         }
     }
@@ -93,19 +89,19 @@ public class NoticeService {
 
     public List<NoticeListDto> getAllNoticeDtos() {
         return noticeRepository.findAllVisibleOrderByLatestDateDesc().stream()
-                .map(notice -> NoticeListDto.from(notice, "관리자"))
+                .map(notice -> NoticeListDto.from(notice, getAdminNickName(notice)))
                 .collect(Collectors.toList());
     }
 
     public List<NoticeListDto> getPinnedNoticeDtos() {
         return noticeRepository.findAllPinnedVisibleOrderByLatestDateDesc().stream()
-                .map(notice -> NoticeListDto.from(notice, "관리자"))
+                .map(notice -> NoticeListDto.from(notice, getAdminNickName(notice)))
                 .collect(Collectors.toList());
     }
 
     public NoticeDto getNotice(Long noticeId) {
         Notice notice = getNoticeOrThrow(noticeId);
-        return NoticeDto.from(notice, "관리자");
+        return NoticeDto.from(notice, getAdminNickName(notice));
     }
 
     public void deleteNotice(Long id) {
@@ -115,5 +111,11 @@ public class NoticeService {
     private Notice getNoticeOrThrow(Long id) {
         return noticeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
+    }
+
+    private String getAdminNickName(Notice notice) {
+        return (notice.getAdmin() != null && notice.getAdmin().getNickName() != null)
+                ? notice.getAdmin().getNickName()
+                : "관리자";
     }
 }
