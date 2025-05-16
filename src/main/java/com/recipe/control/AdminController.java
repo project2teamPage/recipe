@@ -5,12 +5,14 @@ import com.recipe.dto.admin.NoticeDto;
 import com.recipe.dto.admin.NoticeListDto;
 import com.recipe.dto.admin.ReportListDto;
 import com.recipe.entity.admin.Report;
+import com.recipe.entity.user.User;
 import com.recipe.service.admin.InquiryService;
 import com.recipe.service.admin.NoticeService;
 import com.recipe.service.admin.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -70,7 +72,10 @@ public class AdminController {
 
     // 공지사항 작성 처리
     @PostMapping("/admin/noticeWrite")
-    public String createNotice(@ModelAttribute("noticeDto") NoticeDto dto) {
+    public String createNotice(@ModelAttribute("noticeDto") NoticeDto dto,
+                               @AuthenticationPrincipal User currentUser) {
+        // 현재 로그인한 관리자 정보 dto에 세팅
+        dto.setAdminId(currentUser.getId());  // NoticeDto에 adminId 필드 필요
         noticeService.saveNotice(dto);
         return "redirect:/admin/notice";
     }
