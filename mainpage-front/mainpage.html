@@ -73,9 +73,49 @@
                   type="search"
                   placeholder="재료를 입력해주세요. 관련 레시피를 제공합니다."
                 />
+<!-- 모달 -->
+                <div id="overlay" class="overlay hidden"></div>
+
+                <div id="model" class="model hidden">
+                  
+                  <img src="image/logo4.png" alt="모달로고이미지" />
+                  <form action="">
+                    <label for="model-search"></label>
+                    <input
+                      id="model-search"
+                      name="model-search"
+                      class="model-search-form"
+                      type="search"
+                      placeholder="재료를 입력해주세요. 관련 레시피를 제공합니다."
+                    />
+                  </form>
+                  <div class="model-result">
+                      <li class="mo-recipe-result">굴소스</li>
+                      <li class="mo-recipe-result">팽이벗성</li>
+                  </div>
+                  <p class="mo-text">냉털키친이 추천하는 레시피는...</p>
+                  <div class="mo-recipe-list">
+                    <div class="mo-recipe">
+                      <p class="mo-re-title">제목제목제목제목제목</p>
+                      <p>사용자아이디</p>
+                      <button>레시피 바로보기 ></button>
+                    </div>
+                    <div class="mo-recipe">
+                      <p class="mo-re-title">제목제목제목제목제목</p>
+                      <p>사용자아이디</p>
+                      <button>레시피 바로보기 ></button>
+                    </div>
+                    <div class="mo-recipe">
+                      <p class="mo-re-title">제목제목제목제목제목</p>
+                      <p>사용자아이디</p>
+                      <button>레시피 바로보기 ></button>
+                    </div>
+                  </div>
+                </div>
+
                 <ul class="recipe-ul">
                   <li class="recipe-result">굴소스</li>
-                  <li class="recipe-result">팽이벗서</li>
+                  <li class="recipe-result">팽이벗성</li>
                 </ul>
               </form>
             </div>
@@ -238,6 +278,28 @@
         </div>
       </main>
     </div>
-    <footer>푸터</footer>
   </body>
 </html>
+<script>
+  const openInput = document.querySelector(".main-recipe-search");
+  const modal = document.getElementById("model");
+  const overlay = document.getElementById("overlay");
+
+  openInput.addEventListener("focus", () => {
+    modal.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+  });
+
+  overlay.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    overlay.classList.add("hidden");
+  });
+
+  // ESC 키로 닫기
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      modal.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }
+  });
+</script>
