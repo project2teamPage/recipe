@@ -25,6 +25,8 @@ public class MainService {
             mainUserListDtoList.add(mainUserListDto);
         }
 
-        return mainUserListDtoList;
+        List<MainUserListDto> userList = mainUserListDtoList.size() > 10 ? mainUserListDtoList.subList(0, 10) : mainUserListDtoList;
+
+        return userList;
     }
 }

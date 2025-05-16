@@ -6,7 +6,33 @@
 <th:block layout:fragment="css">
     <link rel="stylesheet" href="/css/user/mainpage.css" />
 </th:block>
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="script">
+    <script>
+        window.onload=function(){
+        const openInput = document.querySelector(".main-recipe-search");
+        const modal = document.getElementById("model");
+        const overlay = document.getElementById("overlay");
+
+        openInput.addEventListener("focus", () => {
+          modal.classList.remove("hidden");
+          overlay.classList.remove("hidden");
+        });
+
+        overlay.addEventListener("click", () => {
+          modal.classList.add("hidden");
+          overlay.classList.add("hidden");
+        });
+
+        // ESC 키로 닫기
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            modal.classList.add("hidden");
+            overlay.classList.add("hidden");
+          }
+        });
+        }
+    </script>
+</th:block>
 
 <div layout:fragment="main" id="main">
 
@@ -35,6 +61,49 @@
                                     type="search"
                                     placeholder="재료를 입력해주세요. 관련 레시피를 제공합니다."
                             />
+
+
+                            <!-- 모달 -->
+                            <div id="overlay" class="overlay hidden"></div>
+
+                            <div id="model" class="model hidden">
+
+                                <img src="image/logo4.png" alt="모달로고이미지" />
+                                <form action="">
+                                    <label for="model-search"></label>
+                                    <input
+                                            id="model-search"
+                                            name="model-search"
+                                            class="model-search-form"
+                                            type="search"
+                                            placeholder="재료를 입력해주세요. 관련 레시피를 제공합니다."
+                                    />
+                                </form>
+                                <div class="model-result">
+                                    <li class="mo-recipe-result">굴소스</li>
+                                    <li class="mo-recipe-result">팽이벗성</li>
+                                </div>
+                                <p class="mo-text">냉털키친이 추천하는 레시피는...</p>
+                                <div class="mo-recipe-list">
+                                    <div class="mo-recipe">
+                                        <p class="mo-re-title">제목제목제목제목제목</p>
+                                        <p>사용자아이디</p>
+                                        <button>레시피 바로보기 ></button>
+                                    </div>
+                                    <div class="mo-recipe">
+                                        <p class="mo-re-title">제목제목제목제목제목</p>
+                                        <p>사용자아이디</p>
+                                        <button>레시피 바로보기 ></button>
+                                    </div>
+                                    <div class="mo-recipe">
+                                        <p class="mo-re-title">제목제목제목제목제목</p>
+                                        <p>사용자아이디</p>
+                                        <button>레시피 바로보기 ></button>
+                                    </div>
+                                </div>
+                            </div>
+
+
                             <ul class="recipe-ul">
                                 <li class="recipe-result">굴소스</li>
                                 <li class="recipe-result">팽이벗서</li>
@@ -98,17 +167,9 @@
             <div class="member-list">
                 <p class="s-member-title">member</p>
                 <div class="member-list-box">
-                    <div class="memeber-box">
+                    <div class="memeber-box" th:each="user : ${userInfo}">
                         <div class="profile"></div>
-                        <div class="member-name">사용자이름</div>
-                    </div>
-                    <div class="memeber-box">
-                        <div class="profile"></div>
-                        <div class="member-name">사용자이름</div>
-                    </div>
-                    <div class="memeber-box">
-                        <div class="profile"></div>
-                        <div class="member-name">사용자이름</div>
+                        <div th:text="${user.nickName}" class="member-name">사용자이름</div>
                     </div>
                 </div>
                 <button class="more-view-btn">더보기 ></button>
@@ -204,3 +265,5 @@
     <footer>푸터</footer>
 </div>
 </html>
+
+
