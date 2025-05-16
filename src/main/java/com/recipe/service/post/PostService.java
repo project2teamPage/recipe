@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -187,8 +188,38 @@ public class PostService {
         postRepo.increaseViewCount(postId);
     }
 
+    // 이미 좋아요 누른 페이지인지 확인용
+    public boolean hasLiked(Long postId, User user){
+        Post post = postRepo.findById(postId).orElseThrow();
+
+        return postLikeRepo.existsByPostAndUser(post, user);
+    }
 
 
+    // 좋아요 누를시 작동
+    @Transactional
+    public boolean toggleLike(Long postId, Long userId) {
+        Post post = postRepo.findById(postId).orElseThrow();
+        User user = userRepo.findById(userId).orElseThrow();
+
+        boolean existing = postLikeRepo.existsByPostAndUser(post, user);
+
+        if (existing) {
+            postLikeRepo.deleteByPostAndUser(post, user);
+            return false; // 좋아요 취소됨
+        } else {
+            PostLike like = new PostLike();
+            like.setPost(post);
+            like.setUser(user);
+            postLikeRepo.save(like);
+            return true; // 좋아요 추가됨
+        }
+    }
+
+    // 게시글 좋아요 수
+    public int getLikeCount(Long postId) {
+        return postLikeRepo.countByPostId(postId);
+    }
 }
 
 

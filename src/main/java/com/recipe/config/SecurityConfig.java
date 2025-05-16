@@ -54,13 +54,10 @@ public class SecurityConfig {
                 .csrf(
                         cr ->
                                 cr.csrfTokenRepository(
-                                        CookieCsrfTokenRepository.withHttpOnlyFalse()
-                                )
-                )
-                .csrf( cr ->
-                        cr.ignoringRequestMatchers("post/imageUpload")
-                )
-        ;
+                                        CookieCsrfTokenRepository.withHttpOnlyFalse())
+                                        .ignoringRequestMatchers("/post/imageUpload","/post/like", "/recipe/like")
+                        );
+
         //http.formLogin(Customizer.withDefaults());
 
 
