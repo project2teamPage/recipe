@@ -36,12 +36,10 @@ public class NoticeService {
             notice.setPinned(false);
             notice.setHidden(false);
 
-            // 관리자 계정을 임시로 하드코딩하여 설정
             User admin = userRepository.findByRole(Role.ADMIN);
             if (admin != null) {
                 notice.setAdmin(admin);
             } else {
-                // 임시로 관리자를 설정하는 부분
                 admin = new User();
                 admin.setRole(Role.ADMIN);
                 notice.setAdmin(admin);
