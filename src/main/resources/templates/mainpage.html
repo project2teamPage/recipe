@@ -57,18 +57,19 @@
                 </div>
 
                 <div class="recipe-box" style="display: grid;">
-                    <div class="card box" th:each="recipe : ${likedRecipes}">
-                        <div class="recipe-card active">
-                            <img th:src="@{${recipe.imgUrl} }" alt="썸네일" style="object-fit: cover; height: 180px;">
-                            <div class="card-body">
-                                <h5 class="card-title text-truncate" th:text="${recipe.title}">제목</h5>
-                                <p class="card-text small text-muted mb-1" th:text="${recipe.nickName}">닉네임</p>
+                    <a th:href="@{'/recipe/' + ${recipe.id}}"  th:each="recipe : ${likedRecipes}">
+                        <div class="card box">
+                            <div class="recipe-card active">
+                                <img th:src="@{${recipe.imgUrl} }" alt="썸네일" style="object-fit: cover; height: 180px;">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate" th:text="${recipe.title}">제목</h5>
+                                    <p class="card-text small text-muted mb-1" th:text="${recipe.nickName}">닉네임</p>
+                                </div>
                             </div>
+                            <!-- <div class="recipe-card"></div>
+                            <div class="recipe-card"></div> -->
                         </div>
-                        <!-- <div class="recipe-card"></div>
-                        <div class="recipe-card"></div> -->
-                    </div>
-
+                    </a>
                     <button class="carousel-btn prev">‹</button>
                     <button class="carousel-btn next">›</button>
                 </div>
@@ -82,18 +83,15 @@
                 </div>
 
                 <div class="recipe-brag-box">
-                    <div class="brag-card">
-                        <span>제목제목제목제목제목</span>
-                    </div>
-                    <div class="brag-card">
-                        <span>제목제목제목제목제목</span>
-                    </div>
-                    <div class="brag-card">
-                        <span>제목제목제목제목제목</span>
-                    </div>
-                    <div class="brag-card">
-                        <span>제목제목제목제목제목</span>
-                    </div>
+                    <a th:href="@{'/post/' + ${post.id}}" th:each="post : ${posts}">
+                        <div class="brag-card" >
+                            <img th:src="@{'/postImg/' + ${post.imageUrl}}" class="card-img-top" alt="썸네일" style="object-fit: cover; height: 180px;">
+                            <div class="card-body">
+                                <h5 class="card-title text-truncate" th:text="${post.title}">제목</h5>
+                                <p class="card-text small text-muted mb-1" th:text="${post.nickName}">작성자</p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
                 <button class="more-view-btn">더보기 ></button>
             </div>
@@ -181,15 +179,9 @@
                     <button>공지사항 더보기 ></button>
                     <div>
                         <ul class="notice-box">
-                            <li>
-                  <span class="no-catego">카테고리</span>
-                                <span class="no-content">내용내용내용</span>
-                                <span class="date">2025.00.00</span>
-                            </li>
-                            <li>
-                                <span class="no-catego">[레시피]</span>
-                                <span class="no-content">내용내용내용</span>
-                                <span class="date">2025.00.00</span>
+                            <li th:each="notice : ${notice5}">
+                                <span class="no-title" th:text="${notice.title}">내용내용내용</span>
+                                <span class="date" th:text="${notice.writeDate}">2025.00.00</span>
                             </li>
                         </ul>
                     </div>

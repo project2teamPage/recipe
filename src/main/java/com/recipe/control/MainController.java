@@ -1,10 +1,15 @@
 package com.recipe.control;
 
 import com.recipe.config.CustomUserDetails;
+import com.recipe.constant.Role;
+import com.recipe.dto.admin.NoticeListDto;
+import com.recipe.dto.post.PostListDto;
 import com.recipe.dto.recipe.RecipeListDto;
 import com.recipe.dto.user.MemberSignUpDto;
 import com.recipe.entity.user.User;
 import com.recipe.service.MainService;
+import com.recipe.service.admin.NoticeService;
+import com.recipe.service.post.PostService;
 import com.recipe.service.recipe.RecipeService;
 import com.recipe.service.user.UserService;
 import jakarta.validation.Valid;
@@ -27,6 +32,8 @@ public class MainController {
     private final UserService userService;
     private final MainService mainService;
     private final RecipeService recipeService;
+    private final PostService postService;
+    private final NoticeService noticeService;
 
     @GetMapping("/")
     public String mainpage(Model model, @AuthenticationPrincipal CustomUserDetails userDetails){
@@ -50,9 +57,20 @@ public class MainController {
         List<RecipeListDto> likedRecipes = recipeService.getLikedRecipes();
         model.addAttribute("likedRecipes", likedRecipes);
 
+        // 요리자랑 랜덤목록
+        List<PostListDto> posts = postService. getMainPost();
+        model.addAttribute("posts", posts);
 
 
 
+
+
+
+        // 공지사항 최신순
+        List<NoticeListDto> noticeListDtos = noticeService.getNoticesByRole(Role.USER);
+        List<NoticeListDto> notice5 = noticeListDtos.size() > 5? noticeListDtos.subList(0, 5) : noticeListDtos;
+
+        model.addAttribute("notice5", notice5);
 
 
 

@@ -22,6 +22,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
@@ -219,6 +220,25 @@ public class PostService {
     // 게시글 좋아요 수
     public int getLikeCount(Long postId) {
         return postLikeRepo.countByPostId(postId);
+    }
+
+    // 메인페이지 요리자랑 랜덤목록
+    public List<PostListDto> getMainPost() {
+
+        PageRequest pageRequest = PageRequest.of(0,4);
+
+        List<Post> postList = postRepo.findMainPost(pageRequest);
+        List<PostListDto> postListDtos = new ArrayList<>();
+
+        for(Post post : postList){
+
+            PostImage thumbnail = postImageRepo.findFirstByPostIdAndIsThumbnailTrue(post.getId());
+            int postLikes = postLikeRepo.countByPostId(post.getId());
+
+            postListDtos.add( PostListDto.from(post, thumbnail.getImgName(), postLikes) );
+        }
+
+        return postListDtos;
     }
 }
 
