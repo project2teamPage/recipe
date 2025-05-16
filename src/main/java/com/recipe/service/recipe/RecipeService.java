@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
@@ -329,4 +330,29 @@ public class RecipeService {
         return recipeLikeRepo.countByRecipeId(recipeId);
     }
 
+    // 메인페이지용 레시피 좋아요순으로 3개 가져오기
+    public List<RecipeListDto> getLikedRecipes() {
+
+        // 리스트 3개까지 가져온다
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        List<Recipe> recipeList = recipeRepo.findTop3OrderByLikes(pageRequest);
+        List<RecipeListDto> dtoList = new ArrayList<>();
+
+        for(Recipe recipe : recipeList){
+            RecipeStep recipeStep = recipeStepRepo.findByRecipeIdAndIsThumbnailIsTrue(recipe.getId()); // 레시피의 썸네일 step 찾기
+            String imgUrl = "";
+            if( recipeStep != null && recipeStep.getImgUrl() != null){
+                imgUrl = recipeStep.getImgUrl();
+            }
+
+            int recipeLikes = recipeLikeRepo.countByRecipeId( recipe.getId() );
+
+            dtoList.add( RecipeListDto.of(recipe, imgUrl, recipeLikes) );
+        }
+
+        return dtoList;
+
+
+    }
 }

@@ -17,10 +17,10 @@
                     <div class="main-con-question">
                         <button class="top-mypage-icon">my page</button>
                         <div class="main-title">
-                <span
-                ><p class="nick-name">선우님,</p>
-                  냉장고 안에 어떤 재료가 있나요?</span
-                >
+                <span>
+                    <p th:unless="${isLogin}"  class="nick-name">선우님,</p>
+                    <p th:if="${isLogin}" th:text="${user.nickName} + '님,'" class="nick-name">닉네임</p>
+                  냉장고 안에 어떤 재료가 있나요?</span>
                             <p class="m-t-text">
                                 당신의 냉장고 속 남아 있는 식재료를 알려주세요! 저희가 최적의
                                 레시피를 제공하겠습니다!
@@ -30,7 +30,7 @@
                             <label for="recipe-search"></label>
                             <input
                                     id="recipe-search"
-                                    name="recipe-search"
+                                    name="ingredients"
                                     class="main-recipe-search"
                                     type="search"
                                     placeholder="재료를 입력해주세요. 관련 레시피를 제공합니다."
@@ -49,13 +49,22 @@
                     <p class="s-recipe-title">Recipe</p>
                     <span class="recipe-title">간편하고 쉽게 즐기는 인기레시피</span>
                     <p class="t-recipe-text">
-                        어때요, <span>선우</span>님의 취향에 맞나요?
+                        어때요,
+                        <span th:unless="${isLogin}"  class="nick-name">선우</span>
+                        <span th:if="${isLogin}" th:text="${user.nickName}" class="nick-name">닉네임</span>
+                        님의 취향에 맞나요?
                     </p>
                 </div>
 
-                <div class="recipe-box">
-                    <div class="card box">
-                        <div class="recipe-card active"></div>
+                <div class="recipe-box" style="display: grid;">
+                    <div class="card box" th:each="recipe : ${likedRecipes}">
+                        <div class="recipe-card active">
+                            <img th:src="@{${recipe.imgUrl} }" alt="썸네일" style="object-fit: cover; height: 180px;">
+                            <div class="card-body">
+                                <h5 class="card-title text-truncate" th:text="${recipe.title}">제목</h5>
+                                <p class="card-text small text-muted mb-1" th:text="${recipe.nickName}">닉네임</p>
+                            </div>
+                        </div>
                         <!-- <div class="recipe-card"></div>
                         <div class="recipe-card"></div> -->
                     </div>
@@ -64,7 +73,7 @@
                     <button class="carousel-btn next">›</button>
                 </div>
 
-                <button class="more-view-btn">더보기 ></button>
+                <a th:href="@{/recipe(orderType='LIKE')}" class="btn more-view-btn">더보기 ></a>
             </div>
             <div class="recipe-brag">
                 <div class="title">
@@ -173,14 +182,14 @@
                     <div>
                         <ul class="notice-box">
                             <li>
-                  <span class="no-catego">카테고리</span
-                  ><span class="no-content">내용내용내용</span
-                            ><span class="date">2025.00.00</span>
+                  <span class="no-catego">카테고리</span>
+                                <span class="no-content">내용내용내용</span>
+                                <span class="date">2025.00.00</span>
                             </li>
                             <li>
-                  <span class="no-catego">[레시피]</span
-                  ><span class="no-content">내용내용내용</span
-                            ><span class="date">2025.00.00</span>
+                                <span class="no-catego">[레시피]</span>
+                                <span class="no-content">내용내용내용</span>
+                                <span class="date">2025.00.00</span>
                             </li>
                         </ul>
                     </div>
@@ -201,5 +210,5 @@
         </main>
     </div>
     <footer>푸터</footer>
-</body>
+</div>
 </html>

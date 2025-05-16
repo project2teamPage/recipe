@@ -1,30 +1,61 @@
 package com.recipe.control;
 
+import com.recipe.config.CustomUserDetails;
+import com.recipe.dto.recipe.RecipeListDto;
 import com.recipe.dto.user.MemberSignUpDto;
+import com.recipe.entity.user.User;
 import com.recipe.service.MainService;
+import com.recipe.service.recipe.RecipeService;
 import com.recipe.service.user.UserService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
+@AllArgsConstructor
 public class MainController {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private MainService mainService;
+    private final UserService userService;
+    private final MainService mainService;
+    private final RecipeService recipeService;
 
     @GetMapping("/")
-    public String mainpage(Model model){
+    public String mainpage(Model model, @AuthenticationPrincipal CustomUserDetails userDetails){
 
-        model.addAttribute("userInfo", mainService.getAllUsers() );
+        // 로그인시 메인페이지 닉네임 출력용
+        if(userDetails != null){
+            User user = userDetails.getUser();
+
+            model.addAttribute("user", user);
+            model.addAttribute("isLogin", true);
+        } else {
+            model.addAttribute("isLogin", false);
+        }
+
         // 모델에 데이터를 담아(에드에트리뷰트라는 메서드를 이용해서) - 이름을 정해서
         // 이름은 문자열 타입으로~~
+        model.addAttribute("userInfo", mainService.getAllUsers() );
+
+
+        // 인기 레시피 목록
+        List<RecipeListDto> likedRecipes = recipeService.getLikedRecipes();
+        model.addAttribute("likedRecipes", likedRecipes);
+
+
+
+
+
+
+
         return "mainpage";
     }
 
