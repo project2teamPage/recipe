@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="header.css" />
+    <link rel="stylesheet" href="recipe.css" />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <nav class="head">
+        <div class="main-logo"><img src="image/logo4.png" alt="" /></div>
+        <ul class="menu">
+          <li>
+            <a href="#">레시피</a>
+          </li>
+          <li>
+            <a href="#">커뮤니티</a>
+          </li>
+          <li>
+            <a href="#">마이페이지</a>
+          </li>
+          <li>
+            <a href="#">로그인</a>
+          </li>
+          <li class="admin">
+            <a href="#">ADMIN</a>
+          </li>
+        </ul>
+        <form class="top-search" role="">
+          <input
+            class="top-search-form"
+            type="search"
+            placeholder="검색어를 입력해주세요."
+            aria-label="Search"
+          />
+          <button class="top-search-btn" type="top-search-btn">
+            <img src="image/top_search_logo.png" alt="검색 아이콘" />
+          </button>
+        </form>
+      </nav>
+    </header>
+
+    <div class="container">
+      <!--메뉴-->
+      <div class="name-cate">
+        <p>카테고리</p>
+      </div>
+      <div class="form-container">
+        <form method="get" action="/recipe" id="filterForm">
+          <input
+            type="hidden"
+            name="dishType"
+            id="dishTypeInput"
+            th:value="${param.dishType}"
+          />
+          <input
+            type="hidden"
+            name="theme"
+            id="themeInput"
+            th:value="${param.theme}"
+          />
+          <input
+            type="hidden"
+            name="spicy"
+            id="spicyInput"
+            th:value="${param.spicy}"
+          />
+          <!-- 메뉴들 -->
+          <div class="top-menu">
+            <!-- 요리 종류 -->
+            <div class="mt-3">
+              <h5>요리별</h5>
+              <div class="btn-group">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  onclick="toggleFilter('dishTypeInput', 'MAINDISH')"
+                  th:classappend="${param.dishType == 'MAINDISH'} ? ' active' : ''"
+                >
+                  메인요리
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  onclick="toggleFilter('dishTypeInput', 'SIDEDISH')"
+                  th:classappend="${param.dishType == 'SIDEDISH'} ? ' active' : ''"
+                >
+                  반찬
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  onclick="toggleFilter('dishTypeInput', 'DRINK')"
+                  th:classappend="${param.dishType == 'DRINK'} ? ' active' : ''"
+                >
+                  음료
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  onclick="toggleFilter('dishTypeInput', 'DESSERT')"
+                  th:classappend="${param.dishType == 'DESSERT'} ? ' active' : ''"
+                >
+                  디저트
+                </button>
+              </div>
+            </div>
+
+            <!-- 테마 -->
+            <div class="mt-3">
+              <h5>테마별</h5>
+              <div class="btn-group">
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  onclick="toggleFilter('themeInput', 'DIET')"
+                  th:classappend="${param.theme == 'DIET'} ? ' active' : ''"
+                >
+                  다이어트
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  onclick="toggleFilter('themeInput', 'SLOW_AGING')"
+                  th:classappend="${param.theme == 'SLOW_AGING'} ? ' active' : ''"
+                >
+                  저속노화
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  onclick="toggleFilter('themeInput', 'VEGAN')"
+                  th:classappend="${param.theme == 'VEGAN'} ? ' active' : ''"
+                >
+                  채식주의
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  onclick="toggleFilter('themeInput', 'LOW_SUGAR')"
+                  th:classappend="${param.theme == 'LOW_SUGAR'} ? ' active' : ''"
+                >
+                  저당
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  onclick="toggleFilter('themeInput', 'HIGH_PROTEIN')"
+                  th:classappend="${param.theme == 'HIGH_PROTEIN'} ? ' active' : ''"
+                >
+                  고단백
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  onclick="toggleFilter('themeInput', 'LCHF')"
+                  th:classappend="${param.theme == 'LCHF'} ? ' active' : ''"
+                >
+                  저탄고지
+                </button>
+              </div>
+            </div>
+
+            <!-- 매운 정도 -->
+            <div class="mt-3">
+              <h5>맵기별</h5>
+              <div class="btn-group">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger"
+                  onclick="toggleFilter('spicyInput', '0')"
+                  th:classappend="${param.spicy == '0'} ? ' active' : ''"
+                >
+                  순함
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger"
+                  onclick="toggleFilter('spicyInput', '1')"
+                  th:classappend="${param.spicy == '1'} ? ' active' : ''"
+                >
+                  보통
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger"
+                  onclick="toggleFilter('spicyInput', '2')"
+                  th:classappend="${param.spicy == '2'} ? ' active' : ''"
+                >
+                  매움
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger"
+                  onclick="toggleFilter('spicyInput', '3')"
+                  th:classappend="${param.spicy == '3'} ? ' active' : ''"
+                >
+                  아주매움
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 정렬 -->
+          <div class="array">
+            <div class="ar-group">
+              <button
+                type="button"
+                class="btn btn-outline-dark"
+                onclick="setOrder('RECENT')"
+                th:classappend="${param.orderType == 'RECENT' or param.orderType == null} ? ' active' : ''"
+              >
+                최신순
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-dark"
+                onclick="setOrder('LIKE')"
+                th:classappend="${param.orderType == 'LIKE'} ? ' active' : ''"
+              >
+                추천순
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-dark"
+                onclick="setOrder('VIEW')"
+                th:classappend="${param.orderType == 'VIEW'} ? ' active' : ''"
+              >
+                조회순
+              </button>
+            </div>
+          </div>
+
+          <input
+            type="hidden"
+            name="orderType"
+            id="orderTypeInput"
+            th:value="${param.orderType}"
+          />
+        </form>
+      </div>
+
+      <!--레시피 작성-->
+      <div class="recipe-title">
+        <h1 class="top-recipe-type">Recipe</h1>
+        <h1 class="top-recipe">레시피</h1>
+      </div>
+
+      <div class="text-right" style="margin-bottom: 20px">
+        <a href="/recipe/new"></a>
+      </div>
+
+      <div class="recipe-grid">
+        <div class="recipe-card" th:each="recipe : ${recipes}">
+          <a th:href="@{'/recipe/' + ${recipe.id}}">
+            <img src="image/image1.png" alt="" />
+            <!-- <img
+              th:src="${recipe.imgUrl}"
+              alt="레시피 이미지"
+              class="recipe-img"
+            /> -->
+            <div class="writer">
+              <span th:text="${recipe.nickName}">작성자</span>
+              <span th:text="${recipe.formattedDate}">작성일</span>
+            </div>
+
+            <h3 class="w-r-title" th:text="${recipe.title}">
+              제목은어쩌구이거입니다
+            </h3>
+          </a>
+          <p class="write-content">
+            글내용글내용글내용글내용글내용글내용글내용글내용글내용글내용글내용글내용글내용글내용글내용d어엉라ㅓㄴ미아럼냉랴ㅗ너이
+          </p>
+          <p class="re-like" th:text="'좋아요: ' + ${recipe.recipeLikes}">
+            좋아요 수
+          </p>
+        </div>
+      </div>
+
+      <!-- 페이지네이션 -->
+      <div class="pagination">
+        <ul class="d-inline-flex gap-2">
+          <!-- 이전 페이지 -->
+          <li th:if="${currentPage > 1}">
+            <a th:href="@{'/recipe'(page=${currentPage - 2})}">&laquo; 이전</a>
+          </li>
+          <li th:if="${currentPage == 1}">
+            <span class="disabled">&laquo; 이전</span>
+          </li>
+
+          <!-- 페이지 번호 -->
+          <li th:each="i : ${#numbers.sequence(1, totalPages)}">
+            <a
+              th:href="@{'/recipe'(page=${i - 1})}"
+              th:text="${i}"
+              th:classappend="${i == currentPage} ? 'active' : ''"
+              >1</a
+            >
+          </li>
+
+          <!-- 다음 페이지 -->
+          <li th:if="${currentPage < totalPages}">
+            <a th:href="@{'/recipe'(page=${currentPage})}">다음 &raquo;</a>
+          </li>
+          <li th:if="${currentPage == totalPages}">
+            <span class="disabled">다음 &raquo;</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

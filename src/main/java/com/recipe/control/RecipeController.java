@@ -188,7 +188,9 @@ public class RecipeController {
 
         User user = userDetails.getUser();
 
+        // 이미 눌럿나 안눌럿나 확인
         boolean liked = recipeService.toggleLike(recipeId, user);
+
         int likeCount = recipeService.getLikeCount(recipeId);
 
         Map<String, Object> response = new HashMap<>();

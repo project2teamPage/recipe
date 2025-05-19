@@ -26,7 +26,6 @@
   text-align: center;
   display: flex;
   width: 430px;
-
 }
 .cate-box > a {
   text-align: center;
@@ -73,8 +72,6 @@
 .fridge-box {
   margin-top: 50px;
   margin-bottom: 40px;
-      display:flex;
-      flex-wrap: wrap;
 }
 .fridge-title,
 .dish-title,
@@ -86,7 +83,7 @@
 }
 .fridge-col,
 .tip-col {
-  width: 260px;
+  width: 272px;
   height: 359px;
   background-color: #ff6a00;
   border-radius: 23px;
@@ -94,6 +91,7 @@
   background-color: #fff;
   border: 1px solid #bababa;
   overflow: hidden;
+  margin: 16px;
 
   transition: transform 0.2s ease;
 }
@@ -150,12 +148,9 @@
   width: 100%;
   margin-top: 50px;
   margin-bottom: 40px;
-        display:flex;
-        flex-wrap: wrap;
-        gap:10px;
 }
 .dish-col {
-  width: 560px;
+  width: 575px;
   height: 198px;
   display: flex;
   max-width: 600px;

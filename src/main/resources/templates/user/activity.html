@@ -103,85 +103,59 @@
 
         <div class="con-write">
           <span class="con-title">내 게시글</span>
-          <ul class="write-content">
-            <li>
-              <div class="catego">카테고리</div>
-              <p class="write-title"><a href="#">title</a></p>
-              <button type="button">작성된 글 보기</button>
-            </li>
-            <li>
-              <div class="catego">카테고리</div>
-              <p class="write-title"><a href="#">title</a></p>
-              <button type="button">작성된 글 보기</button>
-            </li>
-            <li>
-              <div class="catego">카테고리</div>
-              <p class="write-title"><a href="#">title</a></p>
-              <button type="button">작성된 글 보기</button>
+          <ul class="write-content" id="content-list">
+            <li th:each="content : ${contents}">
+              <div class="catego" th:text="${content.type}">카테고리</div>
+              <p class="write-title" th:text="${content.title}">title</p>
+              <a th:if="${content.type} == '커뮤니티'" th:href="@{'/post/' + ${content.id}}" class="btn btn-primary">작성된 글 보기</a>
+              <a th:if="${content.type} == '레시피'" th:href="@{'/recipe/' + ${content.id}}" class="btn btn-primary">작성된 글 보기</a>
             </li>
           </ul>
-          <!-- 페이지네이션 -->
-          <div class="pagination">
-            <ul class="d-inline-flex gap-2">
-              <!-- 이전 페이지 -->
-              <li></li>
-              <!-- 페이지 번호 -->
-              <li></li>
-              <!-- 다음 페이지 -->
-              <li></li>
-            </ul>
-          </div>
         </div>
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+          <ul>
+            <li th:if="${!contents.first}">
+              <a th:href="@{/user/activity(contentPage=${contents.number - 1}, commentPage=${comments.number})} + '#content-list' "><< 이전</a>
+            </li>
+            <li th:each="pageNum : ${#numbers.sequence(0, contents.totalPages - 1)}"
+                th:classappend="${pageNum == contents.number} ? 'active'">
+              <a th:href="@{/user/activity(contentPage=${pageNum}, commentPage=${comments.number})} + '#content-list' " th:text="${pageNum + 1}">1</a>
+            </li>
+            <li th:if="${!contents.last}">
+              <a th:href="@{/user/activity(contentPage=${contents.number + 1}, commentPage=${comments.number})} + '#content-list' ">다음 >></a>
+            </li>
+          </ul>
+        </div>
+
 
         <div class="con-comment">
           <span class="con-title">내 댓글</span>
-          <div class="con-box">
-            <div class="comment-box">
+          <div class="con-box"  id="comment-list">
+            <div class="comment-box" th:each="comment : ${comments}">
               <div class="comment">
                 <div class="com">
-                  <div class="com-writer">계림제자선우선우</div>
-                  <div class="com-content">식단 구성이 좋아요~</div>
+                  <div class="com-writer" th:text="${user.nickName}">계림제자선우선우</div>
+                  <div class="com-content" th:text="${comment.content}">식단 구성이 좋아요~</div>
                 </div>
-                <button class="com-btn">작성된 글 보기</button>
-              </div>
-            </div>
-            <div class="comment-box">
-              <div class="comment">
-                <div class="com">
-                  <div class="com-writer">계림제자선우선우</div>
-                  <div class="com-content">식단 구성이 좋아요~</div>
-                </div>
-                <button class="com-btn">작성된 글 보기</button>
-              </div>
-            </div>
-            <div class="comment-box">
-              <div class="comment">
-                <div class="com">
-                  <div class="com-writer">계림제자선우선우</div>
-                  <div class="com-content">식단 구성이 좋아요~</div>
-                </div>
-                <button class="com-btn">작성된 글 보기</button>
-              </div>
-            </div>
-            <div class="comment-box">
-              <div class="comment">
-                <div class="com">
-                  <div class="com-writer">계림제자선우선우</div>
-                  <div class="com-content">식단 구성이 좋아요~</div>
-                </div>
-                <button class="com-btn">작성된 글 보기</button>
+                <a th:if="${comment.type} == '커뮤니티'" th:href="@{'/post/' + ${comment.id}}" class="btn btn-primary">작성된 글 보기</a>
+                <a th:if="${comment.type} == '레시피'" th:href="@{'/recipe/' + ${comment.id}}" class="btn btn-primary">작성된 글 보기</a>
               </div>
             </div>
           </div>
           <!-- 페이지네이션 -->
           <div class="pagination">
-            <ul class="d-inline-flex gap-2">
-              <!-- 이전 페이지 -->
-              <li></li>
-              <!-- 페이지 번호 -->
-              <li></li>
-              <!-- 다음 페이지 -->
-              <li></li>
+            <ul>
+              <li th:if="${!comments.first}">
+                <a th:href="@{/user/activity(contentPage=${contents.number}, commentPage=${comments.number - 1})} + '#comment-list'"><< 이전</a>
+              </li>
+              <li th:each="pageNum : ${#numbers.sequence(0, comments.totalPages - 1)}"
+                  th:classappend="${pageNum == comments.number} ? 'active'">
+                <a th:href="@{/user/activity(contentPage=${contents.number}, commentPage=${pageNum})} + '#comment-list'" th:text="${pageNum + 1}">1</a>
+              </li>
+              <li th:if="${!comments.last}">
+                <a th:href="@{/user/activity(contentPage=${contents.number}, commentPage=${comments.number + 1})} + '#comment-list'">다음 >></a>
+              </li>
             </ul>
           </div>
         </div>

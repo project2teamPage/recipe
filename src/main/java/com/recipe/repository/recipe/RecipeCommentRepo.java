@@ -14,4 +14,5 @@ public interface RecipeCommentRepo extends JpaRepository<RecipeComment, Long> {
 
     List<RecipeComment> findAllByUser(User user);
 
+    List<RecipeComment> findAllByUserId(Long id);
 }

@@ -137,7 +137,8 @@ public class RecipeService {
         // 마지막 이미지 == 썸네일
         for(int i = recipeStep.size()-1; i >= 0 ; i--){
             String imgUrl = recipeStep.get(i).getImgUrl();
-            if( imgUrl != null && !imgUrl.trim().isEmpty()){
+            // 이미지 비면 다음꺼루
+            if( imgUrl != null && !imgUrl.trim().isEmpty() && !"null".equalsIgnoreCase(imgUrl.trim()) ){
                 RecipeStep thumbnailStep = recipeStep.get(i);
                 thumbnailStep.setThumbnail(true);
                 break;
@@ -354,5 +355,25 @@ public class RecipeService {
         return dtoList;
 
 
+    }
+
+    // 재료 검색 시 보여줄 레시피리스트
+    public List<RecipeListDto> findByIngredients(List<String> ingredientList) {
+        List<Recipe> recipes = recipeIngredientRepo.findByIngredientNames(ingredientList, ingredientList.size());
+        List<RecipeListDto> dtoList = new ArrayList<>();
+
+        for(Recipe recipe : recipes){
+            RecipeStep recipeStep = recipeStepRepo.findByRecipeIdAndIsThumbnailIsTrue(recipe.getId()); // 레시피의 썸네일 step 찾기
+            String imgUrl = "";
+            if( recipeStep != null && recipeStep.getImgUrl() != null){
+                imgUrl = recipeStep.getImgUrl();
+            }
+
+            int recipeLikes = recipeLikeRepo.countByRecipeId( recipe.getId() );
+
+            dtoList.add( RecipeListDto.of(recipe, imgUrl, recipeLikes) );
+        }
+
+        return dtoList;
     }
 }
