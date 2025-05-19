@@ -47,6 +47,7 @@ public class SecurityConfig {
                           ,"/user/calendar/**","/signup", "/user/**", "/recipe/**", "/post/**").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
                         .requestMatchers("/recipeImg/**", "/postImg/**", "/search/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // 관리자 권한
                         .anyRequest().authenticated()
                 )
 

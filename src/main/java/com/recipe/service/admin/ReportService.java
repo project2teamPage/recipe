@@ -1,15 +1,19 @@
 package com.recipe.service.admin;
 
 import com.recipe.dto.admin.ReportListDto;
+import com.recipe.dto.admin.ReportRequestDto;
 import com.recipe.entity.admin.Report;
+import com.recipe.entity.user.User;
 import com.recipe.repository.admin.ReportRepository;
 import com.recipe.repository.post.PostCommentRepo;
 import com.recipe.repository.post.PostRepo;
 import com.recipe.repository.recipe.RecipeCommentRepo;
 import com.recipe.repository.recipe.RecipeRepo;
+import com.recipe.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportService {
     private final ReportRepository reportRepository;
+    private final UserRepository userRepository;
     private final RecipeRepo recipeRepo;
     private final RecipeCommentRepo recipeCommentRepo;
     private final PostRepo postRepo;
@@ -27,7 +32,7 @@ public class ReportService {
 
         List<ReportListDto> reportListDtos = new ArrayList<>();
         // 레포지토리를 통해서 테이블의 데이터 가져오기
-        List<Report> reportList = reportRepository.findAll();
+        List<Report> reportList = reportRepository.findAllByOrderByDateDesc();
 
         // 엔티티를 dto에 넘겨서 arraryList로 저장
         for(Report report : reportList) {
@@ -96,5 +101,23 @@ public class ReportService {
         }
 
         return reportListDtos;
+    }
+
+    public void saveReport(ReportRequestDto dto) {
+        Report report = new Report();
+
+        User user = userRepository.findByLoginId(dto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("신고자 유저를 찾을 수 없습니다."));
+
+        report.setUser(user);
+
+        report.setTargetId(dto.getTargetId());
+        report.setTargetNickName(dto.getTargetNickName());
+        report.setTargetType(dto.getTargetType());
+        report.setTitle(dto.getTitle());
+        report.setReason(dto.getReason());
+        report.setDate(LocalDateTime.now());
+
+        reportRepository.save(report);
     }
 }

@@ -4,15 +4,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/default}">
 
-<head>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-</head>
-
 <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/post/detail.css}">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </th:block>
 <th:block layout:fragment="script">
+    <script th:src="@{/javascript/post/detail.js}"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -106,6 +104,67 @@
                 </form>
             </span>
             <a th:href="@{/post}" class="btn btn-secondary">목록</a>
+            <!-- 신고 버튼 -->
+            <!-- 로그인한 사용자가 작성자가 아닌 경우만 보여줌 -->
+            <th:block th:if="${user != null}">
+                <th:block th:if="${user.loginId != post.loginId}">
+            <button type="button"
+                    class="btn btn-danger"
+                    id="reportBtn"
+                    th:data-target-id="${post.id}"
+                    th:data-target-nickname="${post.nickName}"
+                    th:data-target-type="'COMMUNITY_POST'"
+                    onclick="openReportModal()">
+                신고
+            </button>
+                </th:block>
+            </th:block>
+        </div>
+
+        <!-- 신고 모달창 -->
+        <div id="reportModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>신고하기</h3>
+                <form id="reportForm">
+                    <!-- 전송용 hidden 값 -->
+                    <input type="hidden" id="targetId" name="targetId" th:value="${post.id}" />
+                    <input type="hidden" id="targetNickName" name="targetNickName" th:value="${post.nickName}" />
+                    <input type="hidden" id="targetType" name="targetType" value="COMMUNITY_POST" />
+                    <input type="hidden" id="userId"
+                           th:if="${#authentication != null and #authentication.principal instanceof T(com.recipe.config.CustomUserDetails)}"
+                           th:value="${#authentication.principal.user.loginId}" />
+
+                    <input type="hidden" id="userNickName"
+                           th:if="${#authentication != null and #authentication.principal instanceof T(com.recipe.config.CustomUserDetails)}"
+                           th:value="${#authentication.principal.user.nickName}" />
+
+
+
+                    <!-- 사용자에겐 보여주되 읽기 전용 -->
+                    <div class="horizontal-row">
+                        <label>대상 글 종류:</label>
+                        <span class="target-type-display">레시피 게시글</span>
+                    </div>
+                    <div class="horizontal-row">
+                        <label>신고 대상자:</label>
+                        <span class="target-nickname-display" th:text="${post.nickName}">작성자 닉네임</span>
+                    </div>
+
+                    <!-- 입력 받는 필드 -->
+                    <div class="horizontal-row">
+                        <label for="report-title">신고 제목:</label>
+                        <input type="text" id="report-title" name="report-title" />
+                    </div>
+                    <div class="horizontal-row">
+                        <label for="report-reason">신고 사유:</label>
+                        <textarea id="report-reason" name="report-reason"></textarea>
+                    </div>
+                    <div style="text-align: right; margin-top: 20px;">
+                        <button type="submit">제출</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- 댓글 -->
@@ -116,6 +175,19 @@
                     <div class="comment-header">
                         <strong th:text="${comment.nickName}">닉네임</strong>
                         <small th:text="${#temporals.format(comment.uploadDate, 'yyyy.MM.dd HH:mm:ss')}">날짜</small>
+                        <!-- 댓글 신고 버튼 추가 -->
+                        <th:block th:if="${user!=null}">
+                            <th:block th:if="${user.id != comment.userId}">
+                                <button type="button"
+                                        class="btn btn-danger comment-report-btn"
+                                        th:data-target-id="${comment.id}"
+                                        th:data-target-nickname="${comment.nickName}"
+                                        th:data-target-type="'COMMUNITY_COMMENT'"
+                                        onclick="openReportModal(this)">
+                                        댓글 신고
+                                </button>
+                            </th:block>
+                        </th:block>
                     </div>
                     <p th:text="${comment.content}">내용</p>
                 </li>

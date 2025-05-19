@@ -19,12 +19,20 @@ public class NoticeDto {
     private String content; // 작성 + 조회
     private LocalDateTime writeDate; // 작성일(상세페이지 조회용)
     private LocalDateTime updateDate; // 공지사항 수정일
+    private Long adminId; // 작성자 ID (작성 시 사용)
 
     public static NoticeDto from (Notice notice, String adminNickName) {
         NoticeDto noticeDto = new NoticeDto();
 
         noticeDto.setId(notice.getId());
-        noticeDto.setAdminNickName(adminNickName);
+        User admin = notice.getAdmin();
+        if (admin != null) {
+            noticeDto.setAdminNickName(admin.getNickName());
+            noticeDto.setAdminId(admin.getId());
+        } else {
+            noticeDto.setAdminNickName("관리자");
+        }
+
         noticeDto.setTitle(notice.getTitle());
         noticeDto.setContent(notice.getContent());
         noticeDto.setWriteDate(notice.getWriteDate());
@@ -32,7 +40,5 @@ public class NoticeDto {
 
         return noticeDto;
     }
-
-
 
 }

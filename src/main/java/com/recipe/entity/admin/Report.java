@@ -29,6 +29,8 @@ public class Report {
 
     private Long targetId; // 피신고된 글/댓글 아이디
 
+    private String targetNickName; // 피신고자 닉네임
+
     private String title; // 신고제목
 
     @Column(columnDefinition = "TEXT")

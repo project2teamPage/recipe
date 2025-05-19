@@ -25,11 +25,16 @@
       <li sec:authorize="isAnonymous()">
         <a href="/user/login">로그인</a>
       </li>
-      <li sec:authorize="hasAnyAuthority('ROLE_USER')">
+      <li sec:authorize="isAuthenticated()">
         <a href="/logout">로그아웃</a>
       </li>
-      <li class="admin" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-        <a href="#" >ADMIN</a>
+      <li class="admin-dropdown" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+        <a href="#">ADMIN</a>
+        <ul class="admin-submenu">
+          <li><a href="/admin/report">신고내역</a></li>
+          <li><a href="/admin/inquiry">문의사항 내역</a></li>
+          <li><a href="/admin/notice">공지사항</a></li>
+        </ul>
       </li>
     </ul>
     <form class="top-search" role="">

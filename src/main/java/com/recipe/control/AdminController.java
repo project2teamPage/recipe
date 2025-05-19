@@ -4,13 +4,16 @@ import com.recipe.constant.Role;
 import com.recipe.dto.admin.NoticeDto;
 import com.recipe.dto.admin.NoticeListDto;
 import com.recipe.dto.admin.ReportListDto;
+import com.recipe.dto.admin.ReportRequestDto;
 import com.recipe.entity.admin.Report;
+import com.recipe.entity.user.User;
 import com.recipe.service.admin.InquiryService;
 import com.recipe.service.admin.NoticeService;
 import com.recipe.service.admin.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,22 +45,16 @@ public class AdminController {
         return "admin/report";
     }
 
-//    @GetMapping("/admin/report/detail/{id}")
-//    @ResponseBody
-//    public ReportListDto getReportDetail(@PathVariable Long id) {
-//        Report report = reportService.findById(id);
-//        if(report == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-//
-//        String targetNickName = "";
-//        String targetLoginId = "";
-//
-//        switch (report.getTargetType()) {
-//            case R
-//        }
-//    }
-
+    @PostMapping("/report")
+    @ResponseBody
+    public ResponseEntity<?> createReport(@RequestBody ReportRequestDto reportRequestDto) {
+        try {
+            reportService.saveReport(reportRequestDto); // 서비스에서 저장 처리
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("신고 저장 실패");
+        }
+    }
 
     // 공지사항 관리 페이지 (사용자 역할에 따라 공지사항 다르게 처리)
     @GetMapping("/admin/notice")
@@ -87,7 +84,10 @@ public class AdminController {
 
     // 공지사항 작성 처리
     @PostMapping("/admin/noticeWrite")
-    public String createNotice(@ModelAttribute("noticeDto") NoticeDto dto) {
+    public String createNotice(@ModelAttribute("noticeDto") NoticeDto dto,
+                               @AuthenticationPrincipal User currentUser) {
+        // 현재 로그인한 관리자 정보 dto에 세팅
+        dto.setAdminId(currentUser.getId());  // NoticeDto에 adminId 필드 필요
         noticeService.saveNotice(dto);
         return "redirect:/admin/notice";
     }
