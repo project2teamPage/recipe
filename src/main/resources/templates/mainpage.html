@@ -247,7 +247,7 @@
                     <div class="community-content">
                         <a th:href="@{/post/} + ${post.id}" th:each="post : ${posts2}">
                             <li>
-                                <img th:src="@{'/postImg/ + ${post.imageUrl}'}" class="thumbnail">
+                                <img th:src="@{'/postImg/' + ${post.imageUrl}}" class="thumbnail">
                                 <div class="com-catego">
                                     <p th:text="${post.title}" class="com-text">
                                         살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
