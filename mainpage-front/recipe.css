@@ -49,13 +49,13 @@
     font-size: 16px;
     font-weight: 600;
   }
-
+  
 .btn-group {
   width: 102px;
   height: 240px;
 }
 
-.btn-group >button {
+.btn-group button {
     background-color: #F8F8F9;
     width: 102px;
     height: 40px;
@@ -96,10 +96,9 @@
 }
 /* 최신순, 추천순, 등등 */
 .array {
-    position: absolute;
+    position: absolute; 
     top: 500px;
     left: 0;
-        line-height: 40px;
 }
 .array button {
     width: 102px;
@@ -107,7 +106,7 @@
     background-color: #ffffff;
     border-radius: 20px;
     font-size: 14px;
-
+    line-height: 40px;
     text-align: center;
     border: 1px solid#BABABA;
     margin-right: 5px;
@@ -127,12 +126,10 @@
     width: 1180px;
     margin-top: 120px;
     margin-bottom: 70px;
-    display:flex;
-    flex-wrap: wrap;
 }
 /* 전체 카드 박스 */
 .recipe-card {
-    width: 260px;
+    width: 272px;
     height: 359px;
     background-color: #ff6a00;
     border-radius: 23px;
@@ -148,7 +145,7 @@
   .recipe-card:hover {
     transform: translateY(-5px);
   }
-
+  
   /* 이미지 스타일 */
   .recipe-card img {
     width: 100%;
@@ -156,7 +153,7 @@
     object-fit: cover;
     display: block;
   }
-
+  
   /* 제목 스타일 */
   .w-r-title {
     font-size: 18px;
@@ -188,33 +185,43 @@
     margin-left: 20px;
     margin-top: 10px;
 }
+/* .recipe-card {
+    width: 272px;
+    height: 359px;
+    background-color: #ff6a00;
+    border-radius: 23px;
+} */
+
+
+
+
 
 /* 페이징 */
 .pagination {
     margin-top: 2rem;
     text-align: center;
   }
-
+  
   .pagination ul {
     list-style: none;
     padding: 0;
     display: inline-flex;
     gap: 8px;
   }
-
+  
   .pagination a {
     text-decoration: none;
     padding: 6px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
   }
-
+  
   .pagination .active {
     background-color: #333;
     color: white;
     border-color: #333;
   }
-
+  
   .pagination .disabled {
     color: #999;
     pointer-events: none;
@@ -222,12 +229,31 @@
     border: 1px solid #ccc;
     border-radius: 4px;
   }
-
-
+/*  
+ .btn-group .active {
+   background-color: blue;
+ }
+ 
+ .recipe-grid {
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+   gap: 1rem;
+   margin-top: 2rem;
+ }
+ 
+ .recipe-card {
+   border: 1px solid #ccc;
+   padding: 1rem;
+   border-radius: 8px;
+   text-align: center;
+ }
+ 
  .recipe-img {
    width: 100%;
    height: 150px;
    object-fit: cover;
    border-radius: 4px;
  }
+ 
 
+ } */
