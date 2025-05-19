@@ -1,5 +1,6 @@
 package com.recipe.repository.recipe;
 
+import com.recipe.entity.recipe.Recipe;
 import com.recipe.entity.recipe.RecipeStep;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,5 @@ public interface RecipeStepRepo extends JpaRepository<RecipeStep, Long> {
     // 레시피 썸네일 이미지
     public RecipeStep findByRecipeIdAndIsThumbnailIsTrue(Long id);
 
+    void deleteByRecipe(Recipe recipe);
 }

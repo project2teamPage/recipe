@@ -133,17 +133,18 @@
           </form>
         </div>
       </div>
-      <div class="btn">
-          <button type="button" class="info-out">회원탈퇴</button>
+      <div id="btn">
+        <form th:action="@{/user/profile/logout}"  method="post">
+          <button type="submit" class="info-out">회원탈퇴</button>
+        </form>
 
           <!-- 회원탈퇴 팝업창 -->
           <div id="withdrawal-popup" class="popup-overlay hidden">
             <div class="popup-content">
               <h2>회원 탈퇴</h2>
               <p>정말 탈퇴하시겠습니까?<br>비밀번호를 입력해주세요.</p>
-              <form method="post" th:action="@{/user/profile}">
                 <input type="password" name="password" placeholder="비밀번호 입력" required />
-                <div class="popup-buttons">
+                <div>
                   <button type="submit" class="confirm-btn">탈퇴하기</button>
                   <button type="button" class="cancel-btn">취소</button>
                 </div>
@@ -151,7 +152,6 @@
           </div>
 
           <button type="button" class="info-change">내 정보 수정</button>
-        </form>
 
       </div>
     </div>

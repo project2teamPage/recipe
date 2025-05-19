@@ -176,7 +176,7 @@ body {
   font-size: 12px;
   position: absolute;
 }
-.btn {
+div #btn {
   float: right;
   margin-top: 5px;
 }

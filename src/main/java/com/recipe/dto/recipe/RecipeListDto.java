@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 @Getter @Setter
 public class RecipeListDto {
 
-    private Long id;
+    private Long id; // recipeId
     private String title;
     private String nickName;
     private String imgUrl;

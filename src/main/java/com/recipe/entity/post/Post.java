@@ -21,6 +21,8 @@ public class Post {
     private User user;
 
     private String title;
+
+    @Lob // varchar -> text
     private String content;
 
     @Enumerated(EnumType.STRING)
@@ -30,6 +32,6 @@ public class Post {
     private LocalDateTime updateDate;
     private int viewCount;
     private boolean isDeleted;
-    private LocalDateTime deletedTime;
+    private LocalDateTime deletedDate;
 
 }

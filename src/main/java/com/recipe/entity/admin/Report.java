@@ -25,14 +25,13 @@ public class Report {
     private User user; // 신고자 아이디
 
     @Enumerated(EnumType.STRING)
-    private TargetType targetType;
-    // 신고 카테고리(레시피게시글, 레시피댓글, 커뮤니티게시글, 커뮤니티댓글)
-
+    private TargetType targetType; // 신고 카테고리(레시피게시글, 레시피댓글, 커뮤니티게시글, 커뮤니티댓글)
 
     private Long targetId; // 피신고된 글/댓글 아이디
 
     private String title; // 신고제목
 
+    @Column(columnDefinition = "TEXT")
     private String reason; // 신고사유
 
     private LocalDateTime date; // 신고날짜

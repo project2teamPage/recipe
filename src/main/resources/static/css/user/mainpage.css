@@ -87,7 +87,7 @@ main {
   z-index: 1001;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, opacity 0.3s ease;
-  
+
   width: 960px;
   max-height: 90vh;
   overflow: auto;
@@ -469,6 +469,7 @@ main {
   align-items: self-start;
   padding-right: 10px;
   padding-left: 30px;
+
 }
 .no-content {
   width: 535px;

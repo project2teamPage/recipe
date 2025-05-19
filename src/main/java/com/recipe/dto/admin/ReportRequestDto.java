@@ -11,7 +11,7 @@ import lombok.Setter;
 
 
 public class ReportRequestDto {
-    private Long targetId; // 피신고자id
+    private Long targetId; // 피신고된 글/댓글 id
     private String targetNickName; // 피신고자 닉네임
 
     @Enumerated(EnumType.STRING)

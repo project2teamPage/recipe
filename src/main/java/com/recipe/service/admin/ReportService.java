@@ -3,6 +3,10 @@ package com.recipe.service.admin;
 import com.recipe.dto.admin.ReportListDto;
 import com.recipe.entity.admin.Report;
 import com.recipe.repository.admin.ReportRepository;
+import com.recipe.repository.post.PostCommentRepo;
+import com.recipe.repository.post.PostRepo;
+import com.recipe.repository.recipe.RecipeCommentRepo;
+import com.recipe.repository.recipe.RecipeRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportService {
     private final ReportRepository reportRepository;
+    private final RecipeRepo recipeRepo;
+    private final RecipeCommentRepo recipeCommentRepo;
+    private final PostRepo postRepo;
+    private final PostCommentRepo postCommentRepo;
 
     // 레포트 테이블에서 데이터 전부 가져오기 - 메서드
     public List<ReportListDto> getReports() {
@@ -23,17 +31,69 @@ public class ReportService {
 
         // 엔티티를 dto에 넘겨서 arraryList로 저장
         for(Report report : reportList) {
-            // switch 이용해서 TargetType 에 따라  조회 할 테이블 결정 하여
-            // 작성자 구하기
-            // 작성자를 구해서 작성자의  닉네임을  ReportListDto.from (   ,  여기! );
-            //  넣어주기
 
-            ReportListDto reportListDto = ReportListDto.from(report, "정훈" );
+            String targetNickName = "";
+            String targetLoginId = "";
+            String targetUrl = "#";
 
-            reportListDtos.add(reportListDto);
+            switch (report.getTargetType()) {
+                case RECIPE_POST:
+                    targetNickName = recipeRepo.findById(report.getTargetId())
+                            .map(recipe -> recipe.getUser().getNickName())
+                            .orElse("알 수 없음");
+
+                    targetLoginId = recipeRepo.findById(report.getTargetId())
+                            .map(recipe -> recipe.getUser().getLoginId())
+                            .orElse("알 수 없음");
+                    targetUrl = "/recipe/" + report.getTargetId();
+                    break;
+
+                case RECIPE_COMMENT:
+                    targetNickName = recipeCommentRepo.findById(report.getTargetId())
+                            .map(comment -> comment.getUser().getNickName())
+                            .orElse("알 수 없음");
+
+                    targetLoginId = recipeCommentRepo.findById(report.getTargetId())
+                            .map(comment -> comment.getUser().getLoginId())
+                            .orElse("알 수 없음");
+                    Long recipeId = recipeCommentRepo.findById(report.getTargetId())
+                            .map(comment -> comment.getRecipe().getId())
+                            .orElse(null);
+                    if (recipeId != null) {
+                        targetUrl = "/recipe/" + recipeId + "#comment-" + report.getTargetId(); // ✅ 댓글 앵커 포함
+                    }
+                    break;
+
+                case COMMUNITY_POST:
+                    targetNickName = postRepo.findById(report.getTargetId())
+                            .map(post -> post.getUser().getNickName())
+                            .orElse("알 수 없음");
+
+                    targetLoginId = postRepo.findById(report.getTargetId())
+                            .map(post -> post.getUser().getLoginId())
+                            .orElse("알 수 없음");
+                    targetUrl = "/community/" + report.getTargetId();
+                    break;
+
+                case COMMUNITY_COMMENT:
+                    targetNickName = postCommentRepo.findById(report.getTargetId())
+                            .map(comment -> comment.getUser().getNickName())
+                            .orElse("알 수 없음");
+
+                    targetLoginId = postCommentRepo.findById(report.getTargetId())
+                            .map(comment -> comment.getUser().getLoginId())
+                            .orElse("알 수 없음");
+                    Long postId = postCommentRepo.findById(report.getTargetId())
+                            .map(comment -> comment.getPost().getId())
+                            .orElse(null);
+                    if (postId != null) {
+                        targetUrl = "/community/" + postId + "#comment-" + report.getTargetId(); // ✅ 댓글 앵커 포함
+                    }
+                    break;
+            }
+
+            reportListDtos.add(ReportListDto.from(report, targetLoginId, targetNickName, targetUrl));
         }
-
-
 
         return reportListDtos;
     }

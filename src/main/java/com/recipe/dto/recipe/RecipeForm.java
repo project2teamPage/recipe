@@ -37,6 +37,24 @@ public class RecipeForm {
     private List<RecipeIngredientDto> recipeIngredientDtoList = new ArrayList<>();
     private List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
 
+    public static RecipeForm from(Recipe recipe, List<RecipeIngredientDto> recipeIngredientDtoList,
+                                  List<RecipeStepDto> recipeStepDtoList){
+        RecipeForm form = new RecipeForm();
+        form.setId(recipe.getId());
+        form.setUserId(recipe.getUser().getId());
+        form.setTitle(recipe.getTitle());
+        form.setDishType(recipe.getDishType());
+        form.setTheme(recipe.getTheme());
+        form.setSpicy(recipe.getSpicy());
+        form.setUploadDate(recipe.getUploadDate());
+        form.setRecipeTime(recipe.getRecipeTime());
+        form.setRecipeDifficulty(recipe.getRecipeDifficulty());
+        form.setRecipeIngredientDtoList(recipeIngredientDtoList);
+        form.setRecipeStepDtoList(recipeStepDtoList);
+
+        return form;
+    }
+
     public Recipe toRecipe(User user){
         Recipe recipe = new Recipe();
         recipe.setUser(user);
@@ -46,9 +64,10 @@ public class RecipeForm {
         recipe.setSpicy(this.spicy);
         recipe.setRecipeDifficulty(this.recipeDifficulty);
         recipe.setRecipeTime(this.recipeTime);
-        recipe.setUploadDate(LocalDateTime.now()); // 직접 설정
-        recipe.setViewCount(0); // 초기값 설정
+        recipe.setUploadDate(LocalDateTime.now());
+        recipe.setViewCount(0);
         recipe.setDeleted(false);
+
 
         return recipe;
     }
