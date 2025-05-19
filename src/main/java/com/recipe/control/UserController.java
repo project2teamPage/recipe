@@ -99,9 +99,8 @@ public class UserController {
 
     // 내 프로필사진 편집
     @GetMapping("/user/profile")
-    public String profile(Model model, Principal principal){
-        String loginId = principal.getName();
-        User user = userRepo.findByLoginId(loginId);
+    public String profile(Model model, @AuthenticationPrincipal CustomUserDetails userDetails){
+        User user = userDetails.getUser();
         model.addAttribute("user", user);
         
         if (user == null) {
