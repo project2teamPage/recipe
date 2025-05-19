@@ -7,31 +7,115 @@
     <link rel="stylesheet" href="/css/user/mainpage.css" />
 </th:block>
 <th:block layout:fragment="script">
+
     <script>
+        //모달창 띄우기
+
         window.onload=function(){
-        const openInput = document.querySelector(".main-recipe-search");
-        const modal = document.getElementById("model");
-        const overlay = document.getElementById("overlay");
+            const openInput = document.querySelector(".main-recipe-search");
+            const modal = document.getElementById("model");
+            const overlay = document.getElementById("overlay");
 
-        openInput.addEventListener("focus", () => {
-          modal.classList.remove("hidden");
-          overlay.classList.remove("hidden");
-        });
+            openInput.addEventListener("focus", () => {
+              modal.classList.remove("hidden");
+              overlay.classList.remove("hidden");
+            });
 
-        overlay.addEventListener("click", () => {
-          modal.classList.add("hidden");
-          overlay.classList.add("hidden");
-        });
+            overlay.addEventListener("click", () => {
+              modal.classList.add("hidden");
+              overlay.classList.add("hidden");
+            });
 
-        // ESC 키로 닫기
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") {
-            modal.classList.add("hidden");
-            overlay.classList.add("hidden");
-          }
-        });
+            // ESC 키로 닫기
+            document.addEventListener("keydown", (e) => {
+              if (e.key === "Escape") {
+                modal.classList.add("hidden");
+                overlay.classList.add("hidden");
+              }
+            });
         }
     </script>
+
+    <script>
+        // 모달창 재료검색
+
+        let modalIngredientCount = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('model-search');
+            const resultList = document.querySelector('.model-result');
+            const hiddenInputContainer = document.getElementById('hiddenModalIngredients');
+
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const name = input.value.trim();
+                    if (!name) return;
+
+                    const exists = Array.from(resultList.children).some(li => li.dataset.name === name);
+                    if (exists) {
+                        input.value = '';
+                        return;
+                    }
+
+                    const badgeId = `modal-ingredient-${modalIngredientCount}`;
+
+                    const li = document.createElement('li');
+                    li.className = 'mo-recipe-result';
+                    li.dataset.name = name;
+                    li.id = badgeId;
+                    li.innerHTML = `${name} <button type="button" class="btn-close btn-sm ms-2" onclick="removeModalIngredient('${badgeId}')"></button>`;
+                    resultList.appendChild(li);
+
+                    const hidden = document.createElement('input');
+                    hidden.type = 'hidden';
+                    hidden.name = `modalIngredients[${modalIngredientCount}]`;
+                    hidden.value = name;
+                    hidden.id = `${badgeId}-hidden`;
+                    hiddenInputContainer.appendChild(hidden);
+
+                    modalIngredientCount++;
+                    input.value = '';
+
+                    // 재료 리스트에서 모든 재료 수집 후 fetch 호출
+                    const allIngredients = Array.from(document.querySelectorAll('.mo-recipe-result')).map(li => li.dataset.name);
+                    fetchRecipesByIngredients(allIngredients);
+                }
+            });
+        });
+
+        function removeModalIngredient(badgeId) {
+            document.getElementById(badgeId)?.remove();
+            document.getElementById(`${badgeId}-hidden`)?.remove();
+
+            const allIngredients = Array.from(document.querySelectorAll('.mo-recipe-result')).map(li => li.dataset.name);
+            fetchRecipesByIngredients(allIngredients);
+        }
+
+
+        // 재료 입력 시마다 fetch로 서버 호출
+        async function fetchRecipesByIngredients(ingredients) {
+            const encodedIngredients = ingredients.map(encodeURIComponent).join(',');
+            const response = await fetch(`/search/${encodedIngredients}`);
+            const data = await response.json(); // JSON 형식의 응답을 가정
+
+            const listContainer = document.querySelector('.mo-recipe-list');
+            listContainer.innerHTML = ''; // 기존 결과 비우기
+
+            data.forEach(recipe => {
+                const div = document.createElement('div');
+                div.className = 'mo-recipe';
+                div.innerHTML = `
+                    <p class="mo-re-title">${recipe.title}</p>
+                    <p>${recipe.nickName}</p>
+                    <a href="/recipe/${recipe.id}" class="btn btn-primary">레시피 바로보기 ></a>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+    </script>
+
 </th:block>
 
 <div layout:fragment="main" id="main">
@@ -67,47 +151,28 @@
                             <div id="overlay" class="overlay hidden"></div>
 
                             <div id="model" class="model hidden">
-
-                                <img src="image/logo4.png" alt="모달로고이미지" />
-                                <form action="">
-                                    <label for="model-search"></label>
+                                <img src="images/logo4.png" alt="모달로고이미지" />
+                                <label for="model-search">
                                     <input
                                             id="model-search"
                                             name="model-search"
                                             class="model-search-form"
                                             type="search"
-                                            placeholder="재료를 입력해주세요. 관련 레시피를 제공합니다."
-                                    />
-                                </form>
+                                            placeholder="재료를 입력해주세요. 관련 레시피를 제공합니다." />
+                                </label>
+
                                 <div class="model-result">
-                                    <li class="mo-recipe-result">굴소스</li>
-                                    <li class="mo-recipe-result">팽이벗성</li>
+
                                 </div>
+
+                                <div id="hiddenModalIngredients"></div>
+
                                 <p class="mo-text">냉털키친이 추천하는 레시피는...</p>
+
                                 <div class="mo-recipe-list">
-                                    <div class="mo-recipe">
-                                        <p class="mo-re-title">제목제목제목제목제목</p>
-                                        <p>사용자아이디</p>
-                                        <button>레시피 바로보기 ></button>
-                                    </div>
-                                    <div class="mo-recipe">
-                                        <p class="mo-re-title">제목제목제목제목제목</p>
-                                        <p>사용자아이디</p>
-                                        <button>레시피 바로보기 ></button>
-                                    </div>
-                                    <div class="mo-recipe">
-                                        <p class="mo-re-title">제목제목제목제목제목</p>
-                                        <p>사용자아이디</p>
-                                        <button>레시피 바로보기 ></button>
-                                    </div>
                                 </div>
                             </div>
 
-
-                            <ul class="recipe-ul">
-                                <li class="recipe-result">굴소스</li>
-                                <li class="recipe-result">팽이벗서</li>
-                            </ul>
                         </form>
                     </div>
                     <div class="mypage-icon"></div>
@@ -162,7 +227,7 @@
                         </div>
                     </a>
                 </div>
-                <button class="more-view-btn">더보기 ></button>
+                <button class="more-view-btn" th:onclick="location.href='/post#dish'">더보기</button>
             </div>
             <div class="member-list">
                 <p class="s-member-title">member</p>
@@ -172,7 +237,7 @@
                         <div th:text="${user.nickName}" class="member-name">사용자이름</div>
                     </div>
                 </div>
-                <button class="more-view-btn">더보기 ></button>
+                <button class="more-view-btn">더보기</button>
             </div>
             <div class="community">
                 <div class="title">
@@ -180,59 +245,20 @@
                 </div>
                 <div class="community-box">
                     <div class="community-content">
-                        <li>
-                            <div class="thumbnail"></div>
-                            <div class="com-catego">
-                                <a href="#"><p>카테고리</p></a>
-                                <p class="com-text">
-                                    살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
-                                    속세맛 마라로제!
-                                </p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="thumbnail"></div>
-                            <div class="com-catego">
-                                <a href="#"><p>카테고리</p></a>
-                                <p class="com-text">
-                                    살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
-                                    속세맛 마라로제!
-                                </p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="thumbnail"></div>
-                            <div class="com-catego">
-                                <a href="#"><p>카테고리</p></a>
-                                <p class="com-text">
-                                    살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
-                                    속세맛 마라로제!
-                                </p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="thumbnail"></div>
-                            <div class="com-catego">
-                                <a href="#"><p>카테고리</p></a>
-                                <p class="com-text">
-                                    살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
-                                    속세맛 마라로제!
-                                </p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="thumbnail"></div>
-                            <div class="com-catego">
-                                <a href="#"><p>카테고리</p></a>
-                                <p class="com-text">
-                                    살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
-                                    속세맛 마라로제!
-                                </p>
-                            </div>
-                        </li>
+                        <a th:href="@{/post/} + ${post.id}" th:each="post : ${posts2}">
+                            <li>
+                                <img th:src="@{'/postImg/ + ${post.imageUrl}'}" class="thumbnail">
+                                <div class="com-catego">
+                                    <p th:text="${post.title}" class="com-text">
+                                        살찔 걱정 없이 저당으로 즐기는 비건주의 회원들도 만족할
+                                        속세맛 마라로제!
+                                    </p>
+                                </div>
+                            </li>
+                        </a>
                     </div>
                 </div>
-                <button class="more-view-btn">더보기</button>
+                <button class="more-view-btn" th:onclick="location.href='/post#tip'">더보기</button>
             </div>
             <div class="bt-notice">
                 <div class="notice">

@@ -37,8 +37,11 @@ public interface PostRepo extends JpaRepository<Post, Long> {
     // 삭제일이 될 때 삭제될 게시글 리스트
     List<Post> findAllByIsDeletedTrueAndDeletedDateBefore(LocalDateTime now);
 
-    // 메인페이지용 요리자랑 가져오기
+    // 메인페이지용 요리자랑/노하우 가져오기
     @Query("SELECT p FROM Post p " +
-            "WHERE p.postCategory = DISH_PRIDE AND p.isDeleted = false ")
-    List<Post> findMainPost(Pageable pageable);
+            "WHERE p.postCategory = :category AND p.isDeleted = false ")
+    List<Post> findMainPost(@Param("category") PostCategory postCategory ,Pageable pageable);
+
+    // 작성한 user 의 id 로 찾기
+    List<Post> findAllByUserIdAndIsDeletedFalse(Long id);
 }

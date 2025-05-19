@@ -223,11 +223,11 @@ public class PostService {
     }
 
     // 메인페이지 요리자랑 랜덤목록
-    public List<PostListDto> getMainPost() {
+    public List<PostListDto> getMainPost(PostCategory postCategory) {
 
         PageRequest pageRequest = PageRequest.of(0,4);
 
-        List<Post> postList = postRepo.findMainPost(pageRequest);
+        List<Post> postList = postRepo.findMainPost(postCategory, pageRequest);
         List<PostListDto> postListDtos = new ArrayList<>();
 
         for(Post post : postList){

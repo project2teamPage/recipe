@@ -2,12 +2,25 @@ package com.recipe.service.user;
 
 
 import com.recipe.config.CustomUserDetails;
+import com.recipe.constant.UploadType;
 import com.recipe.dto.user.MainUserListDto;
 import com.recipe.dto.user.MemberSignInDto;
 import com.recipe.dto.user.MemberSignUpDto;
+import com.recipe.dto.user.UserContentDto;
+import com.recipe.entity.post.Post;
+import com.recipe.entity.post.PostComment;
+import com.recipe.entity.recipe.Recipe;
+import com.recipe.entity.recipe.RecipeComment;
 import com.recipe.entity.user.User;
+import com.recipe.repository.post.PostCommentRepo;
+import com.recipe.repository.post.PostRepo;
+import com.recipe.repository.recipe.RecipeCommentRepo;
+import com.recipe.repository.recipe.RecipeRepo;
 import com.recipe.repository.user.UserRepo;
 import com.recipe.repository.user.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +35,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,6 +51,18 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RecipeRepo recipeRepo;
+
+    @Autowired
+    private PostRepo postRepo;
+
+    @Autowired
+    private RecipeCommentRepo recipeCommentRepo;
+
+    @Autowired
+    private PostCommentRepo postCommentRepo;
 
 
     // 회원가입 정보 저장
@@ -162,4 +190,91 @@ public class UserService implements UserDetailsService {
         userRepo.delete(user);
         return true;
     }
+
+    // 작성한 글 목록 가져오기
+    public Page<UserContentDto> getContentDto(Long id, Pageable pageable) {
+
+        List<Recipe> recipes = recipeRepo.findAllByUserIdAndIsDeletedFalse(id);
+        List<Post> posts = postRepo.findAllByUserIdAndIsDeletedFalse(id);
+
+        List<UserContentDto> contentDtoList = new ArrayList<>();
+
+        if(recipes != null){
+            for(Recipe recipe : recipes){
+                UserContentDto dto = UserContentDto.fromRecipe(recipe);
+                contentDtoList.add(dto);
+            }
+        }
+        if(posts != null){
+            for(Post post : posts){
+                UserContentDto dto = UserContentDto.fromPost(post);
+                contentDtoList.add(dto);
+            }
+        }
+
+        contentDtoList.sort((a, b) -> {
+            LocalDateTime dateA = a.getUpdateDate() != null ? a.getUpdateDate() : a.getUploadDate();
+            LocalDateTime dateB = b.getUpdateDate() != null ? b.getUpdateDate() : b.getUploadDate();
+
+            if (dateA == null && dateB == null) return 0;
+            if (dateA == null) return 1;
+            if (dateB == null) return -1;
+
+            return dateB.compareTo(dateA); // 최신순 (내림차순)
+        });
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), contentDtoList.size());
+        List<UserContentDto> pageContent = contentDtoList.subList(start, end);
+
+
+        return new PageImpl<>(pageContent, pageable, contentDtoList.size());
+    }
+
+    // 작성한 댓글 목록 가져오기
+    public Page<UserContentDto> getCommentContentDto(Long id, Pageable pageable){
+
+        List<RecipeComment> recipes = recipeCommentRepo.findAllByUserId(id);
+        List<PostComment> posts = postCommentRepo.findAllByUserId(id);
+
+        List<UserContentDto> contentDtoList = new ArrayList<>();
+
+        if(recipes != null){
+            for(RecipeComment recipe : recipes){
+                UserContentDto dto = UserContentDto.fromRecipeComment(recipe);
+                contentDtoList.add(dto);
+            }
+        }
+        if(posts != null){
+            for(PostComment post : posts){
+                UserContentDto dto = UserContentDto.fromPostComment(post);
+                contentDtoList.add(dto);
+            }
+        }
+
+        contentDtoList.sort((a, b) -> {
+            LocalDateTime dateA = a.getUpdateDate() != null ? a.getUpdateDate() : a.getUploadDate();
+            LocalDateTime dateB = b.getUpdateDate() != null ? b.getUpdateDate() : b.getUploadDate();
+
+            if (dateA == null && dateB == null) return 0;
+            if (dateA == null) return 1;
+            if (dateB == null) return -1;
+
+            return dateB.compareTo(dateA); // 최신순 (내림차순)
+        });
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), contentDtoList.size());
+        List<UserContentDto> pageContent = contentDtoList.subList(start, end);
+
+
+        return new PageImpl<>(pageContent, pageable, contentDtoList.size());
+
+
+    }
+
+
+
+
 }
+

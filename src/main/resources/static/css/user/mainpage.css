@@ -161,7 +161,7 @@ main {
   margin-left: 30px;
   margin-top: 10px;
 }
-.mo-recipe button {
+.mo-recipe .btn {
   width: 180px;
   height: 54px;
   line-height: 54px;
