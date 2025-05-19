@@ -138,15 +138,20 @@
         </span>
         <a th:href="@{/recipe}" class="btn btn-secondary">목록</a>
         <!-- 신고 버튼 -->
-        <button type="button"
-                class="btn btn-danger"
-                id="reportBtn"
-                th:data-target-id="${recipe.id}"
-                th:data-target-nickname="${recipe.nickName}"
-                th:data-target-type="'RECIPE_POST'"
-                onclick="openReportModal()">
-            신고
-        </button>
+        <!-- 로그인한 사용자가 작성자가 아닌 경우만 보여줌 -->
+        <th:block th:if="${user != null}">
+            <th:block th:if="${user.loginId != recipe.loginId}">
+                <button type="button"
+                        class="btn btn-danger"
+                        id="reportBtn"
+                        th:data-target-id="${recipe.id}"
+                        th:data-target-nickname="${recipe.nickName}"
+                        th:data-target-type="'RECIPE_POST'"
+                        onclick="openReportModal()">
+                        신고
+                </button>
+            </th:block>
+        </th:block>
     </div>
 
     <!-- 신고 모달창 -->
@@ -205,14 +210,16 @@
                     <strong th:text="${comment.nickName}">닉네임</strong>
                     <small th:text="${#temporals.format(comment.uploadDate, 'yyyy.MM.dd HH:mm:ss')}">날짜</small>
                     <!-- 댓글 신고 버튼 추가 -->
-                    <button type="button"
-                            class="btn btn-danger comment-report-btn"
-                            th:data-target-id="${comment.id}"
-                            th:data-target-nickname="${comment.nickName}"
-                            th:data-target-type="'RECIPE_COMMENT'"
-                            onclick="openReportModal(this)">
-                        댓글 신고
-                    </button>
+                    <th:block th:if="${user != null and user.nickName != comment.nickName}">
+                            <button type="button"
+                                    class="btn btn-danger comment-report-btn"
+                                    th:data-target-id="${comment.id}"
+                                    th:data-target-nickname="${comment.nickName}"
+                                    th:data-target-type="'RECIPE_COMMENT'"
+                                    onclick="openReportModal(this)">
+                                    댓글 신고
+                            </button>
+                    </th:block>
                 </div>
                 <p th:text="${comment.content}">내용</p>
             </li>
