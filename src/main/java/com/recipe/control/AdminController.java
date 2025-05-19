@@ -1,19 +1,19 @@
 package com.recipe.control;
 
 import com.recipe.constant.Role;
-import com.recipe.dto.admin.NoticeDto;
-import com.recipe.dto.admin.NoticeListDto;
-import com.recipe.dto.admin.ReportListDto;
-import com.recipe.dto.admin.ReportRequestDto;
+import com.recipe.dto.admin.*;
 import com.recipe.entity.admin.Report;
 import com.recipe.entity.user.User;
 import com.recipe.service.admin.InquiryService;
 import com.recipe.service.admin.NoticeService;
 import com.recipe.service.admin.ReportService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +40,8 @@ public class AdminController {
 
     // 신고 관리 페이지
     @GetMapping("/admin/report")
-    public String reportPage(Model model) {
+    public String reportPage(Model model, HttpServletRequest request) {
+        CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
         model.addAttribute("reportList", reportService.getReports());
         return "admin/report";
     }
@@ -55,6 +56,46 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("신고 저장 실패");
         }
     }
+
+    @GetMapping("/admin/banned")
+    public String bannedPage(Model model) {
+        // 정지된 유저 목록 가져오기 (서비스에서 구현)
+        List<BannedListDto> bannedUsers = reportService.getBannedUsers();
+        model.addAttribute("bannedUsers", bannedUsers);
+        return "admin/banned";
+    }
+
+    @PostMapping("/admin/ban-users")
+    @ResponseBody
+    public ResponseEntity<?> banUsers(@RequestBody Map<String, Object> request,
+                                      @AuthenticationPrincipal User currentUser,
+                                      Authentication authentication) {
+        // 권한 체크
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한 없음");
+        }
+
+        try {
+            List<?> rawList = (List<?>) request.get("userIds");
+            List<String> userIds = rawList.stream()
+                    .map(Object::toString)
+                    .toList();
+            String reason = (String) request.get("reason");
+
+            reportService.banUsers(userIds, reason);
+
+            return ResponseEntity.ok("정지 처리 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("정지 처리 실패: " + e.getMessage());
+        }
+
+
+    }
+
+
+
 
     // 공지사항 관리 페이지 (사용자 역할에 따라 공지사항 다르게 처리)
     @GetMapping("/admin/notice")

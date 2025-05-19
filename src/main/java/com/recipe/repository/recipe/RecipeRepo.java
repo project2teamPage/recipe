@@ -3,6 +3,7 @@ package com.recipe.repository.recipe;
 import com.recipe.constant.DishType;
 import com.recipe.constant.Theme;
 import com.recipe.entity.recipe.Recipe;
+import com.recipe.entity.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +20,8 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
 
     // RecipeId 로 레시피 찾기
     public Recipe findByIdAndIsDeletedFalse(Long id);
+
+    List<Recipe> findAllByUser(User user);
 
     // 게시글 클릭 시 조회수 증가
     @Modifying

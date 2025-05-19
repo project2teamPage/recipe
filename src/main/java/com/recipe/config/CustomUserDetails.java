@@ -41,9 +41,7 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+    public boolean isAccountNonLocked() { return !user.isBanned(); }
 
     @Override
     public boolean isCredentialsNonExpired() {
@@ -54,4 +52,8 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
+
+
 }

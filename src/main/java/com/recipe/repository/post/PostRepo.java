@@ -2,6 +2,7 @@ package com.recipe.repository.post;
 
 import com.recipe.constant.PostCategory;
 import com.recipe.entity.post.Post;
+import com.recipe.entity.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,8 @@ import java.util.List;
 
 @Repository
 public interface PostRepo extends JpaRepository<Post, Long> {
+
+    List<Post> findAllByUser(User user);
 
     // 게시글 카테고리별 리스트
     // 최신순

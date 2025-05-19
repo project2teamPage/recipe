@@ -39,6 +39,8 @@ public class Report {
     private LocalDateTime date; // 신고날짜
 
     private LocalDateTime bannedDate; // 정지날짜
+
+    private LocalDateTime bannedUntil; // 정지 만료일
     
     private String bannedReason; // 정지 사유
 
