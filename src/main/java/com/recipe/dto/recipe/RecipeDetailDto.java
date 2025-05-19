@@ -19,8 +19,8 @@ public class RecipeDetailDto {
     private String loginId;
     private String nickName;
     private String title;
-    private DishType dishtype;
-    private Theme theme;
+    private String dishType;
+    private String theme;
     private int spicy;
     private LocalDateTime uploadDate;
     private LocalDateTime updateDate;
@@ -42,6 +42,8 @@ public class RecipeDetailDto {
         RecipeDetailDto recipeDetailDto = new RecipeDetailDto();
         recipeDetailDto = modelMapper.map(recipe, RecipeDetailDto.class);
 
+        recipeDetailDto.setDishType(recipe.getDishType().getLabel());
+        recipeDetailDto.setTheme(recipe.getTheme().getLabel());
         recipeDetailDto.setLoginId(recipe.getUser().getLoginId());
         recipeDetailDto.setNickName( recipe.getUser().getNickName() );
         recipeDetailDto.setRecipeIngredientDtoList(recipeIngredientDtoList);
