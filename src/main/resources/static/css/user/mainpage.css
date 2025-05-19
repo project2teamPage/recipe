@@ -227,7 +227,12 @@ main {
   margin-top: 5px;
 }
 .recipe-box {
-  margin-top: 50px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 20px;
+    position: relative;
+    padding: 20px 20px;
 }
 .card-box {
   width: 100%;
@@ -242,6 +247,15 @@ main {
   box-sizing: border-box;
   justify-content: center;
   align-items: center;
+}
+.recipe-box a {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+}
+.card.box {
+  flex: 0 0 auto;
+  width: 280px;
 }
 .recipe-card.active {
   transform: scale(1.05);
