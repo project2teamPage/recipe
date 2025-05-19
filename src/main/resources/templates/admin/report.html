@@ -56,8 +56,8 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>피신고자</th>
                     <th>신고자</th>
+                    <th>피신고자</th>
                     <th>카테고리</th>
                     <th>신고제목</th>
                     <th>날짜</th>
@@ -68,8 +68,8 @@
                     <td>
                         <input type="checkbox">
                     </td>
-                    <td th:text="${reportColumn.targetLoginId} + '(' + ${reportColumn.targetNickName} + ')'"></td> <!-- 피신고자 -->
                     <td th:text="${reportColumn.userId} + '(' + ${reportColumn.userNickName} + ')'"></td> <!-- 신고자 -->
+                    <td th:text="${reportColumn.targetLoginId} + '(' + ${reportColumn.targetNickName} + ')'"></td> <!-- 피신고자 -->
                     <td th:text="${reportColumn.targetType}"></td>
                     <td>
                         <a th:href="${reportColumn.targetUrl}" th:text="${reportColumn.title}"></a>
