@@ -106,8 +106,7 @@
           <ul class="write-content" id="content-list">
             <li th:each="content : ${contents}">
               <div class="catego" th:text="${content.type}">카테고리</div>
-              <a th:if="${content.type} == '커뮤니티'" th:href="@{'/post/' + ${content.id}}"><p class="write-title" th:text="${content.title}">title</p></a>
-              <a th:if="${content.type} == '레시피'" th:href="@{'/recipe/' + ${content.id}}"><p class="write-title" th:text="${content.title}">title</p></a>
+              <p class="write-title" th:text="${content.title}">title</p>
               <a th:if="${content.type} == '커뮤니티'" th:href="@{'/post/' + ${content.id}}" class="btn btn-primary">작성된 글 보기</a>
               <a th:if="${content.type} == '레시피'" th:href="@{'/recipe/' + ${content.id}}" class="btn btn-primary">작성된 글 보기</a>
             </li>
