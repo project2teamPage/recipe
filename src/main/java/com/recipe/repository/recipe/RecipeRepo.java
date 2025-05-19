@@ -73,4 +73,5 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
             "WHERE r.isDeleted = false " +
             "ORDER BY (SELECT COUNT(l) FROM RecipeLike l WHERE l.recipe = r ) DESC")
     List<Recipe> findTop3OrderByLikes(Pageable pageable);
+
 }

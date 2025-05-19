@@ -1,6 +1,7 @@
 package com.recipe.control;
 
 import com.recipe.config.CustomUserDetails;
+import com.recipe.constant.PostCategory;
 import com.recipe.constant.Role;
 import com.recipe.dto.admin.NoticeListDto;
 import com.recipe.dto.post.PostListDto;
@@ -19,10 +20,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -58,8 +58,12 @@ public class MainController {
         model.addAttribute("likedRecipes", likedRecipes);
 
         // 요리자랑 랜덤목록
-        List<PostListDto> posts = postService. getMainPost();
+        List<PostListDto> posts = postService.getMainPost(PostCategory.DISH_PRIDE);
         model.addAttribute("posts", posts);
+
+        // 노하우 랜덤목록
+        List<PostListDto> posts2 = postService.getMainPost(PostCategory.TIP);
+        model.addAttribute("posts2", posts2);
 
 
 
@@ -76,6 +80,14 @@ public class MainController {
 
         return "mainpage";
     }
+
+    @GetMapping("/search/{ingredients}")
+    @ResponseBody
+    public List<RecipeListDto> searchRecipes(@PathVariable String ingredients) {
+        List<String> ingredientList = Arrays.asList(ingredients.split(","));
+        return recipeService.findByIngredients(ingredientList);
+    }
+
 
     // 이용약관
     @GetMapping("/user/terms")

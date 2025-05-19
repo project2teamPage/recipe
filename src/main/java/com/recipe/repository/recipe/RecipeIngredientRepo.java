@@ -20,6 +20,16 @@ public interface RecipeIngredientRepo extends JpaRepository<RecipeIngredient, Lo
     @Query("SELECT DISTINCT ri.recipe FROM RecipeIngredient ri WHERE ri.name IN :names")
     public List<Recipe> selectFridgeIngredient(@Param("names") List<String> names);
 
+    // 냉장고 재료 검색
+    @Query("SELECT ri.recipe FROM RecipeIngredient ri " +
+            "WHERE ri.name IN :ingredients " +
+            "GROUP BY ri.recipe " +
+            "HAVING COUNT(DISTINCT ri.name) = :ingredientSize")
+    List<Recipe> findByIngredientNames(
+            @Param("ingredients") List<String> ingredients,
+            @Param("ingredientSize") long ingredientSize);
+
+
 
     void deleteByRecipe(Recipe recipe);
 }
