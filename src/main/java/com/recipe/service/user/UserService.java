@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -162,4 +163,31 @@ public class UserService implements UserDetailsService {
         userRepo.delete(user);
         return true;
     }
+
+    @Transactional
+    public void banUser(Long userId, String reason) {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        user.setBanned(true);
+        user.setBanTime(LocalDateTime.now());
+
+        // 필요하다면 ban 사유도 저장 가능 (현재 User 엔티티엔 없지만, Report 쪽에 따로 넣고 있겠죠?)
+        userRepo.save(user);
+    }
+
+    public boolean isUserBanned(User user) {
+        if (!user.isBanned()) return false;
+
+        LocalDateTime banEnd = user.getBanTime().plusDays(3);
+        if (LocalDateTime.now().isAfter(banEnd)) {
+            user.setBanned(false); // 자동으로 정지 해제
+            user.setBanTime(null);
+            userRepo.save(user);
+            return false;
+        }
+
+        return true;
+    }
+
 }
