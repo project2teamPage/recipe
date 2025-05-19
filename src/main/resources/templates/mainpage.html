@@ -108,7 +108,7 @@
                 div.innerHTML = `
                     <p class="mo-re-title">${recipe.title}</p>
                     <p>${recipe.nickName}</p>
-                    <button onclick="location.href='/recipe/${recipe.id}'">레시피 바로보기 ></button>
+                    <a href="/recipe/${recipe.id}" class="btn btn-primary">레시피 바로보기 ></a>
                 `;
                 listContainer.appendChild(div);
             });

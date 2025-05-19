@@ -1,11 +1,18 @@
 package com.recipe.control;
 
+import com.recipe.config.CustomUserDetails;
 import com.recipe.dto.user.MemberSignUpDto;
+import com.recipe.dto.user.UserContentDto;
 import com.recipe.entity.user.User;
 import com.recipe.repository.user.UserRepo;
 import com.recipe.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 
 @Controller
@@ -126,10 +134,25 @@ public class UserController {
 
     // 내 활동
     @GetMapping("/user/activity")
-    public String activity(Model model, Principal principal){
-        String loginId = principal.getName();
-        User user = userRepo.findByLoginId(loginId);
+    public String activity(Model model, @AuthenticationPrincipal CustomUserDetails userDetails,
+                           @RequestParam(value = "contentPage", defaultValue = "0") int contentPage,
+                           @RequestParam(value = "commentPage", defaultValue = "0") int commentPage){
+
+        Pageable contentPageable = PageRequest.of(contentPage, 3, Sort.by("uploadDate").descending());
+        Pageable commentPageable = PageRequest.of(commentPage, 4, Sort.by("uploadDate").descending());
+
+        // 유저 객체 보내주기
+        User user = userDetails.getUser();
         model.addAttribute("user", user);
+
+        // 작성한 게시글
+        Page<UserContentDto> contentList = userService.getContentDto(user.getId(), contentPageable);
+        model.addAttribute("contents", contentList);
+
+        // 작성한 댓글
+        Page<UserContentDto> commentList = userService.getCommentContentDto(user.getId(), commentPageable);
+        model.addAttribute("comments", commentList);
+
         return "user/activity";
     }
 

@@ -41,4 +41,7 @@ public interface PostRepo extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p " +
             "WHERE p.postCategory = :category AND p.isDeleted = false ")
     List<Post> findMainPost(@Param("category") PostCategory postCategory ,Pageable pageable);
+
+    // 작성한 user 의 id 로 찾기
+    List<Post> findAllByUserIdAndIsDeletedFalse(Long id);
 }

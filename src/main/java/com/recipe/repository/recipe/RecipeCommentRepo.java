@@ -12,4 +12,5 @@ public interface RecipeCommentRepo extends JpaRepository<RecipeComment, Long> {
     public List<RecipeComment> findAllByRecipeIdOrderByUploadDateDesc(Long recipeId);
 
 
+    List<RecipeComment> findAllByUserId(Long id);
 }
