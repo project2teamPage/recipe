@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+  <style>
+    /* 간단한 스타일 */
+    #main {
+        max-width: 800px;
+        margin: auto;
+        font-size: 14px;
+    }
+    #contentText {
+        white-space: pre-wrap; /* 줄바꿈 유지 */
+    }
+    button {
+        background-color: #007acc;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    button:hover {
+        background-color: #005f99;
+    }
+  </style>
+</th:block>
+
+<div layout:fragment="main" id="main">
+  <div>
+    <h2 th:text="${notice.title}"></h2>
+    <p>
+      <strong>작성자 : </strong><span th:text="${notice.adminNickName}"></span><br>
+      <strong>작성일 : </strong><span th:text="${notice.updateDate != null ? notice.updateDate : notice.writeDate}"></span>
+    </p>
+  </div>
+  <div id="contentText" th:text="${notice.content}"></div>
+
+  <button type="button" onclick="location.href='/notice'">목록으로</button>
+</div>
+</html>

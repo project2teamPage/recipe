@@ -118,4 +118,12 @@ public class NoticeService {
                 ? notice.getAdmin().getNickName()
                 : "관리자";
     }
+
+    public NoticeDto getNoticeForUser(Long noticeId) {
+        Notice notice = getNoticeOrThrow(noticeId);
+        if (notice.isHidden()) {
+            throw new RuntimeException("숨김 처리된 공지사항입니다.");
+        }
+        return NoticeDto.from(notice, getAdminNickName(notice));
+    }
 }
