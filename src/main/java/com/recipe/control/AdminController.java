@@ -1,5 +1,6 @@
 package com.recipe.control;
 
+import com.recipe.config.CustomUserDetails;
 import com.recipe.constant.Role;
 import com.recipe.dto.admin.*;
 import com.recipe.entity.admin.Report;
@@ -65,34 +66,34 @@ public class AdminController {
         return "admin/banned";
     }
 
-    @PostMapping("/admin/ban-users")
-    @ResponseBody
-    public ResponseEntity<?> banUsers(@RequestBody Map<String, Object> request,
-                                      @AuthenticationPrincipal User currentUser,
-                                      Authentication authentication) {
-        // 권한 체크
-        if (!authentication.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한 없음");
-        }
-
-        try {
-            List<?> rawList = (List<?>) request.get("userIds");
-            List<String> userIds = rawList.stream()
-                    .map(Object::toString)
-                    .toList();
-            String reason = (String) request.get("reason");
-
-            reportService.banUsers(userIds, reason);
-
-            return ResponseEntity.ok("정지 처리 완료");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("정지 처리 실패: " + e.getMessage());
-        }
-
-
-    }
+//    @PostMapping("/admin/ban-users")
+//    @ResponseBody
+//    public ResponseEntity<?> banUsers(@RequestBody Map<String, Object> request,
+//                                      @AuthenticationPrincipal User currentUser,
+//                                      Authentication authentication) {
+//        // 권한 체크
+//        if (!authentication.getAuthorities().stream()
+//                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한 없음");
+//        }
+//
+//        try {
+//            List<?> rawList = (List<?>) request.get("userIds");
+//            List<String> userIds = rawList.stream()
+//                    .map(Object::toString)
+//                    .toList();
+//            String reason = (String) request.get("reason");
+//
+//            reportService.banUsers(userIds, reason);
+//
+//            return ResponseEntity.ok("정지 처리 완료");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("정지 처리 실패: " + e.getMessage());
+//        }
+//
+//
+//    }
 
 
 
@@ -126,9 +127,12 @@ public class AdminController {
     // 공지사항 작성 처리
     @PostMapping("/admin/noticeWrite")
     public String createNotice(@ModelAttribute("noticeDto") NoticeDto dto,
-                               @AuthenticationPrincipal User currentUser) {
-        // 현재 로그인한 관리자 정보 dto에 세팅
-        dto.setAdminId(currentUser.getId());  // NoticeDto에 adminId 필드 필요
+                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        if (customUserDetails == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인 필요");
+        }
+        User currentUser = customUserDetails.getUser();
+        dto.setAdminId(currentUser.getId());
         noticeService.saveNotice(dto);
         return "redirect:/admin/notice";
     }
