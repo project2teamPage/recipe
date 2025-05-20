@@ -134,7 +134,10 @@ public class PostController {
 
         }
 
+        // 좋아요 누를 시
         model.addAttribute("liked", liked);
+        
+        // 글 방문 시 조회수 증가
         postService.increaseViewCount(postId);
 
 

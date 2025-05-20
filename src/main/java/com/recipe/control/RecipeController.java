@@ -94,7 +94,7 @@ public class RecipeController {
     }
 
 
-    // 레시피 삭제 (임시)
+    // 레시피 삭제
 
     @PostMapping("/recipe/delete/{id}")
     public String deleteRecipe(@PathVariable Long id, Principal principal) {

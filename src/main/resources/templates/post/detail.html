@@ -16,6 +16,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.like-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
+                    // 버튼 연타 방지
                     if (btn.disabled) return;
                     btn.disabled = true;
 
