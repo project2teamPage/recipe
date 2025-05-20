@@ -130,6 +130,10 @@
     display:flex;
     flex-wrap: wrap;
 }
+
+.recipe-grid a {
+    text-decoration: none;
+}
 /* 전체 카드 박스 */
 .recipe-card {
     width: 260px;
