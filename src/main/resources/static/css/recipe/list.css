@@ -29,16 +29,13 @@
 
 .form-container {
   width: 1180px;
-  height: 314px;
+  height: 400px;
   background-color: #f8f8f9;
   margin-top: 10px;
   display: flex;
   position: relative;
 }
-.top-menu {
-    width: 482px;
-    display: flex;
-}
+
 .mt-3 h5 {
     color: #ff6a00;
     font-size: 16px;
@@ -50,23 +47,61 @@
     font-weight: 600;
   }
 
-.btn-group {
-  width: 102px;
-  height: 240px;
+.top-menu-container {
+  text-align: center;
+  margin: 40px auto;
 }
 
-.btn-group >button {
-    background-color: #F8F8F9;
-    width: 102px;
-    height: 40px;
-    border-radius: 20px;
-    text-align: center;
-    border-style: none;
-    font-size: 16px;
+.category-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ff6a00;
+  border-bottom: 2px solid #ff6a00;
+  display: inline-block;
+  padding-bottom: 8px;
+  margin-bottom: 20px;
 }
-.btn-group button .active {
-    background-color: #FFEAD5;
+
+.top-menu {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
 }
+
+.menu-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu-section h5 {
+  color: #ff6a00;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn {
+  background-color: #F8F8F9;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn.active {
+  background-color: #FFEAD5;
+}
+
+
 
 /* 레시피 */
 .recipe-title {
