@@ -66,16 +66,14 @@
                 <a href="#tip" >노하우</a>
 
                 <!-- 레시피 작성 버튼 (그림 포함) -->
-                <button
-                        onclick="location.href='/post/new'"
-                        class="write-btn btn-light"
-                >
+                <a href="/recipe/new">
                     <img
+                            class="write-icon"
                             th:src="@{/images/write_icon.png}"
                             alt="글쓰기"
                             style="width: 84px; height: 84px"
                     />
-                </button>
+                </a>
             </div>
         </div>
 

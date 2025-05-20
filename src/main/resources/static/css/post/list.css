@@ -12,6 +12,8 @@
 a {
    text-decoration: none;
 }
+
+
 .container {
   width: 1180px;
 }
@@ -50,12 +52,13 @@ a {
   margin-top: 60px;
 }
 /* 레시피 작성 버튼 */
-.write-btn {
-  width: 100px;
-  height: 100px;
-  background-color: #ff6a00;
-  border-radius: 50px;
-  border-style: none;
+.write-icon {
+    margin-top: 200px;
+    width: 85px;
+    height: 85px;
+    border-radius: 50px;
+    position: absolute;
+    left: 80%;
 }
 /* 최신순 ㅇㅇㅇ */
 .btn-group {

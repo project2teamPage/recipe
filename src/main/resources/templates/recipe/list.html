@@ -212,15 +212,16 @@
             >
               조회순
             </button>
+
+            <input
+                    type="hidden"
+                    name="orderType"
+                    id="orderTypeInput"
+                    th:value="${param.orderType}"
+            />
           </div>
         </div>
 
-        <input
-                type="hidden"
-                name="orderType"
-                id="orderTypeInput"
-                th:value="${param.orderType}"
-        />
       </form>
     </div>
 
@@ -234,7 +235,7 @@
 
       <a href="/recipe/new">
         <img
-                class="text-right"
+                class="write-icon"
                 th:src="@{/images/write_icon.png}"
                 alt="글쓰기"
                 style="width: 84px; height: 84px"

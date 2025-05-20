@@ -67,6 +67,7 @@
                     li.innerHTML = `${name} <button type="button" class="btn-close btn-sm ms-2" onclick="removeModalIngredient('${badgeId}')"></button>`;
                     resultList.appendChild(li);
 
+                    // 재료 값을 input 에 넣어서 컨트롤러에 보내주기
                     const hidden = document.createElement('input');
                     hidden.type = 'hidden';
                     hidden.name = `modalIngredients[${modalIngredientCount}]`;
@@ -84,7 +85,11 @@
             });
         });
 
+
         function removeModalIngredient(badgeId) {
+
+        // 모달창 재료 삭제용
+
             document.getElementById(badgeId)?.remove();
             document.getElementById(`${badgeId}-hidden`)?.remove();
 
