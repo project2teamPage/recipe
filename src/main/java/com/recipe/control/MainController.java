@@ -108,7 +108,7 @@ public class MainController {
         return "user/notice";  // 사용자 공지사항 목록 뷰
     }
 
-    @GetMapping("/noticeDetail")
+    @GetMapping("/notice/{id}")
     public String userNoticeDetail(@PathVariable Long id, Model model) {
         try {
             NoticeDto noticeDto = noticeService.getNoticeForUser(id);
