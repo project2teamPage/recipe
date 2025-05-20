@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+  <style>
+    /* 목록 스타일 유지 */
+    .title-col {
+        text-align: center;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+    thead th {
+        background-color: #f6f6f6;
+        padding: 12px 10px;
+        text-align: left;
+        border-bottom: 2px solid #ddd;
+    }
+    tbody td {
+        padding: 12px 10px;
+        border-bottom: 1px solid #eee;
+        vertical-align: middle;
+    }
+    .row-gap td {
+        height: 20px;
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+    .pinned {
+        background-color: #fff9e6;
+        font-weight: 500;
+    }
+    .hidden-row {
+        opacity: 0.4;
+    }
+    a {
+        color: #333;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+        color: #007acc;
+    }
+  </style>
+</th:block>
+
+<div layout:fragment="main" id="main">
+  <table>
+    <thead>
+    <tr>
+      <th class="title-col">제목</th>
+      <th class="title-col">작성자</th>
+      <th class="title-col">작성일</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 고정된 공지 (복사본) -->
+    <tr th:each="pinned : ${pinnedNotices}"
+        class="pinned"
+        th:classappend="${pinned.hidden} ? 'hidden-row'">
+      <td class="title-col">
+        <span>[고정]</span>
+        <a th:href="@{'/notice/' + ${pinned.id}}" th:text="${pinned.title}"></a>
+      </td>
+      <td class="title-col" th:text="${pinned.adminNickName}"></td>
+      <td class="title-col" th:text="${pinned.formattedWriteDate}"></td>
+    </tr>
+
+    <tr class="row-gap">
+      <td colspan="3"></td>
+    </tr>
+
+    <!-- 전체 공지 리스트 -->
+    <tr th:each="notice : ${noticeList}"
+        th:classappend="${notice.hidden} ? 'hidden-row'">
+      <td class="title-col">
+        <span th:if="${notice.pinned}">[고정]</span>
+        <a th:href="@{'/notice/' + ${notice.id}}" th:text="${notice.title}"></a>
+      </td>
+      <td class="title-col" th:text="${notice.adminNickName}"></td>
+      <td class="title-col" th:text="${notice.formattedWriteDate}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</html>

@@ -263,7 +263,7 @@
             <div class="bt-notice">
                 <div class="notice">
                     <p>공지사항</p>
-                    <button>공지사항 더보기 ></button>
+                    <button th:onclick="|location.href='@{/notice}'|">공지사항 더보기 ></button>
                     <div>
                         <ul class="notice-box">
                             <li th:each="notice : ${notice5}">
