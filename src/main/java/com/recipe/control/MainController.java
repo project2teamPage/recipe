@@ -3,6 +3,7 @@ package com.recipe.control;
 import com.recipe.config.CustomUserDetails;
 import com.recipe.constant.PostCategory;
 import com.recipe.constant.Role;
+import com.recipe.dto.admin.NoticeDto;
 import com.recipe.dto.admin.NoticeListDto;
 import com.recipe.dto.post.PostListDto;
 import com.recipe.dto.recipe.RecipeListDto;
@@ -100,5 +101,22 @@ public class MainController {
         return "user/personal";
     }
 
+    @GetMapping("/notice")
+    public String userNoticeList(Model model) {
+        List<NoticeListDto> noticeListDtos = noticeService.getNoticesByRole(Role.USER);
+        model.addAttribute("noticeList", noticeListDtos);
+        return "user/notice";  // 사용자 공지사항 목록 뷰
+    }
 
+    @GetMapping("/noticeDetail")
+    public String userNoticeDetail(@PathVariable Long id, Model model) {
+        try {
+            NoticeDto noticeDto = noticeService.getNoticeForUser(id);
+            model.addAttribute("notice", noticeDto);
+            return "user/noticeDetail"; // 사용자 공지사항 상세 뷰
+        } catch (RuntimeException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error/noticeNotFound"; // 에러 페이지 (선택)
+        }
+    }
 }

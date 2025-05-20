@@ -80,7 +80,7 @@ public class ReportService {
                     targetLoginId = postRepo.findById(report.getTargetId())
                             .map(post -> post.getUser().getLoginId())
                             .orElse("알 수 없음");
-                    targetUrl = "/community/" + report.getTargetId();
+                    targetUrl = "/post/" + report.getTargetId();
                     break;
 
                 case COMMUNITY_COMMENT:
@@ -95,7 +95,7 @@ public class ReportService {
                             .map(comment -> comment.getPost().getId())
                             .orElse(null);
                     if (postId != null) {
-                        targetUrl = "/community/" + postId + "#comment-" + report.getTargetId(); // ✅ 댓글 앵커 포함
+                        targetUrl = "/post/" + postId + "#comment-" + report.getTargetId(); // ✅ 댓글 앵커 포함
                     }
                     break;
             }
@@ -154,11 +154,11 @@ public class ReportService {
                         targetUrl = "/recipe/" + report.getTargetId() + "#comment-" + report.getTargetId();
                         break;
                     case COMMUNITY_POST:
-                        targetUrl = "/community/" + report.getTargetId();
+                        targetUrl = "/post/" + report.getTargetId();
                         break;
                     case COMMUNITY_COMMENT:
                         // 댓글에 딸린 게시글 ID를 가져오는 로직 필요 (생략)
-                        targetUrl = "/community/" + report.getTargetId() + "#comment-" + report.getTargetId();
+                        targetUrl = "/post/" + report.getTargetId() + "#comment-" + report.getTargetId();
                         break;
                 }
             }
