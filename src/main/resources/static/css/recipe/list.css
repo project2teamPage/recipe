@@ -97,11 +97,6 @@
   transition: background-color 0.3s ease;
 }
 
-.btn.active {
-  background-color: #FFEAD5;
-}
-
-
 
 /* 레시피 */
 .recipe-title {
@@ -125,7 +120,6 @@
     width: 85px;
     height: 85px;
     border-radius: 50px;
-    background-color: #ff6a00;
     position: absolute;
     left: 80%;
 }
@@ -147,15 +141,10 @@
     border: 1px solid#BABABA;
     margin-right: 5px;
 }
-.array button .active {
-    width: 102px;
-    height: 40px;
+.btn.active {
+
     background-color: #FFEAD5;
-    border-radius: 20px;
-    font-size: 14px;
-    line-height: 40px;
-    text-align: center;
-    border-style: none;
+
 }
 
 .recipe-grid {
